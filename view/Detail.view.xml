@@ -50,8 +50,9 @@
 									<Text id="text1" text="{Beguz}"/>
 									<Label id="label2" text="End Time"/>
 									<Text id="text2" text="{Enduz}"/>
-									<Label id="label3" text="Previous Day Indicator"/>
-									<Text id="text3" text="{Vtken}"/>
+									<!--<Label id="label3" text="Previous Day Indicator"/>-->
+									<CheckBox text="Previous Day Indicator" selected="{Vtken}"/>
+									<!--<Text id="text3" text="{Vtken}"/>-->
 									<Label id="label4" text="Work Order"/>
 									<Text id="text4" text="{Srvord}"/>									
 								</f:content>
