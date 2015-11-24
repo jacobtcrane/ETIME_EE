@@ -34,10 +34,14 @@
     "resourceModelName": "i18n"
   },
   "mockpreview": {
-    "mockUri": "/sap/opu/odata/sap/ZHTR_ETIME_EMPLOYEE_SRV",
-    "metadataFilePath": "",
+    "mockUri": "/sap/opu/odata/sap/ZHTR_ETIME_EMPLOYEE_SRV/",
+    "metadataFilePath": "model/metadata.xml",
     "loadJSONFiles": true,
     "loadCustomRequests": false,
     "mockRequestsFilePath": ""
+  },
+  "deploy": {
+    "destination": "NMD",
+    "name": "ZHTR_ET_E_TST"
   }
 }

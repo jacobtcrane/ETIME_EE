@@ -14,6 +14,22 @@
 			data-sap-ui-xx-bindingSyntax="complex"
 			data-sap-ui-resourceroots='{"com.transfieldservices": "./"}'>
 		</script>
+<script>
+var bRunWithMock = true;
+var sRunWithMock = jQuery.sap.getUriParameters().get('run-with-mock');
+if (sRunWithMock === 'false') {
+bRunWithMock = false;
+}
+if (bRunWithMock) {
+jQuery.sap.require('sap.ui.core.util.MockServer');
+var uri = '/sap/opu/odata/sap/ZHTR_ETIME_EMPLOYEE_SRV/';
+var oMock = new sap.ui.core.util.MockServer({rootUri : uri});
+oMock.simulate('model/metadata.xml', { sMockdataBaseUrl : 'model/', bGenerateMissingMockData : true });
+oMock.start();
+	jQuery(document).ready(function($) {  sap.m.MessageToast.show('Running in demo mode with mock data.', {  duration : 4000 });
+});
+}
+</script>
 
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 
