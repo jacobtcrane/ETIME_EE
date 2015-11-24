@@ -36,7 +36,7 @@
   "mockpreview": {
     "mockUri": "/sap/opu/odata/sap/ZHTR_ETIME_EMPLOYEE_SRV",
     "metadataFilePath": "",
-    "loadJSONFiles": false,
+    "loadJSONFiles": true,
     "loadCustomRequests": false,
     "mockRequestsFilePath": ""
   }

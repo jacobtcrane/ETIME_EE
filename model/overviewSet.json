@@ -1,0 +1,221 @@
+[{
+	"Pernr": "Pernr 1",
+	"Weekstart": "/Date(1558443779000)/",
+	"Weekend": "/Date(1055250179000)/",
+	"AttDate": "/Date(1096290179000)/",
+	"Datetxt": "Datetxt 1",
+	"Statustxt": "Statustxt 1",
+	"Hourstxt": "Hourstxt 1",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2004-09-27T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2004-09-27T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2004-09-27T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 2",
+	"Weekstart": "/Date(1426078979000)/",
+	"Weekend": "/Date(1431522179000)/",
+	"AttDate": "/Date(1558702979000)/",
+	"Datetxt": "Datetxt 2",
+	"Statustxt": "Statustxt 2",
+	"Hourstxt": "Hourstxt 2",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2019-05-24T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2019-05-24T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2019-05-24T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 3",
+	"Weekstart": "/Date(1354798979000)/",
+	"Weekend": "/Date(1078491779000)/",
+	"AttDate": "/Date(1505998979000)/",
+	"Datetxt": "Datetxt 3",
+	"Statustxt": "Statustxt 3",
+	"Hourstxt": "Hourstxt 3",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2017-09-21T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2017-09-21T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2017-09-21T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 4",
+	"Weekstart": "/Date(1490274179000)/",
+	"Weekend": "/Date(1240837379000)/",
+	"AttDate": "/Date(1122814979000)/",
+	"Datetxt": "Datetxt 4",
+	"Statustxt": "Statustxt 4",
+	"Hourstxt": "Hourstxt 4",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2005-07-31T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2005-07-31T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2005-07-31T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 5",
+	"Weekstart": "/Date(1206190979000)/",
+	"Weekend": "/Date(1392987779000)/",
+	"AttDate": "/Date(1439470979000)/",
+	"Datetxt": "Datetxt 5",
+	"Statustxt": "Statustxt 5",
+	"Hourstxt": "Hourstxt 5",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2015-08-13T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2015-08-13T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2015-08-13T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 6",
+	"Weekstart": "/Date(1412254979000)/",
+	"Weekend": "/Date(956235779000)/",
+	"AttDate": "/Date(1277384579000)/",
+	"Datetxt": "Datetxt 6",
+	"Statustxt": "Statustxt 6",
+	"Hourstxt": "Hourstxt 6",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2010-06-24T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2010-06-24T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2010-06-24T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 7",
+	"Weekstart": "/Date(1449579779000)/",
+	"Weekend": "/Date(1373547779000)/",
+	"AttDate": "/Date(1521118979000)/",
+	"Datetxt": "Datetxt 7",
+	"Statustxt": "Statustxt 7",
+	"Hourstxt": "Hourstxt 7",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2018-03-15T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2018-03-15T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2018-03-15T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 8",
+	"Weekstart": "/Date(1517403779000)/",
+	"Weekend": "/Date(1397826179000)/",
+	"AttDate": "/Date(1214658179000)/",
+	"Datetxt": "Datetxt 8",
+	"Statustxt": "Statustxt 8",
+	"Hourstxt": "Hourstxt 8",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2008-06-28T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2008-06-28T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2008-06-28T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 9",
+	"Weekstart": "/Date(1515416579000)/",
+	"Weekend": "/Date(1451221379000)/",
+	"AttDate": "/Date(1563800579000)/",
+	"Datetxt": "Datetxt 9",
+	"Statustxt": "Statustxt 9",
+	"Hourstxt": "Hourstxt 9",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2019-07-22T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2019-07-22T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2019-07-22T13:02:59')/header"
+		}
+	}
+}, {
+	"Pernr": "Pernr 10",
+	"Weekstart": "/Date(1092661379000)/",
+	"Weekend": "/Date(1281186179000)/",
+	"AttDate": "/Date(1190984579000)/",
+	"Datetxt": "Datetxt 10",
+	"Statustxt": "Statustxt 10",
+	"Hourstxt": "Hourstxt 10",
+	"__metadata": {
+		"uri": "overviewSet(datetime'2007-09-28T13:02:59')",
+		"type": "ZHTR_ETIME_EMPLOYEE_SRV.overview"
+	},
+	"detailSet": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2007-09-28T13:02:59')/detailSet"
+		}
+	},
+	"header": {
+		"__deferred": {
+			"uri": "overviewSet(datetime'2007-09-28T13:02:59')/header"
+		}
+	}
+}]
