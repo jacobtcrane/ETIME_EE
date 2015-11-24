@@ -1,0 +1,15 @@
+<mvc:View
+	controllerName="com.transfieldservices.view.Welcome"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc" >
+	<Page
+		enableScrolling="false">
+		<footer>
+			<Toolbar>
+			</Toolbar>
+		</footer>
+		<content>
+		</content>
+	</Page>
+</mvc:View>

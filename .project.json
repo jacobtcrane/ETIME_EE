@@ -1,0 +1,43 @@
+{
+  "dataBinding": {
+    "/view/Master.view.xml": {
+      "entitySet": "overviewSet"
+    },
+    "/view/Master2.view.xml": {
+      "entitySet": "detailSet"
+    },
+    "/view/Detail.view.xml": {
+      "entitySet": "detailSet"
+    },
+    "/view/NotFound.view.xml": {
+      "entitySet": "UNBINDKEY"
+    },
+    "/view/App.view.xml": {
+      "entitySet": "UNBINDKEY"
+    },
+    "/view/Welcome.view.xml": {
+      "entitySet": "UNBINDKEY"
+    }
+  },
+  "generation": [
+    {
+      "templateId": "ui5template.fioriMasterMasterDetail",
+      "templateVersion": "1.4.0",
+      "dateTimeStamp": "Tue, 24 Nov 2015 12:31:43 GMT"
+    }
+  ],
+  "translation": {
+    "translationDomain": "",
+    "supportedLanguages": "en,fr,de",
+    "defaultLanguage": "en",
+    "defaultI18NPropertyFile": "i18n.properties",
+    "resourceModelName": "i18n"
+  },
+  "mockpreview": {
+    "mockUri": "/sap/opu/odata/sap/ZHTR_ETIME_EMPLOYEE_SRV",
+    "metadataFilePath": "",
+    "loadJSONFiles": false,
+    "loadCustomRequests": false,
+    "mockRequestsFilePath": ""
+  }
+}
