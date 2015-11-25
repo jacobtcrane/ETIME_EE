@@ -4,30 +4,27 @@
 	<edmx:DataServices m:DataServiceVersion="2.0">
 		<Schema Namespace="ZHTR_ETIME_EMPLOYEE_SRV" sap:schema-version="1" xml:lang="en" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
 			<EntityType Name="favTable" sap:content-version="1"><Key><PropertyRef Name="Guid"/></Key><Property Name="Guid" Nullable="false" Type="Edm.Binary" sap:creatable="false" sap:filterable="false" sap:label="UUID" sap:sortable="false"
-				sap:updatable="false"/><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Description" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Name"
-				sap:sortable="false" sap:updatable="false"/><Property Name="Beguz" Nullable="false" Precision="0" Type="Edm.Time" sap:creatable="false" sap:filterable="false" sap:label="Start time"
-				sap:sortable="false" sap:updatable="false"/><Property Name="Enduz" Nullable="false" Precision="0" Type="Edm.Time" sap:creatable="false" sap:filterable="false" sap:label="End time"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="1" Name="Vtken" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Previous day"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="4" Name="Awart" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Att./abs. type"
-				sap:sortable="false" sap:updatable="false"/><Property Name="Stdaz" Nullable="false" Precision="7" Scale="2" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
-				sap:label="Att.hours" sap:sortable="false" sap:updatable="false"/><Property MaxLength="4" Name="Lgart" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Wage Type"
-				sap:sortable="false" sap:updatable="false"/><Property Name="Anzhl" Nullable="false" Precision="7" Scale="2" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
-				sap:label="Number
-				per time
-				unit" sap:sortable="false" sap:updatable="false"/><Property MaxLength="3" Name="Zeinh" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Time unit/meas."
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="Srvord" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Order"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="Nwh" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Network"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="8" Name="Wbs" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Rec. WBS elem."
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="Iaufnr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Internal Order"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="6" Name="Acttyp" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Activity Type"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="4" Name="Operation" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Oper./Act."
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="4" Name="Rsnvar" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Reason"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="144" Name="Enote" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Employee notes"
-				sap:sortable="false" sap:updatable="false"/><Property MaxLength="1" Name="IsPrepopulated" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
-				sap:label="Is
-				prepopulated" sap:sortable="false" sap:updatable="false"/><Property MaxLength="1" Name="Hda" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="HDA"
-				sap:sortable="false" sap:updatable="false"/></EntityType>
+				sap:updatable="false"/><Property MaxLength="8" Name="Pernr" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No." sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="40" Name="Description" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Name" sap:sortable="false"
+				sap:updatable="false"/><Property Name="Beguz" Precision="0" Type="Edm.Time" sap:creatable="false" sap:filterable="false" sap:label="Start time" sap:sortable="false"
+				sap:updatable="false"/><Property Name="Enduz" Precision="0" Type="Edm.Time" sap:creatable="false" sap:filterable="false" sap:label="End time" sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="1" Name="Vtken" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Previous day" sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="4" Name="Awart" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Att./abs. type" sap:sortable="false"
+				sap:updatable="false"/><Property Name="Stdaz" Precision="7" Scale="2" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false" sap:label="Att.hours"
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="4" Name="Lgart" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Wage Type" sap:sortable="false"
+				sap:updatable="false"/><Property Name="Anzhl" Precision="7" Scale="2" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false" sap:label="Number per time unit"
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="3" Name="Zeinh" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Time unit/meas."
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="Srvord" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Order" sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="12" Name="Nwh" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Network" sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="8" Name="Wbs" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Rec. WBS elem." sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="12" Name="Iaufnr" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Internal Order"
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="6" Name="Acttyp" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Activity Type" sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="4" Name="Operation" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Oper./Act." sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="4" Name="Rsnvar" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Reason" sap:sortable="false"
+				sap:updatable="false"/><Property MaxLength="144" Name="Enote" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Employee notes"
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="1" Name="IsPrepopulated" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Is prepopulated"
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="1" Name="Hda" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="HDA" sap:sortable="false"
+				sap:updatable="false"/></EntityType>
 			<EntityType Name="VH_wbsElement" sap:content-version="1"><Key><PropertyRef Name="Posid"/></Key><Property MaxLength="24" Name="Posid" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="WBS Element"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Post1" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Description"
 				sap:sortable="false" sap:updatable="false"/></EntityType>
@@ -47,15 +44,15 @@
 			<EntityType Name="VH_operation" sap:content-version="1"><Key><PropertyRef Name="Aufnr"/><PropertyRef Name="Vornr"/></Key><Property MaxLength="12" Name="Aufnr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Order"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="4" Name="Vornr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Oper./Act."
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Ltxa1" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Opr. short text"
-				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_network2operation" Name="VH_network" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_network2operation"
-				ToRole="FromRole_ASS_network2operation"/><NavigationProperty FromRole="ToRole_ASS_order2operation" Name="VH_order" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_order2operation"
-				ToRole="FromRole_ASS_order2operation"/></EntityType>
+				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_order2operation" Name="VH_order" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_order2operation"
+				ToRole="FromRole_ASS_order2operation"/><NavigationProperty FromRole="ToRole_ASS_network2operation" Name="VH_network" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_network2operation"
+				ToRole="FromRole_ASS_network2operation"/></EntityType>
 			<EntityType Name="VH_cause" sap:content-version="1"><Key><PropertyRef Name="Grund"/><PropertyRef Name="Aufnr"/></Key><Property MaxLength="4" Name="Grund" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Reason"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="Aufnr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Order"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="30" Name="Grdtx" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Description"
-				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_network2cause" Name="VH_network" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_network2cause"
-				ToRole="FromRole_ASS_network2cause"/><NavigationProperty FromRole="ToRole_ASS_order2cause" Name="VH_order" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_order2cause"
-				ToRole="FromRole_ASS_order2cause"/></EntityType>
+				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_order2cause" Name="VH_order" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_order2cause"
+				ToRole="FromRole_ASS_order2cause"/><NavigationProperty FromRole="ToRole_ASS_network2cause" Name="VH_network" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_network2cause"
+				ToRole="FromRole_ASS_network2cause"/></EntityType>
 			<EntityType Name="VH_attendance" sap:content-version="1"><Key><PropertyRef Name="Awart"/></Key><Property MaxLength="4" Name="Awart" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Att./abs. type"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="25" Name="Atext" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="A/A type text"
 				sap:sortable="false" sap:updatable="false"/></EntityType>
@@ -68,19 +65,22 @@
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Approvedhourstxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Rejectedhourstxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Totalhourstxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
+				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Weektxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Week Text"
 				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="FromRole_ASS_header2overview" Name="overviewSet" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_header2overview"
 				ToRole="ToRole_ASS_header2overview"/></EntityType>
-			<EntityType Name="overview" sap:content-version="1"><Key><PropertyRef Name="AttDate"/></Key><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
+			<EntityType Name="overview" sap:content-version="1"><Key><PropertyRef Name="Weekstart"/><PropertyRef Name="Weekend"/><PropertyRef Name="AttDate"/></Key><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
 				sap:sortable="false" sap:updatable="false"/><Property Name="Weekstart" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Date"
 				sap:sortable="false" sap:updatable="false"/><Property Name="Weekend" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Date"
 				sap:sortable="false" sap:updatable="false"/><Property Name="AttDate" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Date"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Datetxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Statustxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Hourstxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
-				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="FromRole_ASS_overview2detail" Name="detailSet" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_overview2detail"
-				ToRole="ToRole_ASS_overview2detail"/><NavigationProperty FromRole="ToRole_ASS_header2overview" Name="header" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_header2overview"
-				ToRole="FromRole_ASS_header2overview"/></EntityType>
-			<EntityType Name="detail" sap:content-version="1"><Key><PropertyRef Name="Begda"/></Key><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
+				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_header2overview" Name="header" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_header2overview"
+				ToRole="FromRole_ASS_header2overview"/><NavigationProperty FromRole="FromRole_ASS_overview2detail" Name="detailSet" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_overview2detail"
+				ToRole="ToRole_ASS_overview2detail"/></EntityType>
+			<EntityType Name="detail" sap:content-version="1"><Key><PropertyRef Name="Weekstart"/><PropertyRef Name="Weekend"/><PropertyRef Name="Begda"/></Key><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
+				sap:sortable="false" sap:updatable="false"/><Property Name="Weekstart" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Week Start"
+				sap:sortable="false" sap:updatable="false"/><Property Name="Weekend" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Week Start"
 				sap:sortable="false" sap:updatable="false"/><Property Name="Begda" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Date"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="3" Name="Seqnr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="IT record no."
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Timetxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
@@ -116,8 +116,7 @@
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="3" Name="Status" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Record Status"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="40" Name="Statustxt" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Char"
 				sap:sortable="false" sap:updatable="false"/><Property MaxLength="1" Name="Hda" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="HDA" sap:sortable="false"
-				sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_overview2detail" Name="overviewSet" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_overview2detail"
-				ToRole="FromRole_ASS_overview2detail"/></EntityType>
+				sap:updatable="false"/></EntityType>
 			<Association Name="ASS_network2cause" sap:content-version="1"><End Multiplicity="0..1" Role="FromRole_ASS_network2cause" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_network"/><End Multiplicity="*" Role="ToRole_ASS_network2cause" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_cause"/><ReferentialConstraint>
 					<Principal Role="FromRole_ASS_network2cause"><PropertyRef Name="Aufnr"/></Principal>
 					<Dependent Role="ToRole_ASS_network2cause"><PropertyRef Name="Grund"/></Dependent></ReferentialConstraint>
@@ -127,12 +126,12 @@
 					<Dependent Role="ToRole_ASS_network2operation"><PropertyRef Name="Vornr"/></Dependent></ReferentialConstraint>
 			</Association>
 			<Association Name="ASS_overview2detail" sap:content-version="1"><End Multiplicity="1" Role="FromRole_ASS_overview2detail" Type="ZHTR_ETIME_EMPLOYEE_SRV.overview"/><End Multiplicity="*" Role="ToRole_ASS_overview2detail" Type="ZHTR_ETIME_EMPLOYEE_SRV.detail"/><ReferentialConstraint>
-					<Principal Role="FromRole_ASS_overview2detail"><PropertyRef Name="AttDate"/></Principal>
-					<Dependent Role="ToRole_ASS_overview2detail"><PropertyRef Name="Begda"/></Dependent></ReferentialConstraint>
+					<Principal Role="FromRole_ASS_overview2detail"><PropertyRef Name="Weekend"/><PropertyRef Name="Weekstart"/><PropertyRef Name="AttDate"/></Principal>
+					<Dependent Role="ToRole_ASS_overview2detail"><PropertyRef Name="Weekend"/><PropertyRef Name="Weekstart"/><PropertyRef Name="Begda"/></Dependent></ReferentialConstraint>
 			</Association>
-			<Association Name="ASS_header2overview" sap:content-version="1"><End Multiplicity="1" Role="FromRole_ASS_header2overview" Type="ZHTR_ETIME_EMPLOYEE_SRV.header"/><End Multiplicity="*" Role="ToRole_ASS_header2overview" Type="ZHTR_ETIME_EMPLOYEE_SRV.overview"/><ReferentialConstraint>
-					<Principal Role="FromRole_ASS_header2overview"><PropertyRef Name="Weekend"/><PropertyRef Name="Weekstart"/></Principal>
-					<Dependent Role="ToRole_ASS_header2overview"><PropertyRef Name="Weekend"/><PropertyRef Name="Weekstart"/></Dependent></ReferentialConstraint>
+			<Association Name="ASS_header2overview" sap:content-version="1"><End Multiplicity="0..1" Role="FromRole_ASS_header2overview" Type="ZHTR_ETIME_EMPLOYEE_SRV.header"/><End Multiplicity="*" Role="ToRole_ASS_header2overview" Type="ZHTR_ETIME_EMPLOYEE_SRV.overview"/><ReferentialConstraint>
+					<Principal Role="FromRole_ASS_header2overview"><PropertyRef Name="Weekstart"/><PropertyRef Name="Weekend"/></Principal>
+					<Dependent Role="ToRole_ASS_header2overview"><PropertyRef Name="Weekstart"/><PropertyRef Name="Weekend"/></Dependent></ReferentialConstraint>
 			</Association>
 			<Association Name="ASS_order2operation" sap:content-version="1"><End Multiplicity="0..1" Role="FromRole_ASS_order2operation" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_order"/><End Multiplicity="*" Role="ToRole_ASS_order2operation" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_operation"/><ReferentialConstraint>
 					<Principal Role="FromRole_ASS_order2operation"><PropertyRef Name="Aufnr"/></Principal>
