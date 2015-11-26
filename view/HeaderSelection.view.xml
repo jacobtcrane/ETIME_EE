@@ -1,0 +1,17 @@
+<core:View xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified" controllerName="com.transfieldservices.view.HeaderSelection" viewName="header" id="header" height="100px">
+	<!--<Page>-->
+		<!--<content>-->
+	<l:VerticalLayout>
+		<l:content>
+			<u:CalendarDateInterval id="calendar" days="7" select="handleCalendarSelect"/>
+			<!--<l:HorizontalLayout>-->
+			<!--	<Button press="handleSelectToday" text="Select Today"/>-->
+			<!--	<Label text="Selected Date (yyyy-mm-dd):" labelFor="selectedDate" class="labelMarginLeft"/>-->
+			<!--	<Text id="selectedDate" text="No Date Selected" class="labelMarginLeft"/>-->
+			<!--</l:HorizontalLayout>-->
+		</l:content>
+	</l:VerticalLayout>		
+		
+	<!--</content>-->
+	<!--</Page>-->
+</core:View>
