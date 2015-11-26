@@ -1,5 +1,6 @@
 sap.ui.define([
-], function() {
+	"sap/ui/commons/TextView"
+], function(TextView) {
 	"use strict";
 	
 	return sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.HeaderSummary", {
@@ -12,15 +13,41 @@ sap.ui.define([
 		onInit: function() {
 			this.oEventBus = sap.ui.getCore().getEventBus();
 			this.oEventBus.subscribe('HeaderSelection','headDateEvt',this.onDateSelected, this);
+			
+			var rejectedHoursTV = this.byId("__input3");
+			rejectedHoursTV.setSemanticColor(sap.ui.commons.TextViewColor.Critical);
+			rejectedHoursTV.setDesign(sap.ui.commons.TextViewDesign.H5);
+
+			var approvedHoursTV = this.byId("__input2");
+			approvedHoursTV.setSemanticColor(sap.ui.commons.TextViewColor.Positive);
+			approvedHoursTV.setDesign(sap.ui.commons.TextViewDesign.H5);
+			
+			var panel = this.byId("panel");
+			panel.setBackgroundDesign(sap.m.BackgroundDesign.Solid); 
+			
+			var totalhoursTV = this.byId("__input1");
+			totalhoursTV.setDesign(sap.ui.commons.TextViewDesign.Standard);
+
+			var weekTV = this.byId("__input0");
+			weekTV.setDesign(sap.ui.commons.TextViewDesign.H4);
+			
+			this.oFormatYyyymmdd = sap.ui.core.format.DateFormat.getInstance({pattern: "yyyy-MM-dd"});
 		},
 
 		onDateSelected: function(sChannel, sEvent, oData) {
-			// this.getView().byId('')
-			// var oComponent = this.getOwnerComponent();
-			// var date = oComponent.getModel('headDate');
-			if(oData != null){
+			var startDate = null; var endDate = null; var sEntityPath = null; var tmpDate = null;
+			// startDate = oData[0].getStartDate();
+			startDate = new Date(oData);
+			var startDateStr = this.oFormatYyyymmdd.format(startDate);
+			// tmpDate = startDate;
+			// tmpDate = tmpDate.setDate(startDate.getDate() + 7);
+			// endDate = new Date(tmpDate);
+			// var endDateStr = this.oFormatYyyymmdd.format(endDate);
+			// endDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
+			sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')';
+			if(sEntityPath != null){
 				// var sEntityPath = "/" + date;
-				this.bindView(oData);                         
+				this.bindView(sEntityPath);                         
 			}
 		},
 
@@ -28,7 +55,8 @@ sap.ui.define([
 		var oView = this.getView();
 		
 		oView.bindElement(sEntityPath); 
-
+		// var model = oView.getModel();
+		// var data = oView.getModel().getData(sEntityPath);
 		//Check if the data is already on the client
 		if(!oView.getModel().getData(sEntityPath)) {
 
@@ -42,14 +70,38 @@ sap.ui.define([
 			}, this));
 		}
 	},
+	
+	showEmptyView : function () {
+		// this.getRouter().myNavToWithoutHash({ 
+		// 	currentView : this.getView(),
+		// 	targetViewName : "com.transfieldservices.view.NotFound",
+		// 	targetViewType : "XML"
+		// });
+	},
+	
+	getEventBus : function () {
+		return sap.ui.getCore().getEventBus();
+	},
+	
+	getRouter : function () {
+		return sap.ui.core.UIComponent.getRouterFor(this);
+	},
+	
+	fireDetailChanged : function (sEntityPath) {
+		this.getEventBus().publish("HeaderSummary", "Changed", { sEntityPath : sEntityPath });
+	},
+
+	fireDetailNotFound : function () {
+		this.getEventBus().publish("HeaderSummary", "NotFound");
+	},
 	/**
 	 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
 	 * This hook is the same one that SAPUI5 controls get after being rendered.
 	 * @memberOf com.transfieldservices.view.HeaderSummary
 	 */
-	//	onAfterRendering: function() {
-	//
-	//	},
+		// onAfterRendering: function() {
+	
+		// },
 
 	/**
 	 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.

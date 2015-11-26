@@ -2,10 +2,13 @@
 	controllerName="com.transfieldservices.view.Master"
 	displayBlock="true"
 	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
-	<Page
-		id="master1Page"
-		title="{i18n>master1Title}">
+	<Page id="master1Page" title="{i18n>master1Title}">
+		<!--<headerContent>-->
+		<!--</headerContent>-->
 		<subHeader>
 			<Bar id="master1SearchBar">
 				<contentMiddle>
@@ -20,9 +23,10 @@
 				</contentMiddle>
 			</Bar>
 		</subHeader>
+		<!--<l:VerticalLayout>-->
 		<content>
-			<mvc:XMLView displayBlock="true" height="30%" id="headSelect" viewName="com.transfieldservices.view.HeaderSelection"/>
-			<mvc:XMLView displayBlock="true" height="30%" id="headSummary" viewName="com.transfieldservices.view.HeaderSummary"/>
+			<mvc:XMLView displayBlock="true" height="140px" id="headSelect" viewName="com.transfieldservices.view.HeaderSelection"/>
+			<mvc:XMLView displayBlock="true" height="100px" id="headSummary" viewName="com.transfieldservices.view.HeaderSummary"/>
 			<List
 				id="master1List"
 				items="{/overviewSet}"
@@ -38,15 +42,14 @@
 						press="onSelect" 
 						title="{Datetxt}">
 						<attributes>
-							<ObjectAttribute 
-								text="{Hourstxt}"/>
-							<ObjectAttribute 
-								text="{Statustxt}"/>
+							<ObjectAttribute text="{Hourstxt}"/>
+							<ObjectAttribute text="{Statustxt}"/>
 						</attributes>
 					</ObjectListItem>
 				</items>
 			</List>
 		</content>
+		<!--</l:VerticalLayout>-->
 		<footer>
 			<Toolbar>
 			</Toolbar>

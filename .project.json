@@ -17,6 +17,9 @@
     },
     "/view/Welcome.view.xml": {
       "entitySet": "UNBINDKEY"
+    },
+    "/view/HeaderSummary.view.xml": {
+      "entitySet": "headerSet"
     }
   },
   "generation": [
