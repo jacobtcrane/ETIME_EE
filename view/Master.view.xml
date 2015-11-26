@@ -1,4 +1,3 @@
-
 <mvc:View
 	controllerName="com.transfieldservices.view.Master"
 	displayBlock="true"
@@ -22,6 +21,8 @@
 			</Bar>
 		</subHeader>
 		<content>
+			<mvc:XMLView displayBlock="true" height="30%" id="headSelect" viewName="com.transfieldservices.view.HeaderSelection"/>
+			<mvc:XMLView displayBlock="true" height="30%" id="headSummary" viewName="com.transfieldservices.view.HeaderSummary"/>
 			<List
 				id="master1List"
 				items="{/overviewSet}"

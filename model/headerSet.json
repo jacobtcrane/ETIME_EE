@@ -1,7 +1,7 @@
 [{
 	"Pernr": "00000001",
 	"Weekstart": "/Date(1446933600000)/",
-	"Weekend": "/Date(1447452000000)/",
+	"Weekend": "/Date(1446933600000)/",
 	"Approvedhourstxt": "8.0 Hours Approved",
 	"Rejectedhourstxt": "9.5 Hours Rejected",
 	"Totalhourstxt": "25.5 Hours"

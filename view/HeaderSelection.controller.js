@@ -15,9 +15,12 @@ sap.ui.define(['sap/ui/core/mvc/Controller','sap/ui/unified/DateRange','com/tran
 			// this._updateText(oCalendar);
 			// var oHeaderSummary = new HeaderSummary();
 			// oHeaderSummary.bindView(oCalendar.getSelectedDates()[0].startDate);
-			 var oComponent = this.getOwnerComponent();
-			 oComponent.setModel(oCalendar.getSelectedDates()[0].startDate,'headDate');
-			 var odataParam = '{ startdate:"'+ oCalendar.getSelectedDates() +'"}';
+			 //var oComponent = this.getOwnerComponent();
+			 //oComponent.setModel(oCalendar.getSelectedDates()[0].startDate,'headDate');
+			 var oRange = oCalendar.getSelectedDates();
+			 var startDate = this.oFormatYyyymmdd.format(oRange[0].getStartDate());
+			 var endDate = this.oFormatYyyymmdd.format(oRange[0].getStartDate());
+			 var odataParam = '/headerSet(Weekstart=datetime\'' + startDate + 'T22:00:00\',Weekend=datetime\'' + endDate + 'T22:00:00\')';
 			 this.oEventBus.publish('HeaderSelection','headDateEvt',odataParam);
 			 
 		},

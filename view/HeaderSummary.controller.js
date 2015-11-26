@@ -16,16 +16,17 @@ sap.ui.define([
 
 		onDateSelected: function(sChannel, sEvent, oData) {
 			// this.getView().byId('')
-			var oComponent = this.getOwnerComponent();
-			var date = oComponent.getModel('headDate');
-			if(date != null){
-				var sEntityPath = "/" + date;
-				this.bindView(date);                         
+			// var oComponent = this.getOwnerComponent();
+			// var date = oComponent.getModel('headDate');
+			if(oData != null){
+				// var sEntityPath = "/" + date;
+				this.bindView(oData);                         
 			}
 		},
 
 	bindView : function (sEntityPath) {
 		var oView = this.getView();
+		
 		oView.bindElement(sEntityPath); 
 
 		//Check if the data is already on the client
