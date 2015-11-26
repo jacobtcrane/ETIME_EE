@@ -78,7 +78,7 @@
 				sap:sortable="false" sap:updatable="false"/><NavigationProperty FromRole="ToRole_ASS_header2overview" Name="header" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_header2overview"
 				ToRole="FromRole_ASS_header2overview"/><NavigationProperty FromRole="FromRole_ASS_overview2detail" Name="detailSet" Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_overview2detail"
 				ToRole="ToRole_ASS_overview2detail"/></EntityType>
-			<EntityType Name="detail" sap:content-version="1"><Key><PropertyRef Name="Weekstart"/><PropertyRef Name="Weekend"/><PropertyRef Name="Begda"/></Key><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
+			<EntityType Name="detail" sap:content-version="1"><Key><PropertyRef Name="Weekstart"/><PropertyRef Name="Weekend"/><PropertyRef Name="Begda"/><PropertyRef Name="Seqnr"/></Key><Property MaxLength="8" Name="Pernr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel No."
 				sap:sortable="false" sap:updatable="false"/><Property Name="Weekstart" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Week Start"
 				sap:sortable="false" sap:updatable="false"/><Property Name="Weekend" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Week Start"
 				sap:sortable="false" sap:updatable="false"/><Property Name="Begda" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Date"
@@ -165,5 +165,4 @@
 					sap:deletable="false" sap:updatable="false"><End EntitySet="VH_orderSet" Role="FromRole_ASS_order2cause"/><End EntitySet="VH_causeSet" Role="ToRole_ASS_order2cause"/></AssociationSet></EntityContainer><atom:link href="http://AUNSWDNWGV01.production.transfieldservices.com:8095/sap/opu/odata/SAP/ZHTR_ETIME_EMPLOYEE_SRV/$metadata" rel="self"
 					xmlns:atom="http://www.w3.org/2005/Atom"/><atom:link href="http://AUNSWDNWGV01.production.transfieldservices.com:8095/sap/opu/odata/SAP/ZHTR_ETIME_EMPLOYEE_SRV/$metadata"
 					rel="latest-version" xmlns:atom="http://www.w3.org/2005/Atom"/></Schema></edmx:DataServices>
-					<!--test-->
 </edmx:Edmx>
