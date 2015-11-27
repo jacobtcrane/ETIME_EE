@@ -27,6 +27,15 @@
         "entryPath": "/test-resources"
       },
       "description": "SAPUI5 Test Resources"
+    },
+    {
+      "path": "/ui5_execute_abap",
+      "target": {
+        "type": "destination",
+        "name": "TSL",
+        "entryPath": "/sap/bc/ui5_ui5"
+      },
+      "description": "TSL"
     }
   ]
 }
