@@ -28,7 +28,7 @@ sap.ui.define([
 			approvedHoursTV.setDesign(sap.ui.commons.TextViewDesign.H5);
 			
 			var panel = this.byId("panel");
-			panel.setBackgroundDesign(sap.m.BackgroundDesign.Solid); 
+			// panel.setBackgroundDesign(sap.m.BackgroundDesign.Solid); 
 			
 			var totalhoursTV = this.byId("__input1");
 			totalhoursTV.setDesign(sap.ui.commons.TextViewDesign.Standard);
