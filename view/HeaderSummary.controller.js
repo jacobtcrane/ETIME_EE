@@ -11,6 +11,11 @@ sap.ui.define([
 	 * @memberOf com.transfieldservices.view.HeaderSummary
 	 */
 		onInit: function() {
+			var oDivider = this.byId("devider");
+			// oDivider.setWidth("1%");
+			oDivider.setHeight(sap.ui.commons.HorizontalDividerHeight.Large);
+			oDivider.setType(sap.ui.commons.HorizontalDividerType.Area);
+			
 			this.oEventBus = sap.ui.getCore().getEventBus();
 			this.oEventBus.subscribe('HeaderSelection','headDateEvt',this.onDateSelected, this);
 			

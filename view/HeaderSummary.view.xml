@@ -22,6 +22,7 @@
 		    </sap.ui.layout.form:SimpleForm>
 	    </content>
 	 </Panel>
+		    <c:HorizontalDivider id="devider" width="100%"></c:HorizontalDivider>
 		<!--</l:content>-->
 	<!--</l:VerticalLayout>-->
 </core:View>
