@@ -1,5 +1,5 @@
 [{
-	"Pernr": "1",
+	"Pernr": "00000001",
 	"Begda": "/Date(1447020000000)/",
 	"Seqnr": "1",
 	"Timetxt": "08:00 - 12:00",
@@ -14,9 +14,11 @@
 	"Ordertxt": "Gardening",
 	"Enote": "This app is crap",
 	"Status": "APV",
-	"Statustxt": "Approved"
+	"Statustxt": "Approved",
+	"Weekstart": "/Date(1446933600000)/",
+	"Weekend": "/Date(1447452000000)/"
 }, {
-	"Pernr": "1",
+	"Pernr": "00000001",
 	"Begda": "/Date(1447020000000)/",
 	"Seqnr": "2",
 	"Timetxt": "12:30 - 16:30",
@@ -30,9 +32,11 @@
 	"Srvord": "12093",
 	"Ordertxt": "Kangaroo Wrasslin'",
 	"Status": "APV",
-	"Statustxt": "Approved"
+	"Statustxt": "Approved",
+	"Weekstart": "/Date(1446933600000)/",
+	"Weekend": "/Date(1447452000000)/"
 }, {
-	"Pernr": "1",
+	"Pernr": "00000001",
 	"Begda": "/Date(1447106400000)/",
 	"Seqnr": "1",
 	"Timetxt": "08:00 - 12:00",
@@ -46,53 +50,7 @@
 	"Srvord": "12092",
 	"Ordertxt": "Gardening",
 	"Status": "REJ",
-	"Statustxt": "Rejected"	
-}, {
-	"Pernr": "1",
-	"Begda": "/Date(1447106400000)/",
-	"Seqnr": "2",
-	"Timetxt": "12:30 - 16:30",
-	"Durationtxt": "4.0 Hours",
-	"Atttxt": "Regular Hours",
-	"Beguz": "PT12H30M00S",
-	"Enduz": "PT16H30M00S",
-	"Costtxt": "Kangaroo Wrasslin'",	
-	"Awart": "1000",
-	"Awarttxt": "Regular Hours",
-	"Srvord": "12093",
-	"Ordertxt": "Kangaroo Wrasslin'",
-	"Status": "REJ",
-	"Statustxt": "Rejected"	
-}, {
-	"Pernr": "1",
-	"Begda": "/Date(1447106400000)/",
-	"Seqnr": "3",
-	"Timetxt": "16:30 - 18:00",
-	"Durationtxt": "4.0 Hours",
-	"Atttxt": "Toxic Exposure",
-	"Beguz": "PT16H30M00S",
-	"Enduz": "PT18H00M00S",
-	"Costtxt": "Mine Decontamination",
-	"Awart": "1200",
-	"Awarttxt": "Toxic Exposure",
-	"Srvord": "12093",
-	"Ordertxt": "Mine Decontamination'",
-	"Status": "REJ",
-	"Statustxt": "Rejected"		
-}, {
-	"Pernr": "1",
-	"Begda": "/Date(1447192800000)/",
-	"Seqnr": "1",
-	"Timetxt": "08:00 - 16:00",
-	"Durationtxt": "8.0 Hours",
-	"Atttxt": "Regular Hours",
-	"Costtxt": "Gardening",
-	"Beguz": "PT08H00M00S",
-	"Enduz": "PT16H00M00S",
-	"Awart": "1000",
-	"Awarttxt": "Regular Hours",
-	"Srvord": "12092",
-	"Ordertxt": "Gardening",
-	"Status": "SUB",
-	"Statustxt": "Submitted"		
+	"Statustxt": "Rejected",
+	"Weekstart": "/Date(1446933600000)/",
+	"Weekend": "/Date(1447452000000)/"
 }]

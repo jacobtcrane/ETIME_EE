@@ -27,7 +27,7 @@ sap.ui.define([
 			approvedHoursTV.setSemanticColor(sap.ui.commons.TextViewColor.Positive);
 			approvedHoursTV.setDesign(sap.ui.commons.TextViewDesign.H5);
 			
-			var panel = this.byId("panel");
+			// var panel = this.byId("panel");
 			// panel.setBackgroundDesign(sap.m.BackgroundDesign.Solid); 
 			
 			var totalhoursTV = this.byId("__input1");
@@ -50,6 +50,8 @@ sap.ui.define([
 			// var endDateStr = this.oFormatYyyymmdd.format(endDate);
 			// endDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
 			sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')';
+			// sEntityPath = '/headerSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr + 'T22:00:00\'';
+
 			if(sEntityPath != null){
 				// var sEntityPath = "/" + date;
 				this.bindView(sEntityPath);                         
@@ -63,17 +65,17 @@ sap.ui.define([
 		// var model = oView.getModel();
 		// var data = oView.getModel().getData(sEntityPath);
 		//Check if the data is already on the client
-		if(!oView.getModel().getData(sEntityPath)) {
+		// if(!oView.getModel().getData(sEntityPath)) {
 
-			// Check that the entity specified was found
-			oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
-				var oData = oView.getModel().getData(sEntityPath);
-				if (!oData) {
-					this.showEmptyView();
-					this.fireDetailNotFound();
-				}
-			}, this));
-		}
+		// 	// Check that the entity specified was found
+		// 	oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
+		// 		var oData = oView.getModel().getData(sEntityPath);
+		// 		if (!oData) {
+		// 			this.showEmptyView();
+		// 			this.fireDetailNotFound();
+		// 		}
+		// 	}, this));
+		// }
 	},
 	
 	showEmptyView : function () {

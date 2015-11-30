@@ -5,12 +5,11 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 		this.oFormatYyyymmdd = sap.ui.core.format.DateFormat.getInstance({pattern: "yyyy-MM-dd"});
 		
 		var oEventBus = this.getEventBus();
-
-		this.getView().byId("master1List").attachEventOnce("updateFinished", function() {
-			this.oInitialLoadFinishedDeferred.resolve();
-			oEventBus.publish("Master", "InitialLoadFinished", { oListItem : this.getView().byId("master1List").getItems()[0] });
-    		this.getRouter().detachRoutePatternMatched(this.onRouteMatched, this);
-		}, this);
+		// this.getView().byId("master1List").attachEventOnce("updateFinished", function() {
+		// 	this.oInitialLoadFinishedDeferred.resolve();
+		// 	oEventBus.publish("Master", "InitialLoadFinished", { oListItem : this.getView().byId("master1List").getItems()[0] });
+  //  		this.getRouter().detachRoutePatternMatched(this.onRouteMatched, this);
+		// }, this);
 
 		//On phone devices, there is nothing to select from the list. There is no need to attach events.
 		if (sap.ui.Device.system.phone) {
@@ -33,7 +32,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 			 //var startDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
 			 //var endDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
 			 //var odataParam = 'Weekstart=datetime\'' + startDate + 'T22:00:00\',Weekend=datetime\'' + endDate + 'T22:00:00\'';
-			var sEntityPath = '/overviewSet?$filter=Weekstart ge datetime\'' + startDateStr + 'T22:00:00\' and Weekend le datetime\'' + startDateStr + 'T22:00:00\'';
+			var sEntityPath = '/overviewSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr + 'T22:00:00\'';
 			if(sEntityPath != null){
 				// var sEntityPath = "/" + date;
 				this.bindView(sEntityPath);                         
@@ -58,20 +57,33 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 	
 	bindView : function (sEntityPath) {
 		var oView = this.getView();
-		oView.bindElement(sEntityPath); 
+		var list = this.getView().byId("master1List");
+
+        var template = new sap.m.ObjectListItem({
+					// id : "master1ListItem",
+                    type: "{device>/listItemType}",
+                    press: "onSelect",
+                    title:"{Datetxt}",
+                    attributes: [new sap.m.ObjectAttribute({text: "{Hourstxt}"}),
+                			new sap.m.ObjectAttribute({text: "{Statustxt}"})]
+ 
+             });
+             
+		list.bindItems(sEntityPath,template);         
+		// oView.bindElement(sEntityPath); 
 
 		//Check if the data is already on the client
-		if(!oView.getModel().getData(sEntityPath)) {
+		// if(!oView.getModel().getData(sEntityPath)) {
 
-			// Check that the entity specified was found
-			oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
-				var oData = oView.getModel().getData(sEntityPath);
-				if (!oData) {
-					this.showEmptyView();
-					this.fireDetailNotFound();
-				}
-			}, this));
-		}
+		// 	// Check that the entity specified was found
+		// 	oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
+		// 		var oData = oView.getModel().getData(sEntityPath);
+		// 		if (!oData) {
+		// 			this.showEmptyView();
+		// 			this.fireDetailNotFound();
+		// 		}
+		// 	}, this));
+		// }
 	},
 	
 	onRouteMatched : function(oEvent) {
@@ -105,16 +117,20 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 		this.getView().byId("master1List").removeSelections();
 	},
 
-	onSearch : function() {
+	onSearch : function(oEvent) {
 		// Add search filter
-		var filters = [];
-		var searchString = this.getView().byId("master1SearchField").getValue();
-		if (searchString && searchString.length > 0) {
-			filters = [ new sap.ui.model.Filter("", sap.ui.model.FilterOperator.Contains, searchString) ];
-		}
+					// add filter for search
+			var aFilters = [];
+			var sQuery = oEvent.getSource().getValue();
+			if (sQuery && sQuery.length > 0) {
+				var filter = new sap.ui.model.Filter("overviewFilt", sap.ui.model.FilterOperator.Contains, sQuery);
+				aFilters.push(filter);
+			}
 
-		// Update list binding
-		this.getView().byId("master1List").getBinding("items").filter(filters);
+			// update list binding
+			var list = this.getView().byId("master1List");
+			var binding = list.getBinding("items");
+			binding.filter(aFilters, "Application");
 	},
 
 	onSelect : function(oEvent) {
@@ -147,6 +163,6 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 	},
 	
 	onAfterRendering: function() {
-		this.bindView('');
+		// this.bindView('');
 	}
 });

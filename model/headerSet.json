@@ -5,13 +5,13 @@
 	"Approvedhourstxt": "8.0 Hours Approved",
 	"Rejectedhourstxt": "9.5 Hours Rejected",
 	"Totalhourstxt": "25.5 Hours",
-	"Weektxt": "November 8 - 8"
+	"Weektxt": "November 8 - 14"
 }, {
 	"Pernr": "00000001",
-	"Weekstart": "/Date(1447020000000)/",
-	"Weekend": "/Date(1447020000000)/",
+	"Weekstart": "/Date(1447538400000)/",
+	"Weekend": "/Date(1447538400000)/",
 	"Approvedhourstxt": "8.0 Hours Approved",
 	"Rejectedhourstxt": "9.5 Hours Rejected",
 	"Totalhourstxt": "25.5 Hours",
-	"Weektxt": "November 9 - 9"
+	"Weektxt": "November 15 - 21"
 }]
