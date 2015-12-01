@@ -27,11 +27,6 @@
       "templateId": "ui5template.fioriMasterMasterDetail",
       "templateVersion": "1.4.0",
       "dateTimeStamp": "Tue, 24 Nov 2015 12:31:43 GMT"
-    },
-    {
-      "templateId": "ui5template.basicSAPUI5ApplicationComponent",
-      "templateVersion": "1.4.0",
-      "dateTimeStamp": "Mon, 30 Nov 2015 12:16:38 GMT"
     }
   ],
   "translation": {

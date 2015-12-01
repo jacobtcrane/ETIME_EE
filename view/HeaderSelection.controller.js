@@ -41,7 +41,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller','sap/ui/unified/DateRange','sap/ui/c
 				this.getView().addDependent(this._oPopover);
 			}
 
-				var pop = this.getView().byId("popover_id");
+				var pop = oView.byId("popover_id");
 				pop.setTitle(selDateStr);
 			// delay because addDependent will do a async rerendering and the popover will immediately close without it
 			var oCalendar = oEvent.getSource();
