@@ -4,7 +4,7 @@
 	<l:VerticalLayout>
 		<l:content>
 			<!--<u:CalendarDateInterval id="calendar" days="7" select="handleCalendarSelect" validationSuccess="test"/>-->
-			<me:Calendar id="calendar_old" width="100%" changeCurrentDate="handleCalendarSelect">
+			<me:Calendar id="calendar_old" width="100%" changeCurrentDate="handleCalendarSelect" tapOnDate="handleDaySelect">
 				
 			</me:Calendar>
 		</l:content>

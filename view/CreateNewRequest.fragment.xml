@@ -1,0 +1,24 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Popover
+		id = "popover_id"
+		class="sapUiContentPadding"
+		placement="Bottom">
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button
+					id="attendance"
+					text="New Attendance"
+					press="handleNewAttPress" />
+				<Button
+					id="allowance"
+					text="New Allowance"
+					press="handleNewAllPress" />
+			</Toolbar>
+		</footer>
+		<!--<Image src="{ProductPicUrl}" width="15em" densityAware="false" />-->
+		<Text text="Do you want to create an Attendance or Allowance Request?" />
+	</Popover>
+</core:FragmentDefinition>

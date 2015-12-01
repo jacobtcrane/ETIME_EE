@@ -108,7 +108,7 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 		this.setModel(oDeviceModel, "device");
 
 		this.getRouter().initialize();
-
+	this.setModel(oModel,"theOdataModel");
 	},
 
 	_startMockServer : function (sServiceUrl) {
