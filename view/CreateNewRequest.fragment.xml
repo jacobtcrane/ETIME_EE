@@ -1,24 +1,44 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core">
 	<Popover
-		id = "popover_id"
+		title = "New Request"
 		class="sapUiContentPadding"
 		placement="Bottom">
+		<!--<NavContainer id="navCon">-->
+		<!--	<Page id="options">-->
+  <!--  			<headerContent/>-->
+		<!--        <subHeader/>-->
+		<!--		<content>-->
+		<!--	        <VBox>-->
+  <!--                      <Text text="Do you want to create an Attendance or Allowance Request?" />-->
+  <!--  			    </VBox>-->
+		<!--        </content>-->
+		<!--  		<footer>-->
+		<!--	        <Toolbar>-->
+		<!--		        <ToolbarSpacer/>-->
+  <!--                      <Button text="New Attendance" press="handleNewAttPress" />-->
+		<!--           		<Button	text="New Allowance" press="handleNewAllPress" />-->
+		<!--	        </Toolbar>-->
+		<!--        </footer>-->
+		<!--	</Page>-->
+		<!--	<Page id="detail" showNavButton="true" navButtonPress="onNavBack" title="Request">-->
+		<!--	    <mvc:XMLView displayBlock="true" height="100%" id="detailInput" viewName="com.transfieldservices.view.Detail"/>-->
+		<!--	</Page>-->
+		<!--</NavContainer>-->
+		
+		
+		
+		
+		
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-				<Button
-					id="attendance"
-					text="New Attendance"
-					press="handleNewAttPress" />
-				<Button
-					id="allowance"
-					text="New Allowance"
-					press="handleNewAllPress" />
+                        <Button text="New Attendance" press="handleNewAttPress" />
+		           		<Button	text="New Allowance" press="handleNewAllPress" />
 			</Toolbar>
 		</footer>
-		<!--<Image src="{ProductPicUrl}" width="15em" densityAware="false" />-->
 		<Text text="Do you want to create an Attendance or Allowance Request?" />
 	</Popover>
 </core:FragmentDefinition>

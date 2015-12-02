@@ -10,9 +10,10 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
             var oEventBus = this.getEventBus();
 			oEventBus.subscribe("Master2", "LoadFinished", this.onMasterLoaded, this);
 		}
-
-		this.getRouter().attachRouteMatched(this.onRouteMatched, this);
-
+		
+        if (this.getRouter() != null){
+		    this.getRouter().attachRouteMatched(this.onRouteMatched, this);
+        }
 	},
 
 	onMasterLoaded :  function (sChannel, sEvent, oData) {
@@ -24,7 +25,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 
 	onRouteMatched : function(oEvent) {
 		var oParameters = oEvent.getParameters();
-
+        var from = oParameters.name;
 		jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function () {
 
 			// When navigating in the Detail page, update the binding context 
@@ -36,6 +37,25 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
                 return;
             }
 		}, this));
+		
+		if ( oParameters.name === "newdetail") { 
+
+		   	//create new record
+		    var oSelectedDate = new Date(oParameters.arguments.entity);
+			var oNewRequest = {	Seqnr: "0", 
+			                    Atttxt: oParameters.arguments.entity,
+			                    Begda: oSelectedDate, 
+			                    Weekstart: oSelectedDate, 
+			                    Weekend: oSelectedDate,
+			                    Statustxt: "New"};
+			var oModel = this.getView().getModel( "theOdataModel" );
+			var oContext = oModel.createEntry("detailSet", oNewRequest);
+
+    // 		var sEntityPath = "/" + oParameters.arguments.entity;
+    // 		this.bindView(sEntityPath);
+            var oView = this.getView();
+		    oView.setBindingContext(oContext); 
+		}
 	},
 
 	bindView : function (sEntityPath) {
@@ -59,7 +79,42 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		}
 
 	},
-
+    
+    onBeguzEntered : function(oEvent){
+        var oBeguz = oEvent.getParameters().dateValue;
+        var oEnduz =  this.getView().byId("enduz").getDateValue();
+        oBeguz.setFullYear(1970);
+        oBeguz.setMonth(0);
+        oBeguz.setDate(1);
+        if (oEnduz != null && oEnduz > oBeguz){
+            this.getTimeDiff(oEnduz,oBeguz);
+        }else{
+            this.getView().byId("objectHeader").setNumber('');
+        }
+    },
+    
+    onEnduzEntered : function(oEvent){
+        var oEnduz = oEvent.getParameters().dateValue;
+        var oBeguz =  this.getView().byId("beguz").getDateValue();
+        oEnduz.setFullYear(1970);
+        oEnduz.setMonth(0);
+        oEnduz.setDate(1);
+        if (oBeguz != null && oEnduz > oBeguz){
+            this.getTimeDiff(oEnduz,oBeguz);
+        }else{
+            this.getView().byId("objectHeader").setNumber('');
+        }
+    },
+    
+    getTimeDiff: function(oEnduz, oBeguz){
+        var oTimeDiff = this.getView().byId("objectHeader");
+            var diffTime = oEnduz.getTime() - oBeguz.getTime();
+            var minutes = ((diffTime / 1000) / 60) % 60;
+            var hours = (((diffTime / 1000) / 60) / 60) % 60;
+            var strTime = hours + ':' + minutes + ' Hours';
+            oTimeDiff.setNumber(strTime);
+    },
+    
 	showEmptyView : function () {
 		this.getRouter().myNavToWithoutHash({ 
 			currentView : this.getView(),

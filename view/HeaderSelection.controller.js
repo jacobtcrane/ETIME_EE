@@ -1,4 +1,7 @@
-sap.ui.define(['sap/ui/core/mvc/Controller','sap/ui/unified/DateRange','sap/ui/core/Fragment','com/transfieldservices/view/HeaderSummary.controller'],
+sap.ui.define(['sap/ui/core/mvc/Controller',
+                'sap/ui/unified/DateRange',
+                'sap/ui/core/Fragment',
+                'com/transfieldservices/view/HeaderSummary.controller'],
 	function(Controller, DateRange, HeaderSummary,Fragment) {
 	"use strict";
 
@@ -21,28 +24,26 @@ sap.ui.define(['sap/ui/core/mvc/Controller','sap/ui/unified/DateRange','sap/ui/c
 		},
 		
 		handleDaySelect: function(oEvent){
-			var oSelectedDate = new Date(oEvent.getParameters().date);
-			var selDateStr = this.oFormatYyyymmdd.format(oSelectedDate);
+			this.oSelectedDate = oEvent.getParameters().date;//new Date(oEvent.getParameters().date);
+// 			var selDateStr = this.oFormatYyyymmdd.format(this.oSelectedDate);
 
 			var oView = this.getView();
 			// var sEntityPath = '/headerSet(Weekstart=datetime\'' + selDateStr + 'T22:00:00\',Weekend=datetime\'' + selDateStr + 'T22:00:00\')';
 			// var oData = oView.getModel().getData(sEntityPath);
 			
-			//create new record
-			// var headerSet = oModel.getProperty("/headerSet",this);
-			var oNewRequest = {	Seqnr: "0", Begda: oSelectedDate , Weekstart: oSelectedDate, Weekend: oSelectedDate};
-			var oModel = this.getView().getModel( "theOdataModel" );
-			oModel.createEntry("/detailSet", oNewRequest);
-
 			// create popover
 			if (! this._oPopover) {
 				this._oPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.view.CreateNewRequest", this);
-				// this._oPopover.title = "Test";
 				this.getView().addDependent(this._oPopover);
 			}
 
+<<<<<<< HEAD
+				// var pop = oView.byId("popover_id");
+				// pop.setTitle(selDateStr);
+=======
 				var pop = oView.byId("popover_id");
 				pop.setTitle(selDateStr);
+>>>>>>> 8c137319d10e75a8e330f1ec6fca97289fe63fcf
 			// delay because addDependent will do a async rerendering and the popover will immediately close without it
 			var oCalendar = oEvent.getSource();
 			jQuery.sap.delayedCall(0, this, function () {
@@ -63,8 +64,37 @@ sap.ui.define(['sap/ui/core/mvc/Controller','sap/ui/unified/DateRange','sap/ui/c
 		onAfterRendering: function() {
 			 var oNewDate = this.oCalendar.getCurrentDate();
 			 this.oEventBus.publish('HeaderSelection','headDateEvt',oNewDate);
-		}
-
+		},
+	
+	    getRouter : function () {
+		    return sap.ui.core.UIComponent.getRouterFor(this);
+	    },
+        //Attendance
+        handleNewAttPress: function(oEvent){
+            this._oPopover.close();
+            
+            this.getRouter().myNavToWithoutHash({ 
+			    currentView : this.getView(),
+			    targetViewName : "com.transfieldservices.view.Detail",
+			    targetViewType : "XML",
+			    transition: "slide"
+		    });
+            // If we're on a phone device, include nav in history
+		    var bReplace = jQuery.device.is.phone ? false : true;
+		    this.getRouter().navTo("newdetail", {
+			    from: "newreq",
+			    entity: this.oSelectedDate
+		    }, bReplace);
+// 			var oNavCon = sap.ui.core.Fragment.byId("popover", "navCon");
+// 			var oDetailPage = sap.ui.core.Fragment.byId("popover", "detail");
+// 			oNavCon.to(oDetailPage);
+// 			oDetailPage.bindElement(this.oContext.getPath());
+        },
+        
+        //Allowance
+        handleNewAllPress: function(oEvent){
+        
+        }
 	});
 
 	return CalendarDateIntervalBasicController;

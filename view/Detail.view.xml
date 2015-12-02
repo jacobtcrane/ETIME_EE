@@ -1,7 +1,7 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns="sap.m" controllerName="com.transfieldservices.view.Detail">
 	<Page id="detailPage" showNavButton="{device&gt;/isPhone}" navButtonPress="onNavBack" class="sapUiFioriObjectPage" title="Timesheet Entry">
 		<content>
-			<ObjectHeader title="{Timetxt}" number="{Durationtxt}" numberUnit="">
+			<ObjectHeader id="objectHeader" title="{Timetxt}" number="{Durationtxt}" numberUnit="">
 				<attributes>
 					<ObjectAttribute text="{Atttxt}"/>
 				</attributes>
@@ -13,17 +13,35 @@
 				<items>
 					<IconTabFilter key="Details" icon="sap-icon://hint">
 						<content>
-							<f:SimpleForm id="detailForm" minWidth="1024" maxContainerCols="2" editable="false" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1">
+							<f:SimpleForm id="detailForm" minWidth="1024" maxContainerCols="2" editable="false" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="4" emptySpanM="4" columnsL="2" columnsM="2">
 								<f:content>
-									<Label id="lblStartTime" text="Start Time"/>
-									<Text id="text1" text="{Beguz}"/>
-									<Label id="label2" text="End Time"/>
-									<Text id="text2" text="{Enduz}"/>
+								<l:HorizontalLayout class="sapUiSmallMargin" >
+								    <l:VerticalLayout class="sapUiSmallMarginEnd">
+							    		<l:content>
+									    <Label id="lblStartTime" text="Start Time"/>
+									    <DateTimeInput id="beguz" value="{Beguz,formatter:'com.transfieldservices.utils.Conversions.time'}" width="100px" type="Time" placeholder="Enter Time ..."	class="sapUiSmallMarginBottom" change="onBeguzEntered"/>
+							    		</l:content>
+								    </l:VerticalLayout>
+								    <l:VerticalLayout class="sapUiSmallMarginEnd">
+							    		<l:content>
+    									<Label id="label2" text="End Time"/>
+	    								<DateTimeInput id="enduz" value="{Enduz,formatter:'com.transfieldservices.utils.Conversions.time'}" width="100px" type="Time" placeholder="Enter Time ..."	class="sapUiSmallMarginBottom"  change="onEnduzEntered"/>
+							    		</l:content>
+								    </l:VerticalLayout>
+								    <!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
+    								<!--    <l:content>-->
+	    							<!--	<Text text=" "/>-->
+	    							<!--	<Text id="timediff" class="sapUiSmallMarginEnd"/>-->
+		    						<!--	</l:content>-->
+								    <!--</l:VerticalLayout>-->
+            					</l:HorizontalLayout>
+									<!--<Input id="text1" text="{Beguz}"/>-->
+									<!--<Input id="text2" text="{Enduz}"/>-->
 									<!--<Label id="label3" text="Previous Day Indicator"/>-->
 									<CheckBox text="Previous Day Indicator" selected="{Vtken}"/>
 									<!--<Text id="text3" text="{Vtken}"/>-->
 									<Label id="label4" text="Work Order"/>
-									<Text id="text4" text="{Srvord}"/>									
+									<Input id="text4" text="{Srvord}"/>									
 								</f:content>
 							</f:SimpleForm>
 						</content>

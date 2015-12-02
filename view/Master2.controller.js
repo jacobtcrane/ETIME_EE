@@ -117,7 +117,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 		// If we're on a phone device, include nav in history
 		var bReplace = jQuery.device.is.phone ? false : true;
 		this.getRouter().navTo("detail", {
-			from: "master",
+			from: "master02",
 			entity: oItem.getBindingContext().getPath().substr(1)
 		}, bReplace);
 	},

@@ -25,16 +25,9 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 		onDateSelected: function(sChannel, sEvent, oData) {
 			var startDate = new Date(oData);
 			var startDateStr = this.oFormatYyyymmdd.format(startDate);
-			// this.getView().byId('')
-			// var oComponent = this.getOwnerComponent();
-			// var date = oComponent.getModel('headDate');
-			// oData = '/overviewSet(' + oData + ',AttDate=datetime\'0000-00-00T00:00:00\')';
-			 //var startDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
-			 //var endDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
-			 //var odataParam = 'Weekstart=datetime\'' + startDate + 'T22:00:00\',Weekend=datetime\'' + endDate + 'T22:00:00\'';
 			var sEntityPath = '/overviewSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr + 'T22:00:00\'';
+// 			var sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')?$expand=overviewSet';
 			if(sEntityPath != null){
-				// var sEntityPath = "/" + date;
 				this.bindView(sEntityPath);                         
 			}
 		},
@@ -69,21 +62,21 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
  
              });
              
-		list.bindItems(sEntityPath,template);         
-		// oView.bindElement(sEntityPath); 
+		list.bindItems(sEntityPath,template,null,null);         
+// 		oView.bindElement(sEntityPath); 
 
-		//Check if the data is already on the client
-		// if(!oView.getModel().getData(sEntityPath)) {
+// // 		Check if the data is already on the client
+// 		if(!oView.getModel().getData(sEntityPath)) {
 
-		// 	// Check that the entity specified was found
-		// 	oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
-		// 		var oData = oView.getModel().getData(sEntityPath);
-		// 		if (!oData) {
-		// 			this.showEmptyView();
-		// 			this.fireDetailNotFound();
-		// 		}
-		// 	}, this));
-		// }
+// 			// Check that the entity specified was found
+// 			oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
+// 				var oData = oView.getModel().getData(sEntityPath);
+// 				if (!oData) {
+// 					this.showEmptyView();
+// 					this.fireDetailNotFound();
+// 				}
+// 			}, this));
+// 		}
 	},
 	
 	onRouteMatched : function(oEvent) {
