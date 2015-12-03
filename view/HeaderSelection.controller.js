@@ -33,10 +33,16 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			
 			// create popover
 			if (! this._oPopover) {
+<<<<<<< HEAD
+				this._oPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.dialogs.CreateNewRequest", this);
+=======
 				this._oPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.view.CreateNewRequest", this);
+>>>>>>> branch 'master' of https://github.com/jacobtcrane/ETIME_EE.git
 				this.getView().addDependent(this._oPopover);
 			}
 
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 				// var pop = oView.byId("popover_id");
 				// pop.setTitle(selDateStr);
@@ -44,6 +50,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 				var pop = oView.byId("popover_id");
 				pop.setTitle(selDateStr);
 >>>>>>> 8c137319d10e75a8e330f1ec6fca97289fe63fcf
+>>>>>>> branch 'master' of https://github.com/jacobtcrane/ETIME_EE.git
 			// delay because addDependent will do a async rerendering and the popover will immediately close without it
 			var oCalendar = oEvent.getSource();
 			jQuery.sap.delayedCall(0, this, function () {

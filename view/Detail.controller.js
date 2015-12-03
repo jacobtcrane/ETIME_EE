@@ -1,3 +1,4 @@
+jQuery.sap.require("com.transfieldservices.utils.Conversions");  
 sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 
 	onInit : function() {
@@ -39,7 +40,13 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		}, this));
 		
 		if ( oParameters.name === "newdetail") { 
+<<<<<<< HEAD
+            //remove any existing view bindings
+            this.getView().unbindElement();
+            
+=======
 
+>>>>>>> branch 'master' of https://github.com/jacobtcrane/ETIME_EE.git
 		   	//create new record
 		    var oSelectedDate = new Date(oParameters.arguments.entity);
 			var oNewRequest = {	Seqnr: "0", 
@@ -142,6 +149,53 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		}, true);
 	},
 	
+		handleValueHelp : function (oEvent) {
+			var sInputValue = oEvent.getSource().getValue();
+            var source = oEvent.getSource().getId();
+            var filter;
+			this.inputId = oEvent.getSource().getId();
+			// create value help dialog
+			if (this._valueHelpDialog) {
+				this.getView().removeDependent(this._valueHelpDialog);
+			}
+				if(source.search("attendanceInput") > -1){
+    				this._valueHelpDialog = sap.ui.xmlfragment(	"com.transfieldservices.dialogs.AttDialog",this);
+    				filter = new sap.ui.model.Filter("Atext",sap.ui.model.FilterOperator.Contains, sInputValue);
+				}else if (source.search("wbsInput") > -1){
+					this._valueHelpDialog = sap.ui.xmlfragment(	"com.transfieldservices.dialogs.WBSDialog",this);
+    				filter = new sap.ui.model.Filter("Post1",sap.ui.model.FilterOperator.Contains, sInputValue);
+			    }
+				this.getView().addDependent(this._valueHelpDialog);
+// 			}
+
+			// create a filter for the binding
+			this._valueHelpDialog.getBinding("items").filter([filter]);
+
+			// open value help dialog filtered by the input value
+			this._valueHelpDialog.open(sInputValue);
+		},
+
+		_handleValueHelpSearch : function (evt) {
+			var sValue = evt.getParameter("value");
+			var oFilter;
+			if(evt.getSource().getId().search("AttDialog") > -1){
+                oFilter = new sap.ui.model.Filter("Atext",sap.ui.model.FilterOperator.Contains, sValue);
+			}else if(evt.getSource().getId().search("WBSDialog") > -1){
+                oFilter = new sap.ui.model.Filter("Post1",sap.ui.model.FilterOperator.Contains, sValue);
+			}
+			evt.getSource().getBinding("items").filter([oFilter]);
+		},
+
+		_handleValueHelpClose : function (evt) {
+			var oSelectedItem = evt.getParameter("selectedItem");
+			if (oSelectedItem) {
+				var inputDD = this.getView().byId(this.inputId);
+				inputDD.setValue(oSelectedItem.getTitle());
+				inputDD.setDescription(oSelectedItem.getDescription());
+			}
+			evt.getSource().getBinding("items").filter([]);
+		},
+		
 	getEventBus : function () {
 		return sap.ui.getCore().getEventBus();
 	},

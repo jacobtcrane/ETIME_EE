@@ -7,7 +7,7 @@ com.transfieldservices.utils.Conversions = {
 			var date = new Date(value.ms);
 			var timeinmiliseconds = date.getTime(); //date.getTime(); //date.getSeconds(); //date.getTime();  
 			var oTimeFormat = sap.ui.core.format.DateFormat.getTimeInstance({
-				pattern: "KK:mm:ss a"
+				pattern: "KK:mm a"
 			});
 			var TZOffsetMs = new Date(0).getTimezoneOffset() * 60 * 1000;
 			var timeStr = oTimeFormat.format(new Date(timeinmiliseconds + TZOffsetMs));
