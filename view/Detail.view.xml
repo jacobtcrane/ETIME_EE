@@ -3,7 +3,6 @@
 	<Page class="sapUiFioriObjectPage" id="detailPage" navButtonPress="onNavBack" showNavButton="{device&gt;/isPhone}" title="Timesheet Entry">
 		<content>
 			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Timetxt}">
-			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Timetxt}">
 				<attributes>
 					<ObjectAttribute text="{Atttxt}"/>
 				</attributes>
@@ -18,116 +17,59 @@
 						<l:VerticalLayout class="sapUiSmallMarginEnd">
 							<l:content>
 								<Label id="lblStartTime" text="Start Time"/>
-								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time ..." type="Time"
-									dateValue="{Beguz}" width="100px"/>
+								<!--<TimePicker id="beguz" value="{Beguz}" width="100px" valueFormat="PThh'H'mm'M'ss'S'" displayFormat="HH:mm" placeholder="Enter Time..." change="onBeguzEntered"/>-->
+								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time..." type="Time"
+									value="{Beguz}" width="100px" valueFormat="PTHH'H'mm'M'ss'S'"/>
 							</l:content>
 						</l:VerticalLayout>
 						<l:VerticalLayout class="sapUiSmallMarginEnd">
 							<l:content>
 								<Label id="lblEndTime" text="End Time"/>
-								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time ..." type="Time"
-									dateValue="{Enduz}" width="100px"/>
+								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time..." type="Time"
+									value="{Enduz}" width="100px" valueFormat="PTHH'H'mm'M'ss'S'"/>
 									<!--{path:'Enduz',formatter:'com.transfieldservices.utils.Conversions.time'}-->
 							</l:content>
 						</l:VerticalLayout>
-						<!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
-						<!--    <l:content>-->
-						<!--	<Text text=" "/>-->
-						<!--	<Text id="timediff" class="sapUiSmallMarginEnd"/>-->
-						<!--	</l:content>-->
-						<!--</l:VerticalLayout>-->
 					</l:HorizontalLayout>
 					<!--<Input id="text1" text="{Beguz}"/>-->
 					<!--<Input id="text2" text="{Enduz}"/>-->
 					<!--<Label id="label3" text="Previous Day Indicator"/>-->
 					<CheckBox selected="{Vtken}" text="Previous Day Indicator"/>
-					<!--<Input id="test" value="{Beguz}"/>-->
-					<Label id="labelatt" text="Attendance Type"/>
-					<Input id="attendanceInput" placeholder="Enter Attendance Type ..." showSuggestion="true" showValueHelp="true"
-						suggestionItems="{/VH_attendanceSet}" type="Text" valueHelpRequest="handleValueHelp"
-						value="{Awarttxt}" description="{Awart}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
-						<suggestionItems>
-							<core:Item text="{Atext}"/>
-						</suggestionItems>
-					</Input>
-					<Label id="labelwbs" text="WBS Element"/>
-					<Input id="wbsInput" placeholder="Enter WBS Element ..." showSuggestion="true" showValueHelp="true"
-						suggestionItems="{/VH_wbsElementSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}" 
-						value="{Wbstxt}" description="{Wbs}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
+					<!--<Label id="labelatt" text="Attendance Type"/>-->
+					<!--<Input id="attendanceInput" placeholder="Enter Attendance Type ..." showSuggestion="true" showValueHelp="true"-->
+					<!--	suggestionItems="{/VH_attendanceSet}" type="Text" valueHelpRequest="handleValueHelp"-->
+					<!--	value="{Awarttxt}" description="{Awart}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">-->
+					<!--	<suggestionItems>-->
+					<!--		<core:Item text="{Atext}"/>-->
+					<!--	</suggestionItems>-->
+					<!--</Input>-->
+					<!--<Label id="labelwbs" text="WBS Element"/>-->
+					<!--<Input id="wbsInput" placeholder="Enter WBS Element ..." showSuggestion="true" showValueHelp="true"-->
+					<!--	suggestionItems="{/VH_wbsElementSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}" -->
+					<!--	value="{Wbstxt}" description="{Wbs}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">-->
 						<!--valueLiveUpdate="true" liveChange="handleLiveSearch"-->
-						<suggestionItems>
-							<core:Item text="{Post1}"/>
-						</suggestionItems>
-					</Input>
-					<Label id="labelnet" text="Network"/>
-					<Input id="netInput" placeholder="Enter Network ..." showSuggestion="true" showValueHelp="true"
-						suggestionItems="{/VH_networkSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}"
-						value="{Networktxt}" description="{Nwh}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
+					<!--	<suggestionItems>-->
+					<!--		<core:Item text="{Post1}"/>-->
+					<!--	</suggestionItems>-->
+					<!--</Input>-->
+					<!--<Label id="labelnet" text="Network"/>-->
+					<!--<Input id="netInput" placeholder="Enter Network ..." showSuggestion="true" showValueHelp="true"-->
+					<!--	suggestionItems="{/VH_networkSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Ktext}"-->
+					<!--	value="{Networktxt}" description="{Nwh}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">-->
+					<!--	<suggestionItems>-->
+					<!--		<core:Item text="{Ktext}"/>-->
+					<!--	</suggestionItems>-->
+					<!--</Input>-->
+					<Label id="labelorder" text="Order"/>
+					<Input id="orderInput" placeholder="Enter Order ..." showSuggestion="true" showValueHelp="true"
+						suggestionItems="{/ZhtrsEtimeOrderShSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Ktext}"
+						value="{Ordertxt}" description="{Srvord}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
 						<suggestionItems>
 							<core:Item text="{Ktext}"/>
 						</suggestionItems>
 					</Input>
-					<!--<Text id="text3" text="{Vtken}"/>-->
-					<Label id="label4" text="Work Order"/>
-					<Input id="text4" text="{Srvord}"/>
 				</f:content>
 			</f:SimpleForm>
-			<f:SimpleForm emptySpanM="4" labelSpanL="3" columnsL="2" editable="false" emptySpanL="4" columnsM="2" id="detailForm" labelSpanM="3"
-				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024">
-				<f:content>
-					<l:HorizontalLayout class="sapUiSmallMargin">
-						<l:VerticalLayout class="sapUiSmallMarginEnd">
-							<l:content>
-								<Label id="lblStartTime" text="Start Time"/>
-								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time ..." type="Time"
-									value="{path:'Beguz',formatter:'com.transfieldservices.utils.Conversions.time'}" width="100px"/>
-							</l:content>
-						</l:VerticalLayout>
-						<l:VerticalLayout class="sapUiSmallMarginEnd">
-							<l:content>
-								<Label id="label2" text="End Time"/>
-								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time ..." type="Time"
-									value="{path:'Enduz',formatter:'com.transfieldservices.utils.Conversions.time'}" width="100px"/>
-							</l:content>
-						</l:VerticalLayout>
-						<!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
-						<!--    <l:content>-->
-						<!--	<Text text=" "/>-->
-						<!--	<Text id="timediff" class="sapUiSmallMarginEnd"/>-->
-						<!--	</l:content>-->
-						<!--</l:VerticalLayout>-->
-					</l:HorizontalLayout>
-					<!--<Input id="text1" text="{Beguz}"/>-->
-					<!--<Input id="text2" text="{Enduz}"/>-->
-					<!--<Label id="label3" text="Previous Day Indicator"/>-->
-					<CheckBox selected="{Vtken}" text="Previous Day Indicator"/>
-					<Label id="labelatt" text="Attendance Type"/>
-					<Input id="attendanceInput" placeholder="Enter Attendance Type ..." showSuggestion="true" showValueHelp="true"
-						suggestionItems="{/VH_attendanceSet}" type="Text" valueHelpRequest="handleValueHelp" >
-						<suggestionItems>
-							<core:Item text="{Atttxt}"/>
-						</suggestionItems>
-					</Input>
-					<Label id="labelwbs" text="WBS Element"/>
-					<Input id="wbsInput" placeholder="Enter WBS Element ..." showSuggestion="true" showValueHelp="true"
-						suggestionItems="{/VH_wbsElementSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}">
-						<suggestionItems>
-							<core:Item text="{Post1}"/>
-						</suggestionItems>
-					</Input>
-					<!--<Text id="text3" text="{Vtken}"/>-->
-					<Label id="label4" text="Work Order"/>
-					<Input id="text4" text="{Srvord}"/>
-				</f:content>
-			</f:SimpleForm>
-			<!--<IconTabBar select="onDetailSelect" id="idIconTabBar">-->
-			<!--	<items>-->
-			<!--		<IconTabFilter key="Details" icon="sap-icon://hint">-->
-			<!--			<content>-->
-			<!--			</content>-->
-			<!--		</IconTabFilter>-->
-			<!--	</items>-->
-			<!--</IconTabBar>-->
 		</content>
 		<footer>
 			<OverflowToolbar>

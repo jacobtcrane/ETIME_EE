@@ -1,4 +1,5 @@
 jQuery.sap.require("com.transfieldservices.utils.Conversions");
+jQuery.sap.require("sap.ui.core.format.DateFormat");
 sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 
 	onInit: function() {
@@ -45,9 +46,8 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				return;
 			}
 		}, this));
-            //remove any existing view bindings
-            this.getView().unbindElement();
-            
+		//remove any existing view bindings
+		this.getView().unbindElement();
 
 		if (oParameters.name === "newdetail") {
 			//remove any existing view bindings
@@ -55,6 +55,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 			//create new record
 			var oSelectedDate = new Date(oParameters.arguments.entity);
 			var oNewRequest = {
+			    Pernr: "00000000",
 				Seqnr: "0",
 				Atttxt: oParameters.arguments.entity,
 				Begda: oSelectedDate,
@@ -62,24 +63,10 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				Weekend: oSelectedDate,
 				Statustxt: "New",
 				Status: "INP"
-				// Srvord: ""
 			};
 			this.oModel = this.getView().getModel("theOdataModel");
 			this.oCreatedEntityContext = this.oModel.createEntry("detailSet", oNewRequest);
 			this.oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
-		   	//create new record
-		    var oSelectedDate = new Date(oParameters.arguments.entity);
-			var oNewRequest = {	Seqnr: "0", 
-			                    Atttxt: oParameters.arguments.entity,
-			                    Begda: oSelectedDate, 
-			                    Weekstart: oSelectedDate, 
-			                    Weekend: oSelectedDate,
-			                    Statustxt: "New"};
-			var oModel = this.getView().getModel( "theOdataModel" );
-			var oContext = oModel.createEntry("detailSet", oNewRequest);
-
-			// 		var sEntityPath = "/" + oParameters.arguments.entity;
-			// 		this.bindView(sEntityPath);
 			var oView = this.getView();
 			oView.setBindingContext(this.oCreatedEntityContext);
 		}
@@ -107,33 +94,54 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 
 	},
 
-	onBeguzEntered: function(oEvent) {
-		var oBeguz = oEvent.getParameters().dateValue;
-		// 		this.getView().byId("enduz").bindElement('Enduz');
-		var oEnduz = this.getView().byId("enduz").getDateValue();
-		oBeguz.setFullYear(1970);
-		oBeguz.setMonth(0);
-		oBeguz.setDate(1);
-		if (oEnduz != null && oEnduz > oBeguz) {
-			this.getTimeDiff(oEnduz, oBeguz);
-			this.getView().byId("objectHeader").setTitle(this.getView().byId("beguz").getValue() + '-' + this.getView().byId("enduz").getValue());
+	displayTimeDif: function(begda, endda) {
+		if (endda != null && begda != null) {
+			begda.setFullYear(1970);
+			begda.setMonth(0);
+			begda.setDate(1);
+			endda.setFullYear(1970);
+			endda.setMonth(0);
+			endda.setDate(1);
+			var formatter = sap.ui.core.format.DateFormat.getTimeInstance({
+				pattern: this.getView().byId("beguz").getDisplayFormat()
+			});
+			if (endda > begda) {
+				this.getTimeDiff(endda, begda);
+			} else if (endda < begda) {
+				var date = endda;
+				var day = endda.getDate() + 1;
+				date.setDate(day);
+				this.getTimeDiff(date, begda);
+			}
+			formatter.format(begda);
+			this.getView().byId("objectHeader").setTitle(formatter.format(begda) + ' - ' + formatter.format(endda));
 		} else {
 			this.getView().byId("objectHeader").setNumber('');
 		}
 	},
 
+	onBeguzEntered: function(oEvent) {
+		// 		var oBeguz = oEvent.getParameters().value;
+		// 		var oEnduz = this.getView().byId("enduz").getValue();
+		var oBegda = oEvent.getParameters().dateValue;
+		var oEndda = this.getView().byId("enduz").getDateValue();
+		this.displayTimeDif(oBegda, oEndda);
+	},
+
 	onEnduzEntered: function(oEvent) {
 		var oEnduz = oEvent.getParameters().dateValue;
 		var oBeguz = this.getView().byId("beguz").getDateValue();
-		oEnduz.setFullYear(1970);
-		oEnduz.setMonth(0);
-		oEnduz.setDate(1);
-		if (oBeguz != null && oEnduz > oBeguz) {
-			this.getTimeDiff(oEnduz, oBeguz);
-			this.getView().byId("objectHeader").setTitle(this.getView().byId("beguz").getValue() + '-' + this.getView().byId("enduz").getValue());
-		} else {
-			this.getView().byId("objectHeader").setNumber('');
-		}
+		this.displayTimeDif(oBeguz, oEnduz);
+
+		// 		oEnduz.setFullYear(1970);
+		// 		oEnduz.setMonth(0);
+		// 		oEnduz.setDate(1);
+		// 		if (oBeguz != null && oEnduz > oBeguz) {
+		// 			this.getTimeDiff(oEnduz, oBeguz);
+		// 			this.getView().byId("objectHeader").setTitle(this.getView().byId("beguz").getValue() + '-' + this.getView().byId("enduz").getValue());
+		// 		} else {
+		// 			this.getView().byId("objectHeader").setNumber('');
+		// 		}
 	},
 
 	getTimeDiff: function(oEnduz, oBeguz) {
@@ -144,6 +152,14 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		var strTime = hours + ':' + minutes + ' Hours';
 		oTimeDiff.setNumber(strTime);
 	},
+
+	timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "PThh'H'mm'M'ss'S'"
+	}),
+
+	dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "yyyy-MM-ddThh:mm:ss"
+	}),
 
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
@@ -215,6 +231,14 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				this._valueHelpNetDialog.getBinding("items").filter([filter]);
 			}
 			this._valueHelpNetDialog.open(sInputValue);
+		} else if (source.search("orderInput") > -1) {
+			if (!this._valueHelpOrderDialog) {
+				this._valueHelpOrderDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OrderDialog", this);
+				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this._valueHelpOrderDialog);
+				this._valueHelpOrderDialog.getBinding("items").filter([filter]);
+			}
+			this._valueHelpOrderDialog.open(sInputValue);
 		}
 		// // create a filter for the binding
 		// this._valueHelpDialog.getBinding("items").filter([filter]);
@@ -229,7 +253,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("WBSDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (evt.getSource().getId().search("NetDialog") > -1) {
+		} else if (evt.getSource().getId().search("NetDialog") > -1 || evt.getSource().getId().search("OrderDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
 		}
 		evt.getSource().getBinding("items").filter([oFilter]);
@@ -245,10 +269,31 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		evt.getSource().getBinding("items").filter([]);
 	},
 
+	makeSAPDateTime: function(field, isTime) {
+		var path = this.oCreatedEntityContext.getPath() + field;
+		var property = this.oModel.getProperty(path);
+		var datetime = new Date(property);
+		var sapDateTime;
+		if (isTime) {
+			sapDateTime = this.timeFormatter.format(datetime);
+		} else {
+			sapDateTime = this.dateFormatter.format(datetime);
+		}
+		this.oModel.setProperty(path, sapDateTime);
+	},
+
 	handleSendRequest: function() {
-		// 	  oModel = this.getView().getModel("theOdataModel");
-		// console.log(this.oModel);
-		// console.log(this.oCreatedEntityContext);
+		console.log(this.oModel);
+		//Housekeeping
+		this.makeSAPDateTime('/Weekstart', false);
+		this.makeSAPDateTime('/Weekend', false);
+		this.makeSAPDateTime('/Begda', false);
+
+        var property = this.oModel.getProperty(this.oCreatedEntityContext.getPath() + "/Vtken");
+        if (property){
+            this.oModel.setProperty(this.oCreatedEntityContext.getPath() + "/Vtken","X");
+        }
+		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
 		this.oModel.submitChanges(function() {
 			var msg = 'Request sent';
 			sap.m.MessageToast.show(msg);

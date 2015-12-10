@@ -1,5 +1,7 @@
 [{
 	"Guid": "1234567890",
 	"Pernr": "00000001",
-	"Description": "Fav"
+	"Description": "Fav",
+	"Ktext": "Corporate Building Expenses_Cary Street",
+	"Aufnr": "100002"
 }]
