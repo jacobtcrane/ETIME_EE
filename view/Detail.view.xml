@@ -2,11 +2,8 @@
 	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
 	<Page class="sapUiFioriObjectPage" id="detailPage" navButtonPress="onNavBack" showNavButton="{device&gt;/isPhone}" title="Timesheet Entry">
 		<content>
-<<<<<<< HEAD
 			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Timetxt}">
-=======
-			<ObjectHeader id="objectHeader" title="{Timetxt}" number="{Durationtxt}" numberUnit="">
->>>>>>> branch 'master' of https://github.com/jacobtcrane/ETIME_EE.git
+			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Timetxt}">
 				<attributes>
 					<ObjectAttribute text="{Atttxt}"/>
 				</attributes>
@@ -14,7 +11,67 @@
 					<ObjectStatus text="{Statustxt}"/>
 				</firstStatus>
 			</ObjectHeader>
-<<<<<<< HEAD
+			<f:SimpleForm emptySpanM="4" labelSpanL="3" columnsL="2" editable="false" emptySpanL="4" columnsM="2" id="detailForm" labelSpanM="3"
+				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024">
+				<f:content>
+					<l:HorizontalLayout class="sapUiSmallMargin">
+						<l:VerticalLayout class="sapUiSmallMarginEnd">
+							<l:content>
+								<Label id="lblStartTime" text="Start Time"/>
+								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time ..." type="Time"
+									dateValue="{Beguz}" width="100px"/>
+							</l:content>
+						</l:VerticalLayout>
+						<l:VerticalLayout class="sapUiSmallMarginEnd">
+							<l:content>
+								<Label id="lblEndTime" text="End Time"/>
+								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time ..." type="Time"
+									dateValue="{Enduz}" width="100px"/>
+									<!--{path:'Enduz',formatter:'com.transfieldservices.utils.Conversions.time'}-->
+							</l:content>
+						</l:VerticalLayout>
+						<!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
+						<!--    <l:content>-->
+						<!--	<Text text=" "/>-->
+						<!--	<Text id="timediff" class="sapUiSmallMarginEnd"/>-->
+						<!--	</l:content>-->
+						<!--</l:VerticalLayout>-->
+					</l:HorizontalLayout>
+					<!--<Input id="text1" text="{Beguz}"/>-->
+					<!--<Input id="text2" text="{Enduz}"/>-->
+					<!--<Label id="label3" text="Previous Day Indicator"/>-->
+					<CheckBox selected="{Vtken}" text="Previous Day Indicator"/>
+					<!--<Input id="test" value="{Beguz}"/>-->
+					<Label id="labelatt" text="Attendance Type"/>
+					<Input id="attendanceInput" placeholder="Enter Attendance Type ..." showSuggestion="true" showValueHelp="true"
+						suggestionItems="{/VH_attendanceSet}" type="Text" valueHelpRequest="handleValueHelp"
+						value="{Awarttxt}" description="{Awart}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
+						<suggestionItems>
+							<core:Item text="{Atext}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labelwbs" text="WBS Element"/>
+					<Input id="wbsInput" placeholder="Enter WBS Element ..." showSuggestion="true" showValueHelp="true"
+						suggestionItems="{/VH_wbsElementSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}" 
+						value="{Wbstxt}" description="{Wbs}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
+						<!--valueLiveUpdate="true" liveChange="handleLiveSearch"-->
+						<suggestionItems>
+							<core:Item text="{Post1}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labelnet" text="Network"/>
+					<Input id="netInput" placeholder="Enter Network ..." showSuggestion="true" showValueHelp="true"
+						suggestionItems="{/VH_networkSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}"
+						value="{Networktxt}" description="{Nwh}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
+						<suggestionItems>
+							<core:Item text="{Ktext}"/>
+						</suggestionItems>
+					</Input>
+					<!--<Text id="text3" text="{Vtken}"/>-->
+					<Label id="label4" text="Work Order"/>
+					<Input id="text4" text="{Srvord}"/>
+				</f:content>
+			</f:SimpleForm>
 			<f:SimpleForm emptySpanM="4" labelSpanL="3" columnsL="2" editable="false" emptySpanL="4" columnsM="2" id="detailForm" labelSpanM="3"
 				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024">
 				<f:content>
@@ -71,50 +128,16 @@
 			<!--		</IconTabFilter>-->
 			<!--	</items>-->
 			<!--</IconTabBar>-->
-=======
-			<IconTabBar select="onDetailSelect" id="idIconTabBar">
-				<items>
-					<IconTabFilter key="Details" icon="sap-icon://hint">
-						<content>
-							<f:SimpleForm id="detailForm" minWidth="1024" maxContainerCols="2" editable="false" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="4" emptySpanM="4" columnsL="2" columnsM="2">
-								<f:content>
-								<l:HorizontalLayout class="sapUiSmallMargin" >
-								    <l:VerticalLayout class="sapUiSmallMarginEnd">
-							    		<l:content>
-									    <Label id="lblStartTime" text="Start Time"/>
-									    <DateTimeInput id="beguz" value="{Beguz,formatter:'com.transfieldservices.utils.Conversions.time'}" width="100px" type="Time" placeholder="Enter Time ..."	class="sapUiSmallMarginBottom" change="onBeguzEntered"/>
-							    		</l:content>
-								    </l:VerticalLayout>
-								    <l:VerticalLayout class="sapUiSmallMarginEnd">
-							    		<l:content>
-    									<Label id="label2" text="End Time"/>
-	    								<DateTimeInput id="enduz" value="{Enduz,formatter:'com.transfieldservices.utils.Conversions.time'}" width="100px" type="Time" placeholder="Enter Time ..."	class="sapUiSmallMarginBottom"  change="onEnduzEntered"/>
-							    		</l:content>
-								    </l:VerticalLayout>
-								    <!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
-    								<!--    <l:content>-->
-	    							<!--	<Text text=" "/>-->
-	    							<!--	<Text id="timediff" class="sapUiSmallMarginEnd"/>-->
-		    						<!--	</l:content>-->
-								    <!--</l:VerticalLayout>-->
-            					</l:HorizontalLayout>
-									<!--<Input id="text1" text="{Beguz}"/>-->
-									<!--<Input id="text2" text="{Enduz}"/>-->
-									<!--<Label id="label3" text="Previous Day Indicator"/>-->
-									<CheckBox text="Previous Day Indicator" selected="{Vtken}"/>
-									<!--<Text id="text3" text="{Vtken}"/>-->
-									<Label id="label4" text="Work Order"/>
-									<Input id="text4" text="{Srvord}"/>									
-								</f:content>
-							</f:SimpleForm>
-						</content>
-					</IconTabFilter>
-				</items>
-			</IconTabBar>
->>>>>>> branch 'master' of https://github.com/jacobtcrane/ETIME_EE.git
 		</content>
 		<footer>
-			<Toolbar></Toolbar>
+			<OverflowToolbar>
+                <OverflowToolbarButton text="Favorite" press="handleFavourites" icon="sap-icon://favorite"/>
+	    		<ToolbarSpacer/>
+			    <Button type="Accept" text="Send" press="handleSendRequest">
+                    <layoutData><OverflowToolbarLayoutData moveToOverflow="false" /></layoutData>
+                </Button>
+                <!--<OverflowToolbarButton text="Send"  icon="sap-icon://email"/>-->
+            </OverflowToolbar>
 		</footer>
 	</Page>
 </mvc:View>

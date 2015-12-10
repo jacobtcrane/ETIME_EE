@@ -1,0 +1,19 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.ui.layout.form">
+	<Popover class="sapUiContentPadding" placement="Top" title="Favourites" width="300px">
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button press="handleManageFavs" text="Manage Favourites"/>
+				<Button press="handleAddFav" text="Add as Favourite"/>
+			</Toolbar>
+		</footer>
+		<f:SimpleForm columnsM="2" emptySpanM="4" columnsL="2" editable="false" emptySpanL="4" id="fav_form" labelSpanL="3" labelSpanM="3"
+			layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="300px">
+			<f:content>
+				<Text text="You can create a favourite based on the current form data"/>
+				<Label id="favlab_id" text="Favourite Name"/>
+				<Input id="favname_id" placeholder="My Favourite" width="150px"/>
+			</f:content>
+		</f:SimpleForm>
+	</Popover>
+</core:FragmentDefinition>

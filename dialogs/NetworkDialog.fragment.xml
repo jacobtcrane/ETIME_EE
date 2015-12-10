@@ -1,0 +1,16 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+	    id = "NetDialog"
+	    title = "Network"
+		class="sapUiPopupWithPadding"
+		items="{/VH_networkSet}"
+		search="_handleValueHelpSearch"
+		confirm="_handleValueHelpClose"
+		cancel="_handleValueHelpClose">
+		<StandardListItem
+			title="{Ktext}"
+			description="{Aufnr}" />
+	</SelectDialog>
+</core:FragmentDefinition>

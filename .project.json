@@ -6,9 +6,6 @@
     "/view/Master2.view.xml": {
       "entitySet": "detailSet"
     },
-    "/view/Detail.view.xml": {
-      "entitySet": "detailSet"
-    },
     "/view/NotFound.view.xml": {
       "entitySet": "UNBINDKEY"
     },

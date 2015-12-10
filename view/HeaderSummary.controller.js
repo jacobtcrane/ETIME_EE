@@ -41,19 +41,13 @@ sap.ui.define([
 
 		onDateSelected: function(sChannel, sEvent, oData) {
 			var startDate = null; var endDate = null; var sEntityPath = null; var tmpDate = null;
-			// startDate = oData[0].getStartDate();
 			startDate = new Date(oData);
 			var startDateStr = this.oFormatYyyymmdd.format(startDate);
-			// tmpDate = startDate;
-			// tmpDate = tmpDate.setDate(startDate.getDate() + 7);
-			// endDate = new Date(tmpDate);
-			// var endDateStr = this.oFormatYyyymmdd.format(endDate);
-			// endDate = this.oFormatYyyymmdd.format(oData[0].getStartDate());
+
 			sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')';
 			// sEntityPath = '/headerSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr + 'T22:00:00\'';
 
 			if(sEntityPath != null){
-				// var sEntityPath = "/" + date;
 				this.bindView(sEntityPath);                         
 			}
 		},
@@ -62,28 +56,9 @@ sap.ui.define([
 		var oView = this.getView();
 		
 		oView.bindElement(sEntityPath); 
-		// var model = oView.getModel();
-		// var data = oView.getModel().getData(sEntityPath);
-		//Check if the data is already on the client
-		// if(!oView.getModel().getData(sEntityPath)) {
-
-		// 	// Check that the entity specified was found
-		// 	oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
-		// 		var oData = oView.getModel().getData(sEntityPath);
-		// 		if (!oData) {
-		// 			this.showEmptyView();
-		// 			this.fireDetailNotFound();
-		// 		}
-		// 	}, this));
-		// }
 	},
 	
 	showEmptyView : function () {
-		// this.getRouter().myNavToWithoutHash({ 
-		// 	currentView : this.getView(),
-		// 	targetViewName : "com.transfieldservices.view.NotFound",
-		// 	targetViewType : "XML"
-		// });
 	},
 	
 	getEventBus : function () {

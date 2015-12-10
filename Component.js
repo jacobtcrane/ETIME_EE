@@ -116,6 +116,7 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 
 		// Create and set domain model to the component
 		var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, {json: true,loadMetadataAsync: true});
+		oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 		this.setModel(oModel);
 
 		// Set device model

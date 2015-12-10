@@ -16,7 +16,18 @@
 	"Status": "APV",
 	"Statustxt": "Approved",
 	"Weekstart": "/Date(1446933600000)/",
-	"Weekend": "/Date(1447452000000)/"
+	"Weekend": "/Date(1447452000000)/",
+	"Vtken": "true",
+	"Stdaz": 100,
+	"Lgart": "1230",
+	"Zeinh": "13",
+	"Anzhl": 232.1,
+	"Lgarttxt": "Pizzas",
+	"Zeihntxt": "13 hours",
+	"Nwh": "MyN",
+	"Networktxt": "My Network",
+	"Wbs": "1242",
+	"Wbstxt": "WBS example"
 }, {
 	"Pernr": "00000001",
 	"Begda": "/Date(1447020000000)/",
@@ -34,7 +45,9 @@
 	"Status": "APV",
 	"Statustxt": "Approved",
 	"Weekstart": "/Date(1446933600000)/",
-	"Weekend": "/Date(1447452000000)/"
+	"Weekend": "/Date(1447452000000)/",
+	"Vtken": "true",
+	"Stdaz": 200.12
 }, {
 	"Pernr": "00000001",
 	"Begda": "/Date(1447106400000)/",
@@ -52,5 +65,7 @@
 	"Status": "REJ",
 	"Statustxt": "Rejected",
 	"Weekstart": "/Date(1446933600000)/",
-	"Weekend": "/Date(1447452000000)/"
+	"Weekend": "/Date(1447452000000)/",
+	"Vtken": "false",
+	"Stdaz": 13.21
 }]

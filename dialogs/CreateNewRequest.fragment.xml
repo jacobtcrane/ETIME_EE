@@ -6,6 +6,8 @@
 		title = "New Request"
 		class="sapUiContentPadding"
 		placement="Bottom">
+<<<<<<< HEAD
+=======
 		<!--<NavContainer id="navCon">-->
 		<!--	<Page id="options">-->
   <!--  			<headerContent/>-->
@@ -32,6 +34,7 @@
 		
 		
 		
+>>>>>>> 49b4cdf7621c6e92956338499ae6988737836547
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
