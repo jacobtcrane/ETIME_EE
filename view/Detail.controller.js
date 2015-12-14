@@ -330,6 +330,21 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		});
 	},
 
+    handleManageFavs:function(oEvent){
+        this._oPopover.close();
+         this.getRouter().myNavToWithoutHash({ 
+			    currentView : this.getView(),
+			    targetViewName : "com.transfieldservices.view.Favourites",
+			    targetViewType : "XML",
+			    transition: "slide"
+		    });
+ 
+		    this.getRouter().navTo("favourites", {
+			    from: "newdetail01",
+			    entity: "favTableSet"
+		    }, true);    
+    },
+    
 	getEventBus: function() {
 		return sap.ui.getCore().getEventBus();
 	},

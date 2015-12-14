@@ -17,6 +17,9 @@
     },
     "/view/HeaderSummary.view.xml": {
       "entitySet": "headerSet"
+    },
+    "/view/Favourites.view.xml": {
+      "entitySet": "favTableSet"
     }
   },
   "generation": [
@@ -24,6 +27,11 @@
       "templateId": "ui5template.fioriMasterMasterDetail",
       "templateVersion": "1.4.0",
       "dateTimeStamp": "Tue, 24 Nov 2015 12:31:43 GMT"
+    },
+    {
+      "templateId": "ui5template.basicSAPUI5ApplicationComponent",
+      "templateVersion": "1.4.0",
+      "dateTimeStamp": "Fri, 11 Dec 2015 09:49:20 GMT"
     }
   ],
   "translation": {

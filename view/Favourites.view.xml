@@ -1,0 +1,18 @@
+<core:View controllerName="com.transfieldservices.view.Favourites" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+	<Page navButtonPress="onNavBack" showNavButton="true" title="Favourites">
+		<content>
+			<List delete="handleDelete" enableBusyIndicator="true" growing="true" id="favList" items="{/favTableSet}" mode="Delete">
+				<items>
+					<StandardListItem description="{Awart}" iconDensityAware="false" iconInset="false" title="{Description}"/>
+					<!--<StandardListItem id="favListItem" press="onSelect" title="{Description}" type="{device]/listItemType}">-->
+					<!--	<attributes>-->
+					<!--		<ObjectAttribute text="{Awart}"/>-->
+					<!--		<ObjectAttribute text="{Wbs}"/>-->
+					<!--	</attributes>-->
+					<!--</StandardListItem>-->
+				</items>
+			</List>
+		</content>
+	</Page>
+</core:View>

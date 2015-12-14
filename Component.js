@@ -85,6 +85,22 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
             				targetAggregation : "detailPages"
 						}
 		    		]
+				},
+				{
+				    pattern : "newdetail/{entity}",
+					name : "newdetail01",
+					view : "Detail",
+					viewLevel : 3,
+					targetAggregation : "detailPages",
+					subroutes : [
+						{
+							pattern : "detail02/{entity}",
+							name : "favourites",
+							view : "Favourites",
+        					viewLevel : 3,
+            				targetAggregation : "detailPages"
+						}
+		    		]
 				}
 		    ]
 		}
