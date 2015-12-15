@@ -1,0 +1,16 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+	    id = "OperationDialog"
+	    title = "Operation "
+		class="sapUiPopupWithPadding"
+		items="{/VH_operationSet}"
+		search="_handleValueHelpSearch"
+		confirm="_handleValueHelpClose"
+		cancel="_handleValueHelpClose">
+		<StandardListItem
+			title="{Ltxa1}"
+			description="{Vornr}" />
+	</SelectDialog>
+</core:FragmentDefinition>

@@ -10,76 +10,112 @@
 					<ObjectStatus text="{Statustxt}"/>
 				</firstStatus>
 			</ObjectHeader>
-			<f:SimpleForm emptySpanM="4" labelSpanL="3" columnsL="2" editable="false" emptySpanL="4" columnsM="2" id="detailForm" labelSpanM="3"
+			<f:SimpleForm columnsM="2" emptySpanM="4" columnsL="2" editable="false" emptySpanL="4" id="detailForm" labelSpanL="3" labelSpanM="3"
 				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024">
 				<f:content>
+					<Label id="labelFav" text="Favourites"/>
+					<Input valueHelpRequest="handleValueHelp" id="favouriteDD" description="{Description}" liveChange="handleLiveSearch"
+						placeholder="Saved Favourites ..." showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/favTableSet}" type="Text"
+						value="{Guid}" valueLiveUpdate="true">
+						<suggestionItems>
+							<core:Item text="{Description}"/>
+						</suggestionItems>
+					</Input>
 					<l:HorizontalLayout class="sapUiSmallMargin">
 						<l:VerticalLayout class="sapUiSmallMarginEnd">
 							<l:content>
 								<Label id="lblStartTime" text="Start Time"/>
 								<!--<TimePicker id="beguz" value="{Beguz}" width="100px" valueFormat="PThh'H'mm'M'ss'S'" displayFormat="HH:mm" placeholder="Enter Time..." change="onBeguzEntered"/>-->
-								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time..." type="Time"
-									value="{Beguz}" width="100px" valueFormat="PTHH'H'mm'M'ss'S'"/>
+								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time..." type="Time" value="{Beguz}"
+									valueFormat="PTHH'H'mm'M'ss'S'" width="100px"/>
 							</l:content>
 						</l:VerticalLayout>
 						<l:VerticalLayout class="sapUiSmallMarginEnd">
 							<l:content>
 								<Label id="lblEndTime" text="End Time"/>
-								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time..." type="Time"
-									value="{Enduz}" width="100px" valueFormat="PTHH'H'mm'M'ss'S'"/>
-									<!--{path:'Enduz',formatter:'com.transfieldservices.utils.Conversions.time'}-->
+								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time..." type="Time" value="{Enduz}"
+									valueFormat="PTHH'H'mm'M'ss'S'" width="100px"/>
+								<!--{path:'Enduz',formatter:'com.transfieldservices.utils.Conversions.time'}-->
 							</l:content>
 						</l:VerticalLayout>
 					</l:HorizontalLayout>
-					<!--<Input id="text1" text="{Beguz}"/>-->
-					<!--<Input id="text2" text="{Enduz}"/>-->
-					<!--<Label id="label3" text="Previous Day Indicator"/>-->
 					<CheckBox selected="{Vtken}" text="Previous Day Indicator"/>
-					<!--<Label id="labelatt" text="Attendance Type"/>-->
-					<!--<Input id="attendanceInput" placeholder="Enter Attendance Type ..." showSuggestion="true" showValueHelp="true"-->
-					<!--	suggestionItems="{/VH_attendanceSet}" type="Text" valueHelpRequest="handleValueHelp"-->
-					<!--	value="{Awarttxt}" description="{Awart}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">-->
-					<!--	<suggestionItems>-->
-					<!--		<core:Item text="{Atext}"/>-->
-					<!--	</suggestionItems>-->
-					<!--</Input>-->
-					<!--<Label id="labelwbs" text="WBS Element"/>-->
-					<!--<Input id="wbsInput" placeholder="Enter WBS Element ..." showSuggestion="true" showValueHelp="true"-->
-					<!--	suggestionItems="{/VH_wbsElementSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Wbstxt}" -->
-					<!--	value="{Wbstxt}" description="{Wbs}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">-->
-						<!--valueLiveUpdate="true" liveChange="handleLiveSearch"-->
-					<!--	<suggestionItems>-->
-					<!--		<core:Item text="{Post1}"/>-->
-					<!--	</suggestionItems>-->
-					<!--</Input>-->
-					<!--<Label id="labelnet" text="Network"/>-->
-					<!--<Input id="netInput" placeholder="Enter Network ..." showSuggestion="true" showValueHelp="true"-->
-					<!--	suggestionItems="{/VH_networkSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Ktext}"-->
-					<!--	value="{Networktxt}" description="{Nwh}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">-->
-					<!--	<suggestionItems>-->
-					<!--		<core:Item text="{Ktext}"/>-->
-					<!--	</suggestionItems>-->
-					<!--</Input>-->
-					<Label id="labelorder" text="Order"/>
-					<Input id="orderInput" placeholder="Enter Order ..." showSuggestion="true" showValueHelp="true"
-						suggestionItems="{/ZhtrsEtimeOrderShSet}" type="Text" valueHelpRequest="handleValueHelp" text="{Ktext}"
-						value="{Ordertxt}" description="{Srvord}" valueLiveUpdate="true" liveChange="handleLiveSearch" suggestionItemSelected="handleSuggestionSel">
+					<Label id="labelatt" text="Attendance Type"/>
+					<Input valueHelpRequest="handleValueHelp" id="attendanceInput" description="{Awart}" liveChange="handleLiveSearch"
+						placeholder="Enter Attendance Type ..." showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_attendanceSet}" type="Text"
+						value="{Awarttxt}" valueLiveUpdate="true">
+						<suggestionItems>
+							<core:Item text="{Atext}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labelwbs" text="WBS Element"
+						visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}"/>
+					<Input text="{Wbstxt}" id="wbsInput" description="{Wbs}" value="{Wbstxt}" showValueHelp="true" liveChange="handleLiveSearch" showSuggestion="true"
+						placeholder="Enter WBS Element ..." suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_wbsElementSet}" type="Text" valueHelpRequest="handleValueHelp"
+						valueLiveUpdate="true" visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}">
+						<suggestionItems>
+							<core:Item text="{Post1}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labelnet" text="Network"/>
+					<Input valueHelpRequest="handleValueHelp" id="netInput" description="{Nwh}" liveChange="handleLiveSearch" placeholder="Enter Network ..."
+						showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_networkSet}" text="{Ktext}" type="Text"
+						value="{Networktxt}" valueLiveUpdate="true">
 						<suggestionItems>
 							<core:Item text="{Ktext}"/>
 						</suggestionItems>
 					</Input>
+					<Label id="labelorder" text="Order"/>
+					<Input valueHelpRequest="handleValueHelp" id="orderInput" description="{Srvord}" liveChange="handleLiveSearch" placeholder="Enter Order ..."
+						showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/ZhtrsEtimeOrderShSet}" text="{Ktext}" type="Text"
+						value="{Ordertxt}" valueLiveUpdate="true">
+						<suggestionItems>
+							<core:Item text="{Ktext}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labelcause" text="Cause"/>
+					<Input valueHelpRequest="handleValueHelp" id="causeInput" description="{Rsnvar}" liveChange="handleLiveSearch" placeholder="Enter Cause ..."
+						showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_causeSet}" text="{Grdtx}" type="Text"
+						value="{Rsnvartxt}" valueLiveUpdate="true">
+						<suggestionItems>
+							<core:Item text="{Grdtx}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labeloperation" text="Operation"/>
+					<Input valueHelpRequest="handleValueHelp" id="operationInput" description="{Operation}" liveChange="handleLiveSearch" placeholder="Enter Operation ..."
+						showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_operationSet}" text="{Ltxa1}" type="Text"
+						value="{Operationtxt}" valueLiveUpdate="true">
+						<suggestionItems>
+							<core:Item text="{Ltxa1}"/>
+						</suggestionItems>
+					</Input>
+					<Label id="labelsuboperation" text="Suboperation"/>
+					<Input id="suboperationInput" type="Text" placeholder="Enter Suboperation... "
+						value="{Operationtxt}">
+					</Input>
+					<Label id="labelinternalorder" text="Internal Order"/>
+					<Input id="internalorderInput" type="Text" placeholder="Enter Internal Order... "
+						value="{Iaufnrtxt}">
+					</Input>
+					<CheckBox selected="{Hda}" text="Higher Duties"/>
+					<Label id="labelenote" text="Notes"/>
+					<TextArea id="Enote" value="{Enote}" rows="4" editable="true"/>	
+					<Label id="labelmnote" text="Approver Notes"
+					    visible="{parts : [{path : 'Mnote'}], formatter : 'com.transfieldservices.utils.Conversions.commonFieldVisibilityTrigger'}"/>
+					<TextArea id="Mnote" value="{Mnote}" rows="4" editable="true"
+					     visible="{parts : [{path : 'Mnote'}], formatter : 'com.transfieldservices.utils.Conversions.commonFieldVisibilityTrigger'}"/>						
 				</f:content>
 			</f:SimpleForm>
 		</content>
 		<footer>
 			<OverflowToolbar>
-                <OverflowToolbarButton text="Favorite" press="handleFavourites" icon="sap-icon://favorite"/>
-	    		<ToolbarSpacer/>
-			    <Button type="Accept" text="Send" press="handleSendRequest">
-                    <layoutData><OverflowToolbarLayoutData moveToOverflow="false" /></layoutData>
-                </Button>
-                <!--<OverflowToolbarButton text="Send"  icon="sap-icon://email"/>-->
-            </OverflowToolbar>
+				<OverflowToolbarButton icon="sap-icon://favorite" press="handleFavourites" text="Favorite"/>
+				<ToolbarSpacer/>
+				<Button press="handleSendRequest" text="Send" type="Accept">
+					<layoutData><OverflowToolbarLayoutData moveToOverflow="false"/></layoutData>
+				</Button>
+				<!--<OverflowToolbarButton text="Send"  icon="sap-icon://email"/>-->
+			</OverflowToolbar>
 		</footer>
 	</Page>
 </mvc:View>
