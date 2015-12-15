@@ -29,6 +29,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 		var oParameters = oEvent.getParameters();
 
 		if (oParameters.name === "master2") {
+		  //  ?$filter
 			var sEntityPath = "/" + oParameters.arguments.entity;
 			this.bindView(sEntityPath);
 
@@ -110,7 +111,9 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 	onSelect : function(oEvent){
 		// Get the list item either from the listItem parameter or from the event's
 		// source itself (will depend on the device-dependent mode)
+		var oList = this.getView().byId("master2List");
 		this.showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
+		oList.removeSelections();
 	},
 
 	showDetail : function(oItem) {

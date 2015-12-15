@@ -65,6 +65,9 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				Statustxt: "New",
 				Status: "INP"
 			};
+			if (this.oNewDetailContext != null){
+			   	this.oModel.deleteCreatedEntry(this.oNewDetailContext);
+			}
 			this.oModel = this.getView().getModel("theOdataModel");
 			this.oNewDetailContext = this.oModel.createEntry("detailSet", oNewRequest);
 			this.keyForView = this.oNewDetailContext.getPath();
@@ -78,7 +81,8 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 	bindView: function(sEntityPath) {
 		var oView = this.getView();
 		oView.bindElement(sEntityPath);
-
+        
+        var rec = oView.getModel().getData(sEntityPath);
 		//Check if the data is already on the client
 		if (!oView.getModel().getData(sEntityPath)) {
 
