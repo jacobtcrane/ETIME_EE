@@ -27,7 +27,18 @@
 	"Nwh": "MyN",
 	"Networktxt": "My Network",
 	"Wbs": "1242",
-	"Wbstxt": "WBS example"
+	"Wbstxt": "WBS example",
+	"Iaufnr": "1234",
+	"Iaufnrtxt": "ghjkl",
+	"Acttyp": "3456",
+	"Operation": "IN",
+	"Operationtxt": "INsr",
+	"Rsnvar": "sae",
+	"Rsnvartxt": "asd",
+	"Mnote": "adsd",
+	"Isabs": "X",
+	"isAllowance": "X",
+	"Hda": "asdsa"
 }, {
 	"Pernr": "00000001",
 	"Begda": "/Date(1447020000000)/",

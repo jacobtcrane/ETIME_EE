@@ -37,10 +37,11 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 			// When navigating in the Detail page, update the binding context 
 			if (oParameters.name === "detail") {
 				var sEntityPath = "/" + oParameters.arguments.entity;
+				this.keyForView = sEntityPath;
 				this.bindView(sEntityPath);
 
-				if (this.CreatedEntityContext) {
-					this.oModel.deleteCreatedEntry(this.CreatedEntityContext);
+				if (this.oNewDetailContext) {
+					this.oModel.deleteCreatedEntry(this.oNewDetailContext);
 				}
 			} else {
 				return;
@@ -65,10 +66,12 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				Status: "INP"
 			};
 			this.oModel = this.getView().getModel("theOdataModel");
-			this.oCreatedEntityContext = this.oModel.createEntry("detailSet", oNewRequest);
+			this.oNewDetailContext = this.oModel.createEntry("detailSet", oNewRequest);
+			this.keyForView = this.oNewDetailContext.getPath();
 			this.oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 			var oView = this.getView();
-			oView.setBindingContext(this.oCreatedEntityContext);
+			oView.setBindingContext(this.oNewDetailContext);
+			this.fireDetailChanged(this.oNewDetailContext.getPath());
 		}
 	},
 
@@ -132,16 +135,6 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		var oEnduz = oEvent.getParameters().dateValue;
 		var oBeguz = this.getView().byId("beguz").getDateValue();
 		this.displayTimeDif(oBeguz, oEnduz);
-
-		// 		oEnduz.setFullYear(1970);
-		// 		oEnduz.setMonth(0);
-		// 		oEnduz.setDate(1);
-		// 		if (oBeguz != null && oEnduz > oBeguz) {
-		// 			this.getTimeDiff(oEnduz, oBeguz);
-		// 			this.getView().byId("objectHeader").setTitle(this.getView().byId("beguz").getValue() + '-' + this.getView().byId("enduz").getValue());
-		// 		} else {
-		// 			this.getView().byId("objectHeader").setNumber('');
-		// 		}
 	},
 
 	getTimeDiff: function(oEnduz, oBeguz) {
@@ -199,6 +192,46 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		if (sInputValue.length > 2) {
 			this.handleValueHelp(oEvent);
 		}
+	},
+
+	handleFavSelect: function(oEvent) {
+		var switchVal = oEvent.getSource().getState();
+		if (!this._favSelectDialog) {
+			this._favSelectDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouriteSelectDialog", this);
+			this.getView().addDependent(this._favSelectDialog);
+		}
+		if (switchVal) {
+			this._favSelectDialog.open();
+		}
+	},
+
+	handlePopulateFromFav: function(oEvent) {
+		var oItem = oEvent.getParameter("selectedItem");
+		var favKey = oItem.getBindingContext().getPath();
+		var favourite = this.oModel.getProperty(favKey);
+		var record = this.oModel.getProperty(this.keyForView);
+		record.pernr = favourite.pernr;
+		// 			"Ktext": record.
+		// 			"Aufnr": record.Iaufnr,
+		record.Awart = favourite.Awart;
+		record.Beguz = favourite.Beguz;
+		record.Enduz = favourite.Enduz;
+		record.Vtken = favourite.Vtken;
+		record.Stdaz = favourite.Stdaz;
+		record.Lgart = favourite.Lgart;
+		record.Anzhl = favourite.Anzhl;
+		record.Zeinh = favourite.Zeinh;
+		record.Srvord = favourite.Srvord;
+		record.Nwh = favourite.Nwh;
+		record.Wbs = favourite.Wbs;
+		record.Iaufnr = favourite.Iaufnr;
+		record.Acttyp = favourite.Acttyp;
+		record.Operation = favourite.Operation;
+		record.Rsnvar = favourite.Rsnvar;
+		record.Enote = favourite.Enote;
+		record.Hda = favourite.Hda;
+		this.oModel.setProperty(this.keyForView,record);
+		//Now do the view housekeeping...
 	},
 
 	handleValueHelp: function(oEvent) {
@@ -300,7 +333,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 	},
 
 	makeSAPDateTime: function(field, isTime) {
-		var path = this.oCreatedEntityContext.getPath() + field;
+		var path = this.oNewDetailContext.getPath() + field;
 		var property = this.oModel.getProperty(path);
 		var datetime = new Date(property);
 		var sapDateTime;
@@ -319,9 +352,9 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		this.makeSAPDateTime('/Weekend', false);
 		this.makeSAPDateTime('/Begda', false);
 
-		var property = this.oModel.getProperty(this.oCreatedEntityContext.getPath() + "/Vtken");
+		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
 		if (property) {
-			this.oModel.setProperty(this.oCreatedEntityContext.getPath() + "/Vtken", "X");
+			this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Vtken", "X");
 		}
 		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
 		this.oModel.submitChanges(function() {
@@ -349,19 +382,19 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		var oView = this.getView();
 
 		// create popover
-		if (!this._oPopover) {
-			this._oPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.dialogs.Favourites", this);
-			this.getView().addDependent(this._oPopover);
+		if (!this._oFavPopover) {
+			this._oFavPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.dialogs.Favourites", this);
+			this.getView().addDependent(this._oFavPopover);
 		}
 		// delay because addDependent will do a async rerendering and the popover will immediately close without it
 		var oFavButton = oEvent.getSource();
 		jQuery.sap.delayedCall(0, this, function() {
-			this._oPopover.openBy(oFavButton);
+			this._oFavPopover.openBy(oFavButton);
 		});
 	},
 
 	handleManageFavs: function(oEvent) {
-		this._oPopover.close();
+		this._oFavPopover.close();
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
 			targetViewName: "com.transfieldservices.view.Favourites",
@@ -375,6 +408,74 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		}, true);
 	},
 
+	handleAddFav: function(oEvent) {
+		this._oFavPopover.close();
+		this.oModel = this.getView().getModel("theOdataModel");
+		var record = this.oModel.getProperty(this.keyForView);
+		var elements = this._oFavPopover.findElements(true);
+		var favouriteName;
+		for (var i = 0; i < elements.length; i++) {
+			if (elements[i].getId() === "popover--favname_id") {
+				favouriteName = elements[i].getValue();
+				break;
+			}
+		}
+		var oNewFav = {
+			"Guid": "0",
+			"Pernr": record.pernr,
+			"Description": favouriteName,
+			// 			"Ktext": record.
+			// 			"Aufnr": record.Iaufnr,
+			"Awart": record.Awart,
+			"Beguz": record.Beguz,
+			"Enduz": record.Enduz,
+			"Vtken": record.Vtken,
+			"Stdaz": record.Stdaz,
+			"Lgart": record.Lgart,
+			"Anzhl": record.Anzhl,
+			"Zeinh": record.Zeinh,
+			"Srvord": record.Srvord,
+			"Nwh": record.Nwh,
+			"Wbs": record.Wbs,
+			"Iaufnr": record.Iaufnr,
+			"Acttyp": record.Acttyp,
+			"Operation": record.Operation,
+			"Rsnvar": record.Rsnvar,
+			"Enote": record.Enote,
+			"IsPrepopulated": "X",
+			"Hda": record.Hda
+		};
+		this.backupNewDet = this.oModel.getProperty(this.oNewDetailContext.getPath());
+		this.oModel.deleteCreatedEntry(this.oNewDetailContext); //remove the detail entry as we don't want to save that yet
+		this.oModel.createEntry("favTableSet", oNewFav);
+		this.oModel.submitChanges(function() {
+			var msg = 'Favourite Added';
+			sap.m.MessageToast.show(msg);
+		}, function() {
+			var msg = 'An error occurred during the adding of the favourite';
+			sap.m.MessageToast.show(msg);
+		});
+		this.oNewDetailContext = this.oModel.createEntry("detailSet", this.backupNewDet); //put back the detail entry
+		var oView = this.getView();
+		oView.setBindingContext(this.oNewDetailContext);
+
+	},
+
+// 	handleManageFavs: function(oEvent) {
+// 		this._oPopover.close();
+// 		this.getRouter().myNavToWithoutHash({
+// 			currentView: this.getView(),
+// 			targetViewName: "com.transfieldservices.view.Favourites",
+// 			targetViewType: "XML",
+// 			transition: "slide"
+// 		});
+
+// 		this.getRouter().navTo("favourites", {
+// 			from: "newdetail01",
+// 			entity: "favTableSet"
+// 		}, true);
+// 	},
+
 	getEventBus: function() {
 		return sap.ui.getCore().getEventBus();
 	},
@@ -386,6 +487,6 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 	onExit: function(oEvent) {
 		this.getEventBus().unsubscribe("Master2", "LoadFinished", this.onMasterLoaded, this);
 		// delete the created entity
-		this.oModel.deleteCreatedEntry(this.CreatedEntityContext);
+		this.oModel.deleteCreatedEntry(this.oNewDetailContext);
 	}
 });

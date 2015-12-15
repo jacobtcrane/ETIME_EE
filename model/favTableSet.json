@@ -4,5 +4,22 @@
 	"Description": "Fav",
 	"Ktext": "Corporate Building Expenses_Cary Street",
 	"Aufnr": "100002",
-	"Awart": "1000"
+	"Awart": "1000",
+	"Beguz": "PT08H00M00S",
+	"Enduz": "PT12H00M00S",
+	"Vtken": "X",
+	"Stdaz": 123,
+	"Lgart": "1111",
+	"Anzhl": 123,
+	"Zeinh": "ad",
+	"Srvord": "sad",
+	"Nwh": "netw",
+	"Wbs": "wbsss",
+	"Iaufnr": "121",
+	"Acttyp": "WS",
+	"Operation": "IN",
+	"Rsnvar": "as",
+	"Enote": "123",
+	"IsPrepopulated": "X",
+	"Hda": "asd"
 }]

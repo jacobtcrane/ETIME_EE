@@ -134,6 +134,8 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 		var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, {json: true,loadMetadataAsync: true});
 		oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 		this.setModel(oModel);
+	    this.setModel(oModel,"theOdataModel");
+	    this.setModel(oModel,"theOdataModelFav");
 
 		// Set device model
 		var oDeviceModel = new sap.ui.model.json.JSONModel({
@@ -148,7 +150,6 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 		this.setModel(oDeviceModel, "device");
 
 		this.getRouter().initialize();
-	this.setModel(oModel,"theOdataModel");
 	},
 
 	_startMockServer : function (sServiceUrl) {

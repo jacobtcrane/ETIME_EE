@@ -13,14 +13,13 @@
 			<f:SimpleForm columnsM="2" emptySpanM="4" columnsL="2" editable="false" emptySpanL="4" id="detailForm" labelSpanL="3" labelSpanM="3"
 				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024">
 				<f:content>
-					<Label id="labelFav" text="Favourites"/>
-					<Input valueHelpRequest="handleValueHelp" id="favouriteDD" description="{Description}" liveChange="handleLiveSearch"
-						placeholder="Saved Favourites ..." showSuggestion="true" showValueHelp="true" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/favTableSet}" type="Text"
-						value="{Guid}" valueLiveUpdate="true">
-						<suggestionItems>
-							<core:Item text="{Description}"/>
-						</suggestionItems>
-					</Input>
+					<l:HorizontalLayout class="sapUiSmallMargin">
+						<l:content>
+							<core:Icon class="size2" color="#64E4CE" src="sap-icon://favorite"/>
+							<Label id="labelFav" text="Populate Form from Favourite"/>
+							<Switch change="handleFavSelect" customTextOff="No" customTextOn="Yes" state="false"/>
+						</l:content>
+					</l:HorizontalLayout>
 					<l:HorizontalLayout class="sapUiSmallMargin">
 						<l:VerticalLayout class="sapUiSmallMarginEnd">
 							<l:content>

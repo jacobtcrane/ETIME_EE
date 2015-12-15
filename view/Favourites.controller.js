@@ -20,7 +20,21 @@ sap.ui.controller("com.transfieldservices.view.Favourites", {
 	},
 	
 	handleDelete: function(oEvent) {
-	    
+		this.oModel = this.getView().getModel("theOdataModel");
+		var oItem = oEvent.getParameter("listItem");
+		// after deletion put the focus back to the list
+			oEvent.getSource().attachEventOnce("updateFinished", oEvent.getSource().focus, oEvent.getSource());
+			
+		var sEntityPath = oItem.getBindingContext().getPath().substr(1);
+		this.oModel.remove(sEntityPath,{fnSuccess:function() {
+			                                        var msg = 'Favourite deleted';
+			                                        sap.m.MessageToast.show(msg);
+		                                           }, 
+		                                fnError:function() {
+			                                        var msg = 'An error occurred during the deletion of the favourite';
+			                                        sap.m.MessageToast.show(msg);
+		                                }
+		                                });
 	}
 /**
 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
