@@ -83,6 +83,10 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		oView.bindElement(sEntityPath);
         
         var rec = oView.getModel().getData(sEntityPath);
+        //Housekeeping
+        rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
+        rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
+        oView.getModel().setProperty(sEntityPath,rec);
 		//Check if the data is already on the client
 		if (!oView.getModel().getData(sEntityPath)) {
 
