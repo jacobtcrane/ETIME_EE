@@ -5,7 +5,7 @@
 	    id = "WBSDialog"
 	    title = "WBS Elements"
 		class="sapUiPopupWithPadding"
-		items="{/VH_wbsElementSet}"
+		items="{/PrstpSet}"
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">

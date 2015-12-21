@@ -5,7 +5,7 @@
 	    id = "NetDialog"
 	    title = "Network"
 		class="sapUiPopupWithPadding"
-		items="{/VH_networkSet}"
+		items="{/ZhtrsEtimeOrderShSet}"
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">

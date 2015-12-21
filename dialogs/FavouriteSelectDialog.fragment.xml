@@ -1,13 +1,12 @@
-<core:FragmentDefinition
-	xmlns="sap.m"
-	xmlns:core="sap.ui.core">
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<SelectDialog
 	    id = "FavSelectDialog"
 	    title = "Favourites "
 		class="sapUiPopupWithPadding"
 		items="{/favTableSet}"
 		search="_handleValueHelpSearch"
-		confirm="handlePopulateFromFav">
+		confirm="handlePopulateFromFav"
+		cancel="_handlePopFromFavCan">
 		<StandardListItem
 			title="{Description}"
 			description="{Awart}" />

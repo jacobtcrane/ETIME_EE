@@ -16,7 +16,7 @@
 					<items>
 						<core:Icon class="size2" color="#64E4CE" src="sap-icon://favorite"/>
 						<Label id="labelFav" text="Populate Form from Favourite"/>
-						<Switch change="handleFavSelect" customTextOff="No" customTextOn="Yes" state="false"/>
+						<Switch id="favSwitch" change="handleFavSelect" customTextOff="No" customTextOn="Yes" state="false"/>
 					</items>
 					<!--</l:content>-->
 					<!--</l:HorizontalLayout>-->
@@ -52,11 +52,19 @@
 							<core:Item text="{Atext}"/>
 						</suggestionItems>
 					</Input>
-					<Label id="labelwbs" text="WBS Element"
-						visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}"/>
-					<Input placeholder="Enter WBS Element ..." text="{Wbstxt}" description="{Wbs}" suggestionItems="{/VH_wbsElementSet}" showValueHelp="true"
-						liveChange="handleLiveSearch" showSuggestion="true" id="wbsInput" suggestionItemSelected="handleSuggestionSel" type="Text" value="{Wbstxt}" valueHelpRequest="handleValueHelp"
-						valueLiveUpdate="true" visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}">
+					<!--<Label id="labelwbs" text="WBS Element"-->
+					<!--	visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}"/>-->
+					<!--<Input placeholder="Enter WBS Element ..." text="{Wbstxt}" description="{Wbs}" suggestionItems="{/VH_wbsElementSet}" showValueHelp="true"-->
+					<!--	liveChange="handleLiveSearch" showSuggestion="true" id="wbsInput" suggestionItemSelected="handleSuggestionSel" type="Text" value="{Wbstxt}" valueHelpRequest="handleValueHelp"-->
+					<!--	valueLiveUpdate="true" visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}">-->
+					<!--	<suggestionItems>-->
+					<!--		<core:Item text="{Post1}"/>-->
+					<!--	</suggestionItems>-->
+					<!--</Input>-->
+					<Label id="labelwbs" text="WBS Element"/>
+					<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Wbs}" liveChange="handleLiveSearch" placeholder="Enter WBS Element ..."
+						showSuggestion="true" id="wbsInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/PrstpSet}" text="{Post1}" type="Text"
+						value="{Wbstxt}" valueLiveUpdate="true">
 						<suggestionItems>
 							<core:Item text="{Post1}"/>
 						</suggestionItems>

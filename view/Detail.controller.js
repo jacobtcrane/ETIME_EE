@@ -16,10 +16,6 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		if (this.getRouter() != null) {
 			this.getRouter().attachRouteMatched(this.onRouteMatched, this);
 		}
-
-		// 		this.getView().byId("enduz").bindElement("{Enduz}");
-		// 		this.getView().byId("beguz").bindElement("{Beguz}");
-
 	},
 
 	onMasterLoaded: function(sChannel, sEvent, oData) {
@@ -65,28 +61,28 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				Statustxt: "New",
 				Status: "INP"
 			};
-			if (this.oNewDetailContext != null){
-			   	this.oModel.deleteCreatedEntry(this.oNewDetailContext);
+			if (this.oNewDetailContext != null) {
+				this.oModel.deleteCreatedEntry(this.oNewDetailContext);
 			}
 			this.oModel = this.getView().getModel("theOdataModel");
+			this.oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
+			this.oModel.refreshMetadata();
 			this.oNewDetailContext = this.oModel.createEntry("detailSet", oNewRequest);
 			this.keyForView = this.oNewDetailContext.getPath();
-			this.oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 			var oView = this.getView();
 			oView.setBindingContext(this.oNewDetailContext);
-			this.fireDetailChanged(this.oNewDetailContext.getPath());
 		}
 	},
 
 	bindView: function(sEntityPath) {
 		var oView = this.getView();
 		oView.bindElement(sEntityPath);
-        
-        var rec = oView.getModel().getData(sEntityPath);
-        //Housekeeping
-        rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
-        rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
-        oView.getModel().setProperty(sEntityPath,rec);
+
+		var rec = oView.getModel().getData(sEntityPath);
+		//Housekeeping
+		rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
+		rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
+		oView.getModel().setProperty(sEntityPath, rec);
 		//Check if the data is already on the client
 		if (!oView.getModel().getData(sEntityPath)) {
 
@@ -98,11 +94,9 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 			} else {
 				this.fireDetailChanged(sEntityPath);
 			}
-
 		} else {
 			this.fireDetailChanged(sEntityPath);
 		}
-
 	},
 
 	displayTimeDif: function(begda, endda) {
@@ -202,191 +196,10 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		}
 	},
 
-	handleFavSelect: function(oEvent) {
-		var switchVal = oEvent.getSource().getState();
-		if (!this._favSelectDialog) {
-			this._favSelectDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouriteSelectDialog", this);
-			this.getView().addDependent(this._favSelectDialog);
-		}
-		if (switchVal) {
-			this._favSelectDialog.open();
-		}
-	},
-
-	handlePopulateFromFav: function(oEvent) {
-		var oItem = oEvent.getParameter("selectedItem");
-		var favKey = oItem.getBindingContext().getPath();
-		var favourite = this.oModel.getProperty(favKey);
-		var record = this.oModel.getProperty(this.keyForView);
-		record.pernr = favourite.pernr;
-		// 			"Ktext": record.
-		// 			"Aufnr": record.Iaufnr,
-		record.Awart = favourite.Awart;
-		record.Beguz = favourite.Beguz;
-		record.Enduz = favourite.Enduz;
-		record.Vtken = favourite.Vtken;
-		record.Stdaz = favourite.Stdaz;
-		record.Lgart = favourite.Lgart;
-		record.Anzhl = favourite.Anzhl;
-		record.Zeinh = favourite.Zeinh;
-		record.Srvord = favourite.Srvord;
-		record.Nwh = favourite.Nwh;
-		record.Wbs = favourite.Wbs;
-		record.Iaufnr = favourite.Iaufnr;
-		record.Acttyp = favourite.Acttyp;
-		record.Operation = favourite.Operation;
-		record.Rsnvar = favourite.Rsnvar;
-		record.Enote = favourite.Enote;
-		record.Hda = favourite.Hda;
-		this.oModel.setProperty(this.keyForView,record);
-		//Now do the view housekeeping...
-	},
-
-	handleValueHelp: function(oEvent) {
-		var sInputValue = oEvent.getSource().getValue();
-		var source = oEvent.getSource().getId();
-		var filter;
-		this.inputId = oEvent.getSource().getId();
-		// create value help dialog
-		if (source.search("favouriteDD") > -1) {
-			if (!this._valueHelpFavouritesDialog) {
-				this._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouritesDialog", this);
-				filter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpFavouritesDialog);
-				this._valueHelpFavouritesDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpFavouritesDialog.open(sInputValue);
-		} else if (source.search("attendanceInput") > -1) {
-			if (!this._valueHelpAttDialog) {
-				this._valueHelpAttDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.AttDialog", this);
-				filter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpAttDialog);
-				this._valueHelpAttDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpAttDialog.open(sInputValue);
-		} else if (source.search("wbsInput") > -1) {
-			if (!this._valueHelpWBSDialog) {
-				this._valueHelpWBSDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.WBSDialog", this);
-				filter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpWBSDialog);
-				this._valueHelpWBSDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpWBSDialog.open(sInputValue);
-		} else if (source.search("netInput") > -1) {
-			if (!this._valueHelpNetDialog) {
-				this._valueHelpNetDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.NetworkDialog", this);
-				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpNetDialog);
-				this._valueHelpNetDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpNetDialog.open(sInputValue);
-		} else if (source.search("orderInput") > -1) {
-			if (!this._valueHelpOrderDialog) {
-				this._valueHelpOrderDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OrderDialog", this);
-				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpOrderDialog);
-				this._valueHelpOrderDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpOrderDialog.open(sInputValue);
-		} else if (source.search("causeInput") > -1) {
-			if (!this._valueHelpCauseDialog) {
-				this._valueHelpCauseDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.CauseDialog", this);
-				filter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpCauseDialog);
-				this._valueHelpCauseDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpCauseDialog.open(sInputValue);
-		} else if (source.search("operationInput") > -1) {
-			if (!this._valueHelpOperationDialog) {
-				this._valueHelpOperationDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OperationDialog", this);
-				filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpOperationDialog);
-				this._valueHelpOperationDialog.getBinding("items").filter([filter]);
-			}
-			this._valueHelpOperationDialog.open(sInputValue);
-		}
-		// // create a filter for the binding
-		// this._valueHelpDialog.getBinding("items").filter([filter]);
-		// // open value help dialog filtered by the input value
-		// this._valueHelpDialog.open(sInputValue);
-	},
-
-	_handleValueHelpSearch: function(evt) {
-		var sValue = evt.getParameter("value");
-		var oFilter;
-		if (evt.getSource().getId().search("AttDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (evt.getSource().getId().search("WBSDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (evt.getSource().getId().search("NetDialog") > -1 || evt.getSource().getId().search("OrderDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (evt.getSource().getId().search("FavouritesDialog") > -1 || evt.getSource().getId().search("FavouritesDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Guid", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (evt.getSource().getId().search("CauseDialog") > -1 || evt.getSource().getId().search("CauseDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);			
-		} else if (evt.getSource().getId().search("operationDialog") > -1 || evt.getSource().getId().search("operationDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);			
-		}
-		evt.getSource().getBinding("items").filter([oFilter]);
-	},
-
-	_handleValueHelpClose: function(evt) {
-		var oSelectedItem = evt.getParameter("selectedItem");
-		if (oSelectedItem) {
-			var inputDD = this.getView().byId(this.inputId);
-			inputDD.setValue(oSelectedItem.getTitle());
-			inputDD.setDescription(oSelectedItem.getDescription());
-		}
-		evt.getSource().getBinding("items").filter([]);
-	},
-
-	makeSAPDateTime: function(field, isTime) {
-		var path = this.oNewDetailContext.getPath() + field;
-		var property = this.oModel.getProperty(path);
-		var datetime = new Date(property);
-		var sapDateTime;
-		if (isTime) {
-			sapDateTime = this.timeFormatter.format(datetime);
-		} else {
-			sapDateTime = this.dateFormatter.format(datetime);
-		}
-		this.oModel.setProperty(path, sapDateTime);
-	},
-
-	handleSendRequest: function() {
-		console.log(this.oModel);
-		//Housekeeping
-		this.makeSAPDateTime('/Weekstart', false);
-		this.makeSAPDateTime('/Weekend', false);
-		this.makeSAPDateTime('/Begda', false);
-
-		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
-		if (property) {
-			this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Vtken", "X");
-		}
-		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
-		this.oModel.submitChanges(function() {
-			var msg = 'Request sent';
-			sap.m.MessageToast.show(msg);
-		}, function() {
-			var msg = 'An error occurred during the sending of the request';
-			sap.m.MessageToast.show(msg);
-		});
-		//   {success: "handleSubmitSuccess", error: "handleSubmitError"});
-	},
-
-	handleSubmitError: function() {
-		var msg = 'An error occurred during the sending of the request';
-		sap.m.MessageToast.show(msg);
-	},
-
-	handleSubmitSuccess: function() {
-		var msg = 'Request sent';
-		sap.m.MessageToast.show(msg);
-		this.showEmptyView();
-	},
-
-	handleFavourites: function(oEvent) {
+	/********************
+Favourites - START
+*********************/
+	handleFavourites: function(oEvent) { //Creates the Popover for Managing Favourites
 		var oView = this.getView();
 
 		// create popover
@@ -401,7 +214,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		});
 	},
 
-	handleManageFavs: function(oEvent) {
+	handleManageFavs: function(oEvent) { //Launches Manage Favourites View
 		this._oFavPopover.close();
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
@@ -416,7 +229,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		}, true);
 	},
 
-	handleAddFav: function(oEvent) {
+	handleAddFav: function(oEvent) { //Adds the Screen content as Faourite
 		this._oFavPopover.close();
 		this.oModel = this.getView().getModel("theOdataModel");
 		var record = this.oModel.getProperty(this.keyForView);
@@ -429,7 +242,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 			}
 		}
 		var oNewFav = {
-			"Guid": "0",
+			// "Guid": "0",
 			"Pernr": record.pernr,
 			"Description": favouriteName,
 			// 			"Ktext": record.
@@ -469,20 +282,203 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 
 	},
 
-// 	handleManageFavs: function(oEvent) {
-// 		this._oPopover.close();
-// 		this.getRouter().myNavToWithoutHash({
-// 			currentView: this.getView(),
-// 			targetViewName: "com.transfieldservices.view.Favourites",
-// 			targetViewType: "XML",
-// 			transition: "slide"
-// 		});
+	handleFavSelect: function(oEvent) { //Generates Popover Search Help for selecting a favourite to populate from
+		var switchVal = oEvent.getSource().getState();
+		if (!this._favSelectDialog) {
+			this._favSelectDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouriteSelectDialog", this);
+			this.getView().addDependent(this._favSelectDialog);
+		}
+		if (switchVal) {
+			this._favSelectDialog.open();
+		}
+	},
 
-// 		this.getRouter().navTo("favourites", {
-// 			from: "newdetail01",
-// 			entity: "favTableSet"
-// 		}, true);
-// 	},
+	_handlePopFromFavCan: function(oEvent) { //Cancels Search Help
+		var favswitch = this.getView().byId("favSwitch");
+		favswitch.setState(false);
+	},
+
+	handlePopulateFromFav: function(oEvent) { //Populates form with favourite values
+		var oItem = oEvent.getParameter("selectedItem");
+		var favKey = oItem.getBindingContext().getPath();
+		var favourite = this.oModel.getProperty(favKey);
+		var record = this.oModel.getProperty(this.keyForView);
+		record.pernr = favourite.pernr;
+		// 			"Ktext": record.
+		// 			"Aufnr": record.Iaufnr,
+		record.Awart = favourite.Awart;
+		record.Beguz = favourite.Beguz;
+		record.Enduz = favourite.Enduz;
+		record.Vtken = favourite.Vtken;
+		record.Stdaz = favourite.Stdaz;
+		record.Lgart = favourite.Lgart;
+		record.Anzhl = favourite.Anzhl;
+		record.Zeinh = favourite.Zeinh;
+		record.Srvord = favourite.Srvord;
+		record.Nwh = favourite.Nwh;
+		record.Wbs = favourite.Wbs;
+		record.Iaufnr = favourite.Iaufnr;
+		record.Acttyp = favourite.Acttyp;
+		record.Operation = favourite.Operation;
+		record.Rsnvar = favourite.Rsnvar;
+		record.Enote = favourite.Enote;
+		record.Hda = favourite.Hda;
+		this.oModel.setProperty(this.keyForView, record);
+		//Now do the view housekeeping...
+	},
+	/********************
+Favourites - END
+*********************/
+
+	/********************
+Search Helps - START
+*********************/
+	handleValueHelp: function(oEvent) {
+		var sInputValue = oEvent.getSource().getValue();
+		var source = oEvent.getSource().getId();
+		var filter;
+		this.inputId = oEvent.getSource().getId();
+		// create value help dialog
+		if (source.search("favouriteDD") > -1) {
+			if (!this._valueHelpFavouritesDialog) {
+				this._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouritesDialog", this);
+				filter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this._valueHelpFavouritesDialog);
+				this._valueHelpFavouritesDialog.getBinding("items").filter([filter]);
+			}
+			this._valueHelpFavouritesDialog.open(sInputValue);
+		} else if (source.search("attendanceInput") > -1) {
+			if (!this._valueHelpAttDialog) {
+				this._valueHelpAttDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.AttDialog", this);
+				filter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
+				var oBegda = this.oModel.getProperty(this.keyForView).Begda;
+				var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + this.dateFormatter.format(oBegda) + '\'';
+				this._valueHelpAttDialog.bindElement(sEntityPath);
+				this.getView().addDependent(this._valueHelpAttDialog); //this makes the SAP call
+				this._valueHelpAttDialog.getBinding("items").filter([filter]);
+			}
+			this._valueHelpAttDialog.open(sInputValue);
+		} else if (source.search("wbsInput") > -1) {
+			if (!this._valueHelpWBSDialog) {
+				this._valueHelpWBSDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.WBSDialog", this);
+				filter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this._valueHelpWBSDialog);
+				this._valueHelpWBSDialog.getBinding("items").filter([filter]);
+			}
+			this._valueHelpWBSDialog.open(sInputValue);
+		} else if (source.search("netInput") > -1) {
+			if (!this._valueHelpNetDialog) {
+				this._valueHelpNetDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.NetworkDialog", this);
+				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this._valueHelpNetDialog);
+				this._valueHelpNetDialog.getBinding("items").filter([filter]);
+			}
+			this._valueHelpNetDialog.open(sInputValue);
+		} else if (source.search("orderInput") > -1) {
+			if (!this._valueHelpOrderDialog) {
+				this._valueHelpOrderDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OrderDialog", this);
+				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this._valueHelpOrderDialog);
+				this._valueHelpOrderDialog.getBinding("items").filter([filter]);
+			}
+			this._valueHelpOrderDialog.open(sInputValue);
+		} else if (source.search("causeInput") > -1) {
+			if (!this._valueHelpCauseDialog) {
+				this._valueHelpCauseDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.CauseDialog", this);
+				filter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this._valueHelpCauseDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this._valueHelpCauseDialog);
+			}
+			this._valueHelpCauseDialog.open(sInputValue);
+		} else if (source.search("operationInput") > -1) {
+			if (!this._valueHelpOperationDialog) {
+				this._valueHelpOperationDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OperationDialog", this);
+				filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this._valueHelpOperationDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this._valueHelpOperationDialog);
+			}
+			this._valueHelpOperationDialog.open(sInputValue);
+		}
+	},
+
+	_handleValueHelpSearch: function(evt) {
+		var sValue = evt.getParameter("value");
+		var oFilter;
+		if (evt.getSource().getId().search("AttDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("WBSDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("NetDialog") > -1 || evt.getSource().getId().search("OrderDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("FavouritesDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Guid", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("CauseDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("operationDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+		}
+		evt.getSource().getBinding("items").filter([oFilter]);
+	},
+
+	_handleValueHelpClose: function(evt) {
+		var oSelectedItem = evt.getParameter("selectedItem");
+		if (oSelectedItem) {
+			var inputDD = this.getView().byId(this.inputId);
+			inputDD.setValue(oSelectedItem.getTitle());
+			inputDD.setDescription(oSelectedItem.getDescription());
+		}
+		evt.getSource().getBinding("items").filter([]);
+	},
+	/********************
+Search Helps - END
+*********************/
+
+	makeSAPDateTime: function(field, isTime) {
+		var path = this.oNewDetailContext.getPath() + field;
+		var property = this.oModel.getProperty(path);
+		var datetime = new Date(property);
+		var sapDateTime;
+		if (isTime) {
+			sapDateTime = this.timeFormatter.format(datetime);
+		} else {
+			sapDateTime = this.dateFormatter.format(datetime);
+		}
+		this.oModel.setProperty(path, sapDateTime);
+	},
+
+	handleSendRequest: function() {
+		console.log(this.oModel);
+		//Housekeeping
+		this.makeSAPDateTime('/Weekstart', false);
+		this.makeSAPDateTime('/Weekend', false);
+		this.makeSAPDateTime('/Begda', false);
+
+		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
+		if (property) {
+			this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Vtken", "X");
+		}
+		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
+		this.oModel.submitChanges(function() {
+			var msg = 'Request sent';
+			sap.m.MessageToast.show(msg);
+			this.fireDetailChanged(this.oNewDetailContext.getPath());
+		}, function() {
+			var msg = 'An error occurred during the sending of the request';
+			sap.m.MessageToast.show(msg);
+		});
+		//   {success: "handleSubmitSuccess", error: "handleSubmitError"});
+	},
+
+	handleSubmitError: function() {
+		var msg = 'An error occurred during the sending of the request';
+		sap.m.MessageToast.show(msg);
+	},
+
+	handleSubmitSuccess: function() {
+		var msg = 'Request sent';
+		sap.m.MessageToast.show(msg);
+		this.showEmptyView();
+	},
 
 	getEventBus: function() {
 		return sap.ui.getCore().getEventBus();
