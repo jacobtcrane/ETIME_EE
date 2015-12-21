@@ -97,12 +97,6 @@
 					<PropertyRef Name="Begda"/>
 					<PropertyRef Name="Awart"/>
 				</Key>
-				<Property MaxLength="3" Name="seqnr" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
-					sap:label="IT record no." sap:sortable="false" sap:updatable="false"/>
-				<Property Name="weekend" Nullable="false" Precision="0" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false"
-					sap:label="End Date" sap:sortable="false" sap:updatable="false"/>
-				<Property Name="weekstart" Nullable="false" Precision="0" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false"
-					sap:label="Start Date" sap:sortable="false" sap:updatable="false"/>
 				<Property Name="Begda" Nullable="false" Precision="0" Type="Edm.DateTime" sap:creatable="false" sap:label="Start Date" sap:sortable="false"
 					sap:updatable="false"/>
 				<Property MaxLength="4" Name="Awart" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
@@ -253,8 +247,6 @@
 					sap:sortable="false" sap:updatable="false"/>
 				<Property MaxLength="1" Name="Hda" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="HDA" sap:sortable="false"
 					sap:updatable="false"/>
-				<NavigationProperty FromRole="FromRole_ASS_detail2attendance" Name="attendanceFromDetail"
-					Relationship="ZHTR_ETIME_EMPLOYEE_SRV.ASS_detail2attendance" ToRole="ToRole_ASS_detail2attendance"/>
 			</EntityType>
 			<EntityType Name="ZhtrsEtimeOrderSh" sap:content-version="1">
 				<Key>
@@ -358,24 +350,6 @@
 					</Dependent>
 				</ReferentialConstraint>
 			</Association>
-			<Association Name="ASS_detail2attendance" sap:content-version="1">
-				<End Multiplicity="1" Role="FromRole_ASS_detail2attendance" Type="ZHTR_ETIME_EMPLOYEE_SRV.detail"/>
-				<End Multiplicity="*" Role="ToRole_ASS_detail2attendance" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_attendance"/>
-				<ReferentialConstraint>
-					<Principal Role="FromRole_ASS_detail2attendance">
-						<PropertyRef Name="Weekend"/>
-						<PropertyRef Name="Weekstart"/>
-						<PropertyRef Name="Seqnr"/>
-						<PropertyRef Name="Begda"/>
-					</Principal>
-					<Dependent Role="ToRole_ASS_detail2attendance">
-						<PropertyRef Name="weekend"/>
-						<PropertyRef Name="weekstart"/>
-						<PropertyRef Name="seqnr"/>
-						<PropertyRef Name="Begda"/>
-					</Dependent>
-				</ReferentialConstraint>
-			</Association>
 			<Association Name="ASS_operation2suboperation" sap:content-version="1">
 				<End Multiplicity="0..1" Role="FromRole_ASS_operation2suboperation" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_operation"/>
 				<End Multiplicity="*" Role="ToRole_ASS_operation2suboperation" Type="ZHTR_ETIME_EMPLOYEE_SRV.VH_suboperation"/>
@@ -425,11 +399,6 @@
 					sap:creatable="false" sap:deletable="false" sap:updatable="false">
 					<End EntitySet="headerSet" Role="FromRole_ASS_header2overview"/>
 					<End EntitySet="overviewSet" Role="ToRole_ASS_header2overview"/>
-				</AssociationSet>
-				<AssociationSet Association="ZHTR_ETIME_EMPLOYEE_SRV.ASS_detail2attendance" Name="ASS_detail2attendanceSet" sap:content-version="1"
-					sap:creatable="false" sap:deletable="false" sap:updatable="false">
-					<End EntitySet="detailSet" Role="FromRole_ASS_detail2attendance"/>
-					<End EntitySet="VH_attendanceSet" Role="ToRole_ASS_detail2attendance"/>
 				</AssociationSet>
 				<AssociationSet Association="ZHTR_ETIME_EMPLOYEE_SRV.ASS_operation2suboperation" Name="ASS_operation2suboperationSet"
 					sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false">
