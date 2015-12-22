@@ -28,7 +28,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.AllowancesDetail"
 	onRouteMatched: function(oEvent) {
 		var oParameters = oEvent.getParameters();
 		// 		var from = oParameters.name;
-		jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
+		// jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
 
 			// When navigating in the Detail page, update the binding context 
 			if (oParameters.name === "allowancedetail") {
@@ -42,9 +42,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.AllowancesDetail"
 			} else {
 				return;
 			}
-		}, this));
-		//remove any existing view bindings
-		this.getView().unbindElement();
+		// }, this));
 
 		if (oParameters.name === "newalldetail") {
 			//remove any existing view bindings
@@ -166,6 +164,16 @@ Search Helps - END
 		//   {success: "handleSubmitSuccess", error: "handleSubmitError"});
 	},
 
+	fireDetailChanged: function(sEntityPath) {
+		this.getEventBus().publish("AllowancesDetail", "Changed", {
+			sEntityPath: sEntityPath
+		});
+	},
+
+	fireDetailNotFound: function() {
+		this.getEventBus().publish("AllowancesDetail", "NotFound");
+	},
+	
 	handleSubmitError: function() {
 		var msg = 'An error occurred during the sending of the request';
 		sap.m.MessageToast.show(msg);
@@ -176,7 +184,12 @@ Search Helps - END
 		sap.m.MessageToast.show(msg);
 		this.showEmptyView();
 	},
-
+	
+	onNavBack: function() {
+		// This is only relevant when running on phone devices
+		this.getRouter().myNavBack("main");
+	},
+	
 	getEventBus: function() {
 		return sap.ui.getCore().getEventBus();
 	},

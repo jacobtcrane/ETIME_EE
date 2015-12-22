@@ -28,7 +28,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 	onRouteMatched: function(oEvent) {
 		var oParameters = oEvent.getParameters();
 		// 		var from = oParameters.name;
-		jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
+		// jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
 
 			// When navigating in the Detail page, update the binding context 
 			if (oParameters.name === "detail") {
@@ -42,9 +42,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 			} else {
 				return;
 			}
-		}, this));
-		//remove any existing view bindings
-		this.getView().unbindElement();
+		// }, this));
 
 		if (oParameters.name === "newdetail") {
 			//remove any existing view bindings
@@ -148,13 +146,13 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 		oTimeDiff.setNumber(strTime);
 	},
 
-	timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
-		pattern: "PThh'H'mm'M'ss'S'"
-	}),
+	// timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
+	// 	pattern: "PThh'H'mm'M'ss'S'"
+	// }),
 
-	dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
-		pattern: "yyyy-MM-ddThh:mm:ss"
-	}),
+	// dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
+	// 	pattern: "yyyy-MM-ddThh:mm:ss"
+	// }),
 
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
@@ -433,25 +431,34 @@ Search Helps - START
 Search Helps - END
 *********************/
 
-	makeSAPDateTime: function(field, isTime) {
-		var path = this.oNewDetailContext.getPath() + field;
-		var property = this.oModel.getProperty(path);
-		var datetime = new Date(property);
-		var sapDateTime;
-		if (isTime) {
-			sapDateTime = this.timeFormatter.format(datetime);
-		} else {
-			sapDateTime = this.dateFormatter.format(datetime);
-		}
-		this.oModel.setProperty(path, sapDateTime);
-	},
+	// makeSAPDateTime: function(field, isTime) {
+	// 	var path = this.oNewDetailContext.getPath() + field;
+	// 	var property = this.oModel.getProperty(path);
+	// 	var datetime = new Date(property);
+	// 	var sapDateTime;
+	// 	if (isTime) {
+	// 		sapDateTime = this.timeFormatter.format(datetime);
+	// 	} else {
+	// 		sapDateTime = this.dateFormatter.format(datetime);
+	// 	}
+	// 	this.oModel.setProperty(path, sapDateTime);
+	// },
 
 	handleSendRequest: function() {
 		console.log(this.oModel);
 		//Housekeeping
-		this.makeSAPDateTime('/Weekstart', false);
-		this.makeSAPDateTime('/Weekend', false);
-		this.makeSAPDateTime('/Begda', false);
+		// this.makeSAPDateTime('/Weekstart', false);
+		// this.makeSAPDateTime('/Weekend', false);
+		// this.makeSAPDateTime('/Begda', false);
+		var path = this.oNewDetailContext.getPath() + '/Weekstart';
+		var property = this.oModel.getProperty(path);
+		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		path = this.oNewDetailContext.getPath() + '/Weekend';
+		property = this.oModel.getProperty(path);
+		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		path = this.oNewDetailContext.getPath() + '/Begda';
+		property = this.oModel.getProperty(path);
+		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
 
 		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
 		if (property) {
