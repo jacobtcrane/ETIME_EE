@@ -2,9 +2,9 @@
 	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
 	<Page class="sapUiFioriObjectPage" id="detailPage" navButtonPress="onNavBack" showNavButton="{device&gt;/isPhone}" title="Timesheet Entry">
 		<content>
-			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Timetxt}">
+			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Atttxt}">
 				<attributes>
-					<ObjectAttribute text="{Atttxt}"/>
+					<ObjectAttribute text="{Timetxt}"/>
 				</attributes>
 				<firstStatus>
 					<ObjectStatus text="{Statustxt}"/>

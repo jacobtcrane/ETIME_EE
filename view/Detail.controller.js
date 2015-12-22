@@ -243,7 +243,7 @@ Favourites - START
 		}
 		var oNewFav = {
 			// "Guid": "0",
-			"Pernr": record.pernr,
+			"Pernr": "00000000",
 			"Description": favouriteName,
 			// 			"Ktext": record.
 			// 			"Aufnr": record.Iaufnr,
@@ -263,7 +263,7 @@ Favourites - START
 			"Operation": record.Operation,
 			"Rsnvar": record.Rsnvar,
 			"Enote": record.Enote,
-			"IsPrepopulated": "X",
+			"IsPrepopulated": true,
 			"Hda": record.Hda
 		};
 		this.backupNewDet = this.oModel.getProperty(this.oNewDetailContext.getPath());

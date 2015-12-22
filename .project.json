@@ -49,7 +49,7 @@
     "mockRequestsFilePath": ""
   },
   "deploy": {
-    "destination": "NMD",
+    "destination": "TSL",
     "name": "ZHTR_ETIME_EE"
   }
 }

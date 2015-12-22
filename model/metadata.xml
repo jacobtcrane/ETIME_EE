@@ -32,7 +32,7 @@
 					sap:updatable="false"/>
 				<Property MaxLength="12" Name="Nwh" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Network" sap:sortable="false"
 					sap:updatable="false"/>
-				<Property MaxLength="8" Name="Wbs" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Rec. WBS elem."
+				<Property MaxLength="24" Name="Wbs" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Rec. WBS elem."
 					sap:sortable="false" sap:updatable="false"/>
 				<Property MaxLength="12" Name="Iaufnr" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Internal Order"
 					sap:sortable="false" sap:updatable="false"/>

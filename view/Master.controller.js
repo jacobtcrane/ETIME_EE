@@ -22,7 +22,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 
 		oEventBus.subscribe("Master2", "NotFound", this.onNotFound, this);
 		oEventBus.subscribe('HeaderSelection', 'headDateEvt', this.onDateSelected, this);
-		oEventBus.subscribe("Detail","Changed",this.bindView(this.keyForView),this);
+		oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
 	},
 
 	onDateSelected: function(sChannel, sEvent, oData) {
@@ -55,26 +55,28 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 	},
 
 	bindView: function(sEntityPath) {
-		var oView = this.getView();
-		var list = this.getView().byId("master1List");
+		if (sEntityPath != null) {
+			var oView = this.getView();
+			var list = this.getView().byId("master1List");
 
-		var template = new sap.m.ObjectListItem({
-			// id : "master1ListItem",
-			type: "{device>/listItemType}",
-			press: "onSelect",
-			title: "{Datetxt}",
-			attributes: [new sap.m.ObjectAttribute({
-					text: "{Hourstxt}"
-				}),
-				new sap.m.ObjectAttribute({
-					text: "{Statustxt}"
-				})
-			]
+			var template = new sap.m.ObjectListItem({
+				// id : "master1ListItem",
+				type: "{device>/listItemType}",
+				press: "onSelect",
+				title: "{Datetxt}",
+				attributes: [new sap.m.ObjectAttribute({
+						text: "{Hourstxt}"
+					}),
+					new sap.m.ObjectAttribute({
+						text: "{Statustxt}"
+					})
+				]
 
-		});
+			});
 
-		list.bindItems(sEntityPath, template, null, null);
-		this.keyForView = sEntityPath;
+			list.bindItems(sEntityPath, template, null, null);
+			this.keyForView = sEntityPath;
+		}
 	},
 
 	onRouteMatched: function(oEvent) {

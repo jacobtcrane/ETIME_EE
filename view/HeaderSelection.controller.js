@@ -88,7 +88,20 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
         
         //Allowance
         handleNewAllPress: function(oEvent){
-        
+                    this._oPopover.close();
+            this.getRouter().myNavToWithoutHash({ 
+			    currentView : this.getView(),
+			    targetViewName : "com.transfieldservices.view.AllowancesDetail",
+			    targetViewType : "XML",
+			    transition: "slide"
+		    });
+            // If we're on a phone device, include nav in history
+		    var bReplace = jQuery.device.is.phone ? false : true;
+		    this.getRouter().navTo("newalldetail", {
+			    from: "newreq",
+			    entity: this.oSelectedDate
+		    }, bReplace);
+
         }
 	});
 

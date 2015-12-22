@@ -37,5 +37,26 @@ com.transfieldservices.utils.Conversions = {
 		} else {
 			return false;
 		}
-	}	
+	},
+	makeSAPDateTime: function(property, isTime) {
+		// var path = this.oNewDetailContext.getPath() + field;
+		// var property = this.oModel.getProperty(field);
+		var datetime = new Date(property);
+		var sapDateTime;
+		if (isTime) {
+			sapDateTime = this.timeFormatter.format(datetime);
+		} else {
+			sapDateTime = this.dateFormatter.format(datetime);
+		}
+		return sapDateTime;
+		// this.oModel.setProperty(path, sapDateTime);
+	},
+	
+	timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "PThh'H'mm'M'ss'S'"
+	}),
+
+	dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "yyyy-MM-ddThh:mm:ss"
+	})
 };
