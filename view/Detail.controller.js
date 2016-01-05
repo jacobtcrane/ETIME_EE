@@ -39,8 +39,8 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 				if (this.oNewDetailContext) {
 					this.oModel.deleteCreatedEntry(this.oNewDetailContext);
 				}
-			} else {
-				return;
+			// } else {	// With the commenting of the `jQuery.when` promise above, this return block exits the route matching, affecting the handling of other routes...
+			// 	return;
 			}
 		// }, this));
 
@@ -412,10 +412,12 @@ Search Helps - START
 			oFilter = new sap.ui.model.Filter("Guid", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("CauseDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (evt.getSource().getId().search("operationDialog") > -1) {
+		} else if (evt.getSource().getId().search("OperationDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
 		}
-		evt.getSource().getBinding("items").filter([oFilter]);
+		if (evt.getSource().getBinding("items")) {
+			evt.getSource().getBinding("items").filter([oFilter]);
+		}
 	},
 
 	_handleValueHelpClose: function(evt) {
@@ -425,7 +427,9 @@ Search Helps - START
 			inputDD.setValue(oSelectedItem.getTitle());
 			inputDD.setDescription(oSelectedItem.getDescription());
 		}
-		evt.getSource().getBinding("items").filter([]);
+		if (evt.getSource().getBinding("items")) {
+			evt.getSource().getBinding("items").filter([]);
+		}
 	},
 	/********************
 Search Helps - END

@@ -39,8 +39,8 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.AllowancesDetail"
 				if (this.oNewDetailContext) {
 					this.oModel.deleteCreatedEntry(this.oNewDetailContext);
 				}
-			} else {
-				return;
+			// } else {	// With the commenting of the `jQuery.when` promise above, this return block exits the route matching, affecting the handling of other routes...
+			// 	return;
 			}
 		// }, this));
 
@@ -111,7 +111,7 @@ Search Helps - START
 				this._valueHelpAllDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.AllowanceDialog", this);
 				filter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sInputValue);
 				var oBegda = this.oModel.getProperty(this.keyForView).Begda;
-				var sEntityPath = '/VH_lgartSet?$filter=Begda le datetime\'' + this.dateFormatter.format(oBegda) + '\'';
+				var sEntityPath = '/VH_lgartSet?$filter=Begda le datetime\'' + com.transfieldservices.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
 				this._valueHelpAllDialog.bindElement(sEntityPath);
 				this.getView().addDependent(this._valueHelpAllDialog); //this makes the SAP call
 				this._valueHelpAllDialog.getBinding("items").filter([filter]);
