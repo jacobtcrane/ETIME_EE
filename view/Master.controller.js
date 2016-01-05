@@ -22,6 +22,8 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 
 		oEventBus.subscribe("Master2", "NotFound", this.onNotFound, this);
 		oEventBus.subscribe('HeaderSelection', 'headDateEvt', this.onDateSelected, this);
+		oEventBus.subscribe('Any', 'BusyDialogNeeded', this.onBusyDialogNeeded, this);
+		oEventBus.subscribe('Any', 'BusyDialogDone', this.onBusyDialogDone, this);
 		oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
 	},
 
@@ -36,6 +38,18 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 		}
 	},
 
+	onBusyDialogNeeded: function() {
+		"use strict";
+		// show busy dialog
+		this.getView().byId("theBusyDialog").open();
+	},
+	
+	onBusyDialogDone: function() {
+		"use strict";
+		// close busy dialog
+		this.getView().byId("theBusyDialog").close();
+	},
+	
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),

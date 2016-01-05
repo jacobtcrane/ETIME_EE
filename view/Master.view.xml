@@ -49,6 +49,10 @@
 				</items>
 			</List>
 		</content>
+		<dependents>
+			<core:Fragment fragmentName="com.transfieldservices.dialogs.BusyDialog" type="XML">
+			</core:Fragment>
+		</dependents>
 		<!--</l:VerticalLayout>-->
 		<footer>
 			<Toolbar>

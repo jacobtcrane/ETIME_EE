@@ -67,40 +67,51 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
         //Attendance
         handleNewAttPress: function(oEvent){
             this._oPopover.close();
-            
-            this.getRouter().myNavToWithoutHash({ 
-			    currentView : this.getView(),
-			    targetViewName : "com.transfieldservices.view.Detail",
-			    targetViewType : "XML",
-			    transition: "slide"
-		    });
-            // If we're on a phone device, include nav in history
-		    var bReplace = jQuery.device.is.phone ? false : true;
-		    this.getRouter().navTo("newdetail", {
-			    from: "newreq",
-			    entity: this.oSelectedDate
-		    }, bReplace);
-// 			var oNavCon = sap.ui.core.Fragment.byId("popover", "navCon");
-// 			var oDetailPage = sap.ui.core.Fragment.byId("popover", "detail");
-// 			oNavCon.to(oDetailPage);
-// 			oDetailPage.bindElement(this.oContext.getPath());
+			this.oEventBus.publish('Any','BusyDialogNeeded',null);	// we need to raise the busy dialog synchronous
+			// the busy dialog animation does not start until the routing (and associated page loading)
+			// completes, so we throw this onto the call stack for deferred execution
+			setTimeout($.proxy(function() {
+	            this.getRouter().myNavToWithoutHash({ 
+				    currentView : this.getView(),
+				    targetViewName : "com.transfieldservices.view.Detail",
+				    targetViewType : "XML",
+				    transition: "slide"
+			    });
+	            // If we're on a phone device, include nav in history
+			    var bReplace = jQuery.device.is.phone ? false : true;
+			    this.getRouter().navTo("newdetail", {
+				    from: "newreq",
+				    entity: this.oSelectedDate
+			    }, bReplace);
+	// 			var oNavCon = sap.ui.core.Fragment.byId("popover", "navCon");
+	// 			var oDetailPage = sap.ui.core.Fragment.byId("popover", "detail");
+	// 			oNavCon.to(oDetailPage);
+	// 			oDetailPage.bindElement(this.oContext.getPath());
+				this.oEventBus.publish('Any','BusyDialogDone',null);
+			}, this), 0);
         },
-        
+
         //Allowance
         handleNewAllPress: function(oEvent){
                     this._oPopover.close();
-            this.getRouter().myNavToWithoutHash({ 
-			    currentView : this.getView(),
-			    targetViewName : "com.transfieldservices.view.AllowancesDetail",
-			    targetViewType : "XML",
-			    transition: "slide"
-		    });
-            // If we're on a phone device, include nav in history
-		    var bReplace = jQuery.device.is.phone ? false : true;
-		    this.getRouter().navTo("newalldetail", {
-			    from: "newreq",
-			    entity: this.oSelectedDate
-		    }, bReplace);
+			this.oEventBus.publish('Any','BusyDialogNeeded',null);	// we need to raise the busy dialog synchronous
+			// the busy dialog animation does not start until the routing (and associated page loading)
+			// completes, so we throw this onto the call stack for deferred execution
+			setTimeout($.proxy(function() {
+	            this.getRouter().myNavToWithoutHash({ 
+				    currentView : this.getView(),
+				    targetViewName : "com.transfieldservices.view.AllowancesDetail",
+				    targetViewType : "XML",
+				    transition: "slide"
+			    });
+	            // If we're on a phone device, include nav in history
+			    var bReplace = jQuery.device.is.phone ? false : true;
+			    this.getRouter().navTo("newalldetail", {
+				    from: "newreq",
+				    entity: this.oSelectedDate
+			    }, bReplace);
+				this.oEventBus.publish('Any','BusyDialogDone',null);
+			}, this), 0);
 
         }
 	});
