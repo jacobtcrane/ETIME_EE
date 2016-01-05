@@ -1,11 +1,11 @@
 sap.ui.define(['sap/ui/core/mvc/Controller',
                 'sap/ui/unified/DateRange',
                 'sap/ui/core/Fragment',
-                'com/transfieldservices/view/HeaderSummary.controller'],
+                'com.broadspectrum.etime.ee/view/HeaderSummary.controller'],
 	function(Controller, DateRange, HeaderSummary,Fragment) {
 	"use strict";
 
-	var CalendarDateIntervalBasicController = Controller.extend("com.transfieldservices.view.HeaderSelection", {
+	var CalendarDateIntervalBasicController = Controller.extend("com.broadspectrum.etime.ee.view.HeaderSelection", {
 		oFormatYyyymmdd: null,
 
 		onInit: function() {
@@ -33,8 +33,8 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			
 			// create popover
 			if (! this._oPopover) {
-				this._oPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.dialogs.CreateNewRequest", this);
-				this._oPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.dialogs.CreateNewRequest", this);
+				this._oPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.CreateNewRequest", this);
+				this._oPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.CreateNewRequest", this);
 				this.getView().addDependent(this._oPopover);
 			}
 				// var pop = oView.byId("popover_id");
@@ -73,7 +73,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			setTimeout($.proxy(function() {
 	            this.getRouter().myNavToWithoutHash({ 
 				    currentView : this.getView(),
-				    targetViewName : "com.transfieldservices.view.Detail",
+				    targetViewName : "com.broadspectrum.etime.ee.view.Detail",
 				    targetViewType : "XML",
 				    transition: "slide"
 			    });
@@ -100,7 +100,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			setTimeout($.proxy(function() {
 	            this.getRouter().myNavToWithoutHash({ 
 				    currentView : this.getView(),
-				    targetViewName : "com.transfieldservices.view.AllowancesDetail",
+				    targetViewName : "com.broadspectrum.etime.ee.view.AllowancesDetail",
 				    targetViewType : "XML",
 				    transition: "slide"
 			    });

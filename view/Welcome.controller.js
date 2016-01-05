@@ -1,1 +1,1 @@
-sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Welcome", {});
+sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Welcome", {});

@@ -1,4 +1,4 @@
-sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
+sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 
 	onInit: function() {
 		this.getRouter().attachRouteMatched(this.onRouteMatched, this);
@@ -19,7 +19,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 		//		Load the detail view in desktop
 		// this.getRouter().myNavToWithoutHash({
 		// 	currentView: this.getView(),
-		// 	targetViewName: "com.transfieldservices.view.Detail",
+		// 	targetViewName: "com.broadspectrum.etime.ee.view.Detail",
 		// 	targetViewType: "XML",
 		// 	transition: "slide"
 		// });
@@ -46,7 +46,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 		// if (oParameters.name === "master02" && jQuery.device.is.phone) {
 		// 	this.getRouter().myNavToWithoutHash({
 		// 		currentView: this.getView(),
-		// 		targetViewName: "com.transfieldservices.view.Detail",
+		// 		targetViewName: "com.broadspectrum.etime.ee.view.Detail",
 		// 		targetViewType: "XML",
 		// 		transition: "slide"
 		// 	});
@@ -81,14 +81,14 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 			if (a.isAllowance === 'X') {
 				this.getRouter().myNavToWithoutHash({
 					currentView: this.getView(),
-					targetViewName: "com.transfieldservices.view.AllowancesDetail",
+					targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
 					targetViewType: "XML",
 					transition: "slide"
 				});
 			}else{
 				this.getRouter().myNavToWithoutHash({
 					currentView: this.getView(),
-					targetViewName: "com.transfieldservices.view.Detail",
+					targetViewName: "com.broadspectrum.etime.ee.view.Detail",
 					targetViewType: "XML",
 					transition: "slide"
 				});
@@ -100,7 +100,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
-			targetViewName: "com.transfieldservices.view.NotFound",
+			targetViewName: "com.broadspectrum.etime.ee.view.NotFound",
 			targetViewType: "XML"
 		});
 	},
@@ -141,7 +141,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 		if (a.isAllowance === 'X') {
 			this.getRouter().myNavToWithoutHash({
 				currentView: this.getView(),
-				targetViewName: "com.transfieldservices.view.AllowancesDetail",
+				targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
 				targetViewType: "XML",
 				transition: "slide"
 			});
@@ -153,7 +153,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master2", {
 		} else {
 			this.getRouter().myNavToWithoutHash({
 				currentView: this.getView(),
-				targetViewName: "com.transfieldservices.view.Detail",
+				targetViewName: "com.broadspectrum.etime.ee.view.Detail",
 				targetViewType: "XML",
 				transition: "slide"
 			});

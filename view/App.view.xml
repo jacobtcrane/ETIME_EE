@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="com.transfieldservices.view.App"
+	controllerName="com.broadspectrum.etime.ee.view.App"
 	xmlns:mvc="sap.ui.core.mvc"
 	displayBlock="true"
 	xmlns="sap.m">

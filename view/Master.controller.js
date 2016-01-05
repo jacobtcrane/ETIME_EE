@@ -1,4 +1,4 @@
-sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
+sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
 	onInit: function() {
 		this.oInitialLoadFinishedDeferred = jQuery.Deferred();
@@ -53,7 +53,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
-			targetViewName: "com.transfieldservices.view.NotFound",
+			targetViewName: "com.broadspectrum.etime.ee.view.NotFound",
 			targetViewType: "XML"
 		});
 	},
@@ -103,14 +103,14 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Master", {
 		//Load the master2 view in desktop
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
-			targetViewName: "com.transfieldservices.view.Master2",
+			targetViewName: "com.broadspectrum.etime.ee.view.Master2",
 			targetViewType: "XML"
 		});
 
 		//Load the welcome view in desktop
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
-			targetViewName: "com.transfieldservices.view.Welcome",
+			targetViewName: "com.broadspectrum.etime.ee.view.Welcome",
 			targetViewType: "XML"
 		});
 	},

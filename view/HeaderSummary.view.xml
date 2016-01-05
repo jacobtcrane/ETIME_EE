@@ -5,7 +5,7 @@
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:l="sap.ui.layout" 
-	controllerName="com.transfieldservices.view.HeaderSummary" displayBlock="true">
+	controllerName="com.broadspectrum.etime.ee.view.HeaderSummary" displayBlock="true">
 	<!--<l:VerticalLayout>-->
 		<!--<l:content>-->
 	<Panel id="panel" xmlns:sap.m.Panel="sap.m.Panel" width="auto" class="sapUiResponsiveMargin">
