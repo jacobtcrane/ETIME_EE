@@ -350,7 +350,7 @@ Search Helps - START
 				this._valueHelpAttDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AttDialog", this);
 				filter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				var oBegda = this.oModel.getProperty(this.keyForView).Begda;
-				var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + this.dateFormatter.format(oBegda) + '\'';
+				var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
 				this._valueHelpAttDialog.bindElement(sEntityPath);
 				this.getView().addDependent(this._valueHelpAttDialog); //this makes the SAP call
 				this._valueHelpAttDialog.getBinding("items").filter([filter]);
