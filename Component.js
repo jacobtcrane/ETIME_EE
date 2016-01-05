@@ -1,7 +1,7 @@
-jQuery.sap.declare("com.transfieldservices.Component");
-jQuery.sap.require("com.transfieldservices.MyRouter");
+jQuery.sap.declare("com.broadspectrum.etime.ee.Component");
+jQuery.sap.require("com.broadspectrum.etime.ee.MyRouter");
 
-sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
+sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 	metadata : {
 		name : "TDG Demo App",
 		version : "1.0",
@@ -11,7 +11,7 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 			components : []
 		},
 
-		rootView : "com.transfieldservices.view.App",
+		rootView : "com.broadspectrum.etime.ee.view.App",
 
 		config : {
 			resourceBundle : "i18n/messageBundle.properties",
@@ -23,9 +23,9 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 
 		routing : {
 			config : {
-				routerClass : com.transfieldservices.MyRouter,
+				routerClass : com.broadspectrum.etime.ee.MyRouter,
 				viewType : "XML",
-				viewPath : "com.transfieldservices.view",
+				viewPath : "com.broadspectrum.etime.ee.view",
 				clearTarget : false,
 				transition: "slide"
 			},
@@ -137,7 +137,7 @@ sap.ui.core.UIComponent.extend("com.transfieldservices.Component", {
 		
 		// Always use absolute paths relative to our own component
 		// (relative paths will fail if running in the Fiori Launchpad)
-		var oRootPath = jQuery.sap.getModulePath("com.transfieldservices");
+		var oRootPath = jQuery.sap.getModulePath("com.broadspectrum.etime.ee");
 
 		// Set i18n model
 		var i18nModel = new sap.ui.model.resource.ResourceModel({

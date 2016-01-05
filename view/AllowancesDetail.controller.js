@@ -1,6 +1,6 @@
-jQuery.sap.require("com.transfieldservices.utils.Conversions");
+jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("sap.ui.core.format.DateFormat");
-sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.AllowancesDetail", {
+sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.AllowancesDetail", {
 
 	onInit: function() {
 		this.oInitialLoadFinishedDeferred = jQuery.Deferred();
@@ -108,10 +108,10 @@ Search Helps - START
 		// create value help dialog
 		// if (source.search("allowanceInput") > -1) {
 			if (!this._valueHelpAllDialog) {
-				this._valueHelpAllDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.AllowanceDialog", this);
+				this._valueHelpAllDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AllowanceDialog", this);
 				filter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sInputValue);
 				var oBegda = this.oModel.getProperty(this.keyForView).Begda;
-				var sEntityPath = '/VH_lgartSet?$filter=Begda le datetime\'' + com.transfieldservices.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
+				var sEntityPath = '/VH_lgartSet?$filter=Begda le datetime\'' + com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
 				this._valueHelpAllDialog.bindElement(sEntityPath);
 				this.getView().addDependent(this._valueHelpAllDialog); //this makes the SAP call
 				this._valueHelpAllDialog.getBinding("items").filter([filter]);
@@ -142,16 +142,16 @@ Search Helps - END
 
 	handleSendRequest: function() {
 		//Housekeeping
-		// com.transfieldservices.utils.Conversions.
+		// com.broadspectrum.etime.ee.utils.Conversions.
 		var path = this.oNewDetailContext.getPath() + '/Weekstart';
 		var property = this.oModel.getProperty(path);
-		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 		path = this.oNewDetailContext.getPath() + '/Weekend';
 		property = this.oModel.getProperty(path);
-		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 		path = this.oNewDetailContext.getPath() + '/Begda';
 		property = this.oModel.getProperty(path);
-		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 
 		this.oModel.submitChanges(function() {
 			var msg = 'Request sent';

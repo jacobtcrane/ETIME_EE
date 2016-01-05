@@ -1,8 +1,8 @@
 jQuery.sap.require("sap.m.routing.RouteMatchedHandler");
 jQuery.sap.require("sap.ui.core.routing.Router");
-jQuery.sap.declare("com.transfieldservices.MyRouter");
+jQuery.sap.declare("com.broadspectrum.etime.ee.MyRouter");
 
-sap.ui.core.routing.Router.extend("com.transfieldservices.MyRouter", {
+sap.ui.core.routing.Router.extend("com.broadspectrum.etime.ee.MyRouter", {
 
 	constructor : function() {
 		sap.ui.core.routing.Router.apply(this, arguments);

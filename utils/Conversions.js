@@ -1,6 +1,6 @@
 jQuery.sap.require("sap.ui.core.format.DateFormat");
-jQuery.sap.declare("com.transfieldservices.utils.Conversions");
-com.transfieldservices.utils.Conversions = {
+jQuery.sap.declare("com.broadspectrum.etime.ee.utils.Conversions");
+com.broadspectrum.etime.ee.utils.Conversions = {
 	time: function(value) {
 		// value = 'PT08H00M00S';
 		if (value) {

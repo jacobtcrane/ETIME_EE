@@ -1,4 +1,4 @@
-<mvc:View controllerName="com.transfieldservices.view.Detail" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+<mvc:View controllerName="com.broadspectrum.etime.ee.view.Detail" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
 	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
 	<Page class="sapUiFioriObjectPage" id="detailPage" navButtonPress="onNavBack" showNavButton="true" title="Timesheet Entry">
 		<content>
@@ -39,7 +39,7 @@
 								<Label id="lblEndTime" text="End Time"/>
 								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time..." type="Time" value="{Enduz}"
 									valueFormat="PTHH'H'mm'M'ss'S'" width="120px"/>
-								<!--{path:'Enduz',formatter:'com.transfieldservices.utils.Conversions.time'}-->
+								<!--{path:'Enduz',formatter:'com.broadspectrum.etime.ee.utils.Conversions.time'}-->
 					<!--		</l:content>-->
 					<!--	</l:VerticalLayout>-->
 					<!--</l:HorizontalLayout>-->
@@ -53,10 +53,10 @@
 						</suggestionItems>
 					</Input>
 					<!--<Label id="labelwbs" text="WBS Element"-->
-					<!--	visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}"/>-->
+					<!--	visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.TwoFieldVisibilityTrigger'}"/>-->
 					<!--<Input placeholder="Enter WBS Element ..." text="{Wbstxt}" description="{Wbs}" suggestionItems="{/VH_wbsElementSet}" showValueHelp="true"-->
 					<!--	liveChange="handleLiveSearch" showSuggestion="true" id="wbsInput" suggestionItemSelected="handleSuggestionSel" type="Text" value="{Wbstxt}" valueHelpRequest="handleValueHelp"-->
-					<!--	valueLiveUpdate="true" visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.transfieldservices.utils.Conversions.TwoFieldVisibilityTrigger'}">-->
+					<!--	valueLiveUpdate="true" visible="{parts : [{path : 'Srvord'},{path : 'Nwh'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.TwoFieldVisibilityTrigger'}">-->
 					<!--	<suggestionItems>-->
 					<!--		<core:Item text="{Post1}"/>-->
 					<!--	</suggestionItems>-->
@@ -109,9 +109,9 @@
 					<Label id="labelenote" text="Notes"/>
 					<TextArea editable="true" id="Enote" rows="4" value="{Enote}"/>
 					<Label id="labelmnote" text="Approver Notes"
-						visible="{parts : [{path : 'Mnote'}], formatter : 'com.transfieldservices.utils.Conversions.commonFieldVisibilityTrigger'}"/>
+						visible="{parts : [{path : 'Mnote'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
 					<TextArea editable="true" id="Mnote" rows="4" value="{Mnote}"
-						visible="{parts : [{path : 'Mnote'}], formatter : 'com.transfieldservices.utils.Conversions.commonFieldVisibilityTrigger'}"/>
+						visible="{parts : [{path : 'Mnote'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
 				</f:content>
 			</f:SimpleForm>
 		</content>

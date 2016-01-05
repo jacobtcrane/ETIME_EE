@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="com.transfieldservices.view.Master"
+	controllerName="com.broadspectrum.etime.ee.view.Master"
 	displayBlock="true"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:l="sap.ui.layout"
@@ -25,8 +25,8 @@
 		</subHeader>
 		<!--<l:VerticalLayout>-->
 		<content>
-			<mvc:XMLView displayBlock="true" height="140px" id="headSelect" viewName="com.transfieldservices.view.HeaderSelection"/>
-			<mvc:XMLView displayBlock="true" height="100px" id="headSummary" viewName="com.transfieldservices.view.HeaderSummary"/>
+			<mvc:XMLView displayBlock="true" height="140px" id="headSelect" viewName="com.broadspectrum.etime.ee.view.HeaderSelection"/>
+			<mvc:XMLView displayBlock="true" height="100px" id="headSummary" viewName="com.broadspectrum.etime.ee.view.HeaderSummary"/>
 			<List
 				id="master1List"
 				items="{/overviewSet}"
@@ -50,7 +50,7 @@
 			</List>
 		</content>
 		<dependents>
-			<core:Fragment fragmentName="com.transfieldservices.dialogs.BusyDialog" type="XML">
+			<core:Fragment fragmentName="com.broadspectrum.etime.ee.dialogs.BusyDialog" type="XML">
 			</core:Fragment>
 		</dependents>
 		<!--</l:VerticalLayout>-->

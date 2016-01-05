@@ -1,6 +1,6 @@
-jQuery.sap.require("com.transfieldservices.utils.Conversions");
+jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("sap.ui.core.format.DateFormat");
-sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
+sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	onInit: function() {
 		this.oInitialLoadFinishedDeferred = jQuery.Deferred();
@@ -157,7 +157,7 @@ sap.ui.core.mvc.Controller.extend("com.transfieldservices.view.Detail", {
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
-			targetViewName: "com.transfieldservices.view.NotFound",
+			targetViewName: "com.broadspectrum.etime.ee.view.NotFound",
 			targetViewType: "XML"
 		});
 	},
@@ -202,7 +202,7 @@ Favourites - START
 
 		// create popover
 		if (!this._oFavPopover) {
-			this._oFavPopover = sap.ui.xmlfragment("popover", "com.transfieldservices.dialogs.Favourites", this);
+			this._oFavPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.Favourites", this);
 			this.getView().addDependent(this._oFavPopover);
 		}
 		// delay because addDependent will do a async rerendering and the popover will immediately close without it
@@ -216,7 +216,7 @@ Favourites - START
 		this._oFavPopover.close();
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
-			targetViewName: "com.transfieldservices.view.Favourites",
+			targetViewName: "com.broadspectrum.etime.ee.view.Favourites",
 			targetViewType: "XML",
 			transition: "slide"
 		});
@@ -283,7 +283,7 @@ Favourites - START
 	handleFavSelect: function(oEvent) { //Generates Popover Search Help for selecting a favourite to populate from
 		var switchVal = oEvent.getSource().getState();
 		if (!this._favSelectDialog) {
-			this._favSelectDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouriteSelectDialog", this);
+			this._favSelectDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouriteSelectDialog", this);
 			this.getView().addDependent(this._favSelectDialog);
 		}
 		if (switchVal) {
@@ -339,7 +339,7 @@ Search Helps - START
 		// create value help dialog
 		if (source.search("favouriteDD") > -1) {
 			if (!this._valueHelpFavouritesDialog) {
-				this._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.FavouritesDialog", this);
+				this._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouritesDialog", this);
 				filter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this._valueHelpFavouritesDialog);
 				this._valueHelpFavouritesDialog.getBinding("items").filter([filter]);
@@ -347,7 +347,7 @@ Search Helps - START
 			this._valueHelpFavouritesDialog.open(sInputValue);
 		} else if (source.search("attendanceInput") > -1) {
 			if (!this._valueHelpAttDialog) {
-				this._valueHelpAttDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.AttDialog", this);
+				this._valueHelpAttDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AttDialog", this);
 				filter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				var oBegda = this.oModel.getProperty(this.keyForView).Begda;
 				var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + this.dateFormatter.format(oBegda) + '\'';
@@ -358,7 +358,7 @@ Search Helps - START
 			this._valueHelpAttDialog.open(sInputValue);
 		} else if (source.search("wbsInput") > -1) {
 			if (!this._valueHelpWBSDialog) {
-				this._valueHelpWBSDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.WBSDialog", this);
+				this._valueHelpWBSDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.WBSDialog", this);
 				filter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this._valueHelpWBSDialog);
 				this._valueHelpWBSDialog.getBinding("items").filter([filter]);
@@ -366,7 +366,7 @@ Search Helps - START
 			this._valueHelpWBSDialog.open(sInputValue);
 		} else if (source.search("netInput") > -1) {
 			if (!this._valueHelpNetDialog) {
-				this._valueHelpNetDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.NetworkDialog", this);
+				this._valueHelpNetDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.NetworkDialog", this);
 				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this._valueHelpNetDialog);
 				this._valueHelpNetDialog.getBinding("items").filter([filter]);
@@ -374,7 +374,7 @@ Search Helps - START
 			this._valueHelpNetDialog.open(sInputValue);
 		} else if (source.search("orderInput") > -1) {
 			if (!this._valueHelpOrderDialog) {
-				this._valueHelpOrderDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OrderDialog", this);
+				this._valueHelpOrderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OrderDialog", this);
 				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this._valueHelpOrderDialog);
 				this._valueHelpOrderDialog.getBinding("items").filter([filter]);
@@ -382,7 +382,7 @@ Search Helps - START
 			this._valueHelpOrderDialog.open(sInputValue);
 		} else if (source.search("causeInput") > -1) {
 			if (!this._valueHelpCauseDialog) {
-				this._valueHelpCauseDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.CauseDialog", this);
+				this._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
 				filter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this._valueHelpCauseDialog.getBinding("items").filter([filter]);
 				this.getView().addDependent(this._valueHelpCauseDialog);
@@ -390,7 +390,7 @@ Search Helps - START
 			this._valueHelpCauseDialog.open(sInputValue);
 		} else if (source.search("operationInput") > -1) {
 			if (!this._valueHelpOperationDialog) {
-				this._valueHelpOperationDialog = sap.ui.xmlfragment("com.transfieldservices.dialogs.OperationDialog", this);
+				this._valueHelpOperationDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OperationDialog", this);
 				filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this._valueHelpOperationDialog.getBinding("items").filter([filter]);
 				this.getView().addDependent(this._valueHelpOperationDialog);
@@ -456,13 +456,13 @@ Search Helps - END
 		// this.makeSAPDateTime('/Begda', false);
 		var path = this.oNewDetailContext.getPath() + '/Weekstart';
 		var property = this.oModel.getProperty(path);
-		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 		path = this.oNewDetailContext.getPath() + '/Weekend';
 		property = this.oModel.getProperty(path);
-		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 		path = this.oNewDetailContext.getPath() + '/Begda';
 		property = this.oModel.getProperty(path);
-		this.oModel.setProperty(path, com.transfieldservices.utils.Conversions.makeSAPDateTime(property, false));
+		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 
 		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
 		if (property) {
