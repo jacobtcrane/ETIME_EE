@@ -1,6 +1,6 @@
 <mvc:View controllerName="com.broadspectrum.etime.ee.view.AllowancesDetail" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
 	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
-	<Page class="sapUiFioriObjectPage" id="detailPage" navButtonPress="onNavBack" title="Timesheet Entry">
+	<Page class="sapUiFioriObjectPage" id="detailPage" navButtonPress="onNavBack" showNavButton="true" title="Timesheet Entry">
 		<content>
 			<ObjectHeader id="objectHeader" number="{Anzhl}" numberUnit="" title="{Atttxt}">
 				<attributes>
@@ -26,14 +26,19 @@
 				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" width="100%">
 				<f:content>
 					<Label id="labelall" text="Allowance Type"/>
-					<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Lgart}" liveChange="handleLiveSearch"
-						placeholder="Enter Allowance Type ..." showSuggestion="true" id="allowanceInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_lgartSet}" type="Text"
-						value="{Lgarttxt}" valueLiveUpdate="true">
-						<suggestionItems>
-							<core:Item text="{Lgtxt}"/>
-						</suggestionItems>
-					</Input>
-					<Input id="quantity" value="{Anzhl}"/>
+					<Input id="allowanceInput" placeholder="Enter Allowance Type ..."
+						type="Text" value="{Lgarttxt}" description="{Lgart}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						/>
+					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Lgart}" liveChange="handleLiveSearch"-->
+					<!--	placeholder="Enter Allowance Type ..." showSuggestion="true" id="allowanceInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_lgartSet}" type="Text"-->
+					<!--	value="{Lgarttxt}" valueLiveUpdate="true">-->
+					<!--	<suggestionItems>-->
+					<!--		<core:Item text="{Lgtxt}"/>-->
+					<!--	</suggestionItems>-->
+					<!--</Input>-->
+					<Input id="quantity" placeholder="Enter Quantity ..." value="{Anzhl}"/>
 					<Label id="labelenote" text="Notes"/>
 					<TextArea editable="true" id="Enote" rows="4" value="{Enote}"/>
 				</f:content>
@@ -41,8 +46,11 @@
 		</content>
 		<footer>
 			<OverflowToolbar>
-				<!--<OverflowToolbarButton icon="sap-icon://favorite" press="handleFavourites" text="Favorite"/>-->
+				<OverflowToolbarButton icon="sap-icon://favorite" press="handleFavourites" text="Favorite"/>
 				<ToolbarSpacer/>
+				<Button press="handleSaveRequest" text="Save" type="Emphasized">
+					<layoutData><OverflowToolbarLayoutData moveToOverflow="true"/></layoutData>
+				</Button>
 				<Button press="handleSendRequest" text="Send" type="Accept">
 					<layoutData><OverflowToolbarLayoutData moveToOverflow="false"/></layoutData>
 				</Button>

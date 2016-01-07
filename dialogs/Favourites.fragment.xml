@@ -11,8 +11,8 @@
 			layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="300px">
 			<f:content>
 				<Text text="You can create a favourite based on the current form data"/>
-				<Label id="favlab_id" text="Favourite Name"/>
-				<Input id="favname_id" placeholder="My Favourite" width="150px"/>
+				<Label id="favlab_id" text="Favourite Name" required="true" labelFor="favname_id" />
+				<Input id="favname_id" placeholder="Enter Name ..." width="150px"/>
 			</f:content>
 		</f:SimpleForm>
 	</Popover>

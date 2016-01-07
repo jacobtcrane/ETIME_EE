@@ -1,5 +1,6 @@
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("sap.ui.core.format.DateFormat");
+jQuery.sap.require("sap.m.MessageBox");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	onInit: function() {
@@ -56,8 +57,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				Begda: oSelectedDate,
 				Weekstart: oSelectedDate,
 				Weekend: oSelectedDate,
-				Statustxt: "New",
-				Status: "INP"
+				Statustxt: "Saved",
+				Status: "SAV"
 			};
 			if (this.oNewDetailContext != null) {
 				this.oModel.deleteCreatedEntry(this.oNewDetailContext);
@@ -67,8 +68,15 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.oModel.refreshMetadata();
 			this.oNewDetailContext = this.oModel.createEntry("detailSet", oNewRequest);
 			this.keyForView = this.oNewDetailContext.getPath();
-			var oView = this.getView();
-			oView.setBindingContext(this.oNewDetailContext);
+			this.getView().setBindingContext(this.oNewDetailContext);
+			// reset value state for all input controls
+			var aFormElements = this.byId("detailForm").getContent();
+			aFormElements.forEach(function(oFormElement) {
+				if (oFormElement instanceof sap.m.Input) {
+            		oFormElement.setValueState(sap.ui.core.ValueState.None);
+					oFormElement.setValueStateText(null);
+				}
+			});
 		}
 	},
 
@@ -78,8 +86,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 		var rec = oView.getModel().getData(sEntityPath);
 		//Housekeeping
-		rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
-		rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
+		// rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
+		// rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
+		rec.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(rec.Beguz.ms), true);
+		rec.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(rec.Enduz.ms), true);
 		oView.getModel().setProperty(sEntityPath, rec);
 		//Check if the data is already on the client
 		if (!oView.getModel().getData(sEntityPath)) {
@@ -183,10 +193,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}, true);
 	},
 
-	handleSuggestionSel: function(oEvent) {
-		this.handleValueHelp(oEvent);
-	},
-
 	handleLiveSearch: function(oEvent) {
 		var sInputValue = oEvent.getSource().getValue();
 		if (sInputValue.length > 2) {
@@ -194,26 +200,100 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
+	handleLiveChange: function(oEvent) {
+		// clear the existing description on input changes
+		oEvent.getSource().setDescription(null);
+	},
+
+	handleInputChange: function(oEvent) {
+		"use strict";
+		// register control with message manager
+		sap.ui.getCore().getMessageManager().registerObject(oEvent.getSource(), true);
+		if (!oEvent.getSource().getDescription()) {
+			var sValue = oEvent.getParameter("value");
+			if (oEvent.getSource().getId().search("attendanceInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Atext", "Awart");
+			} else if (oEvent.getSource().getId().search("wbsInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Post1", "Posid");
+			} else if (oEvent.getSource().getId().search("netInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Aufnr");
+			} else if (oEvent.getSource().getId().search("orderInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Aufnr");
+			} else if (oEvent.getSource().getId().search("causeInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Grdtx", "Grund");
+			} else if (oEvent.getSource().getId().search("operationInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ltxa1", "Vornr");
+			} else if (oEvent.getSource().getId().search("internalorderInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Iaufnr");
+			}
+		} else {
+			this.checkInputIsValid(oEvent.getSource());
+		}
+	},
+
+	checkInputIsValid: function(oSource) {
+		"use strict";
+		if (!oSource.getDescription()) {
+			var msg = 'Please choose an item from the list, or use the value help!';
+			oSource.setValueStateText(msg);
+            oSource.setValueState(sap.ui.core.ValueState.Error);
+			return false;
+		} else {
+            oSource.setValueState(sap.ui.core.ValueState.Success);
+		}
+	},
+
+	filterSuggestionItems: function(oSource, filterValue, filterValueIsKey, filterPath, dataField) {
+		"use strict";
+		// ensure the suggestionItems aggregation is bound
+		this.bindSuggestionItems(oSource);
+		if (filterValueIsKey) {
+			oSource.setDescription(filterValue);
+		} else {
+			oSource.setValue(filterValue);
+		}
+		var oFilter = new sap.ui.model.Filter(filterPath, sap.ui.model.FilterOperator.EQ, filterValue);
+		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
+		if (suggestionItemsBinding) {
+			// attach handler to the filter's DataReceived event to update the input field value
+			var onSuggestionItemBindingDataReceived = function(oDataReceivedEvent) {
+				suggestionItemsBinding.detachDataReceived(onSuggestionItemBindingDataReceived, this);
+				var data = oDataReceivedEvent.getParameter("data");
+				if (data && data.results && data.results.length === 1) {
+					if (filterValueIsKey) {
+						oSource.setValue(data.results[0][dataField]);
+					} else {
+						oSource.setDescription(data.results[0][dataField]);
+					}
+				}
+				this.checkInputIsValid(oSource);
+			};
+			suggestionItemsBinding.attachDataReceived(onSuggestionItemBindingDataReceived, this);
+			// now apply the filter
+			suggestionItemsBinding.filter([oFilter]);
+		}
+	},
+	
 	/********************
 Favourites - START
 *********************/
 	handleFavourites: function(oEvent) { //Creates the Popover for Managing Favourites
-		var oView = this.getView();
+		// var oView = this.getView();
 
 		// create popover
-		if (!this._oFavPopover) {
-			this._oFavPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.Favourites", this);
-			this.getView().addDependent(this._oFavPopover);
+		if (!this.getRouter()._oFavPopover) {
+			this.getRouter()._oFavPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.Favourites", this);
+			this.getView().addDependent(this.getRouter()._oFavPopover);
 		}
 		// delay because addDependent will do a async rerendering and the popover will immediately close without it
 		var oFavButton = oEvent.getSource();
 		jQuery.sap.delayedCall(0, this, function() {
-			this._oFavPopover.openBy(oFavButton);
+			this.getRouter()._oFavPopover.openBy(oFavButton);
 		});
 	},
 
 	handleManageFavs: function(oEvent) { //Launches Manage Favourites View
-		this._oFavPopover.close();
+		this.getRouter()._oFavPopover.close();
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
 			targetViewName: "com.broadspectrum.etime.ee.view.Favourites",
@@ -228,17 +308,27 @@ Favourites - START
 	},
 
 	handleAddFav: function(oEvent) { //Adds the Screen content as Faourite
-		this._oFavPopover.close();
 		this.oModel = this.getView().getModel("theOdataModel");
 		var record = this.oModel.getProperty(this.keyForView);
-		var elements = this._oFavPopover.findElements(true);
+		var elements = this.getRouter()._oFavPopover.findElements(true);
 		var favouriteName;
 		for (var i = 0; i < elements.length; i++) {
-			if (elements[i].getId() === "popover--favname_id") {
-				favouriteName = elements[i].getValue();
+			if (elements[i].getId().search("favname_id") > -1) {
+				var oSource = elements[i];
+				favouriteName = oSource.getValue();
+				if (!favouriteName) {
+					var msg = 'Please provide a name for your favourite!';
+					oSource.setValueStateText(msg);
+		            oSource.setValueState(sap.ui.core.ValueState.Error);
+		            oSource.focus();
+					return false;
+				} else {
+		            oSource.setValueState(sap.ui.core.ValueState.None);
+				}
 				break;
 			}
 		}
+		this.getRouter()._oFavPopover.close();
 		var oNewFav = {
 			// "Guid": "0",
 			"Pernr": "00000000",
@@ -261,7 +351,7 @@ Favourites - START
 			"Operation": record.Operation,
 			"Rsnvar": record.Rsnvar,
 			"Enote": record.Enote,
-			"IsPrepopulated": true,
+			"IsPrepopulated": false,	// this is only true for favs created by the backend
 			"Hda": record.Hda
 		};
 		this.backupNewDet = this.oModel.getProperty(this.oNewDetailContext.getPath());
@@ -282,12 +372,14 @@ Favourites - START
 
 	handleFavSelect: function(oEvent) { //Generates Popover Search Help for selecting a favourite to populate from
 		var switchVal = oEvent.getSource().getState();
-		if (!this._favSelectDialog) {
-			this._favSelectDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouriteSelectDialog", this);
-			this.getView().addDependent(this._favSelectDialog);
+		if (!this.getRouter()._favSelectDialog) {
+			this.getRouter()._favSelectDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouriteSelectDialog", this);
+			var filter = new sap.ui.model.Filter("Lgart", sap.ui.model.FilterOperator.EQ, "");
+			this.getView().addDependent(this.getRouter()._favSelectDialog);
+			this.getRouter()._favSelectDialog.getBinding("items").filter([filter]);
 		}
 		if (switchVal) {
-			this._favSelectDialog.open();
+			this.getRouter()._favSelectDialog.open();
 		}
 	},
 
@@ -322,7 +414,46 @@ Favourites - START
 		record.Enote = favourite.Enote;
 		record.Hda = favourite.Hda;
 		this.oModel.setProperty(this.keyForView, record);
-		//Now do the view housekeeping...
+		
+		// updating the model as above doesn't update the view?
+		// update model via bound input fields instead
+		if (favourite.Beguz && favourite.Beguz.ms) {
+			this.getView().byId("beguz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(favourite.Beguz.ms), true));
+		}
+		if (favourite.Enduz && favourite.Enduz.ms) {
+			this.getView().byId("enduz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(favourite.Enduz.ms), true));
+		}
+		if (favourite.Vtken) {
+			this.getView().byId("vtken").setSelected(favourite.Vtken ? true : false);
+		}
+		if (favourite.Awart) {
+			this.filterSuggestionItems(this.getView().byId("attendanceInput"), favourite.Awart, true, "Awart", "Atext");
+		}
+		if (favourite.Wbs) {
+			this.filterSuggestionItems(this.getView().byId("wbsInput"), favourite.Wbs, true, "Posid", "Post1");
+		}
+		if (favourite.Nwh) {
+			this.filterSuggestionItems(this.getView().byId("netInput"), favourite.Nwh, true, "Aufnr", "Ktext");
+		}
+		if (favourite.Srvord) {
+			this.filterSuggestionItems(this.getView().byId("orderInput"), favourite.Srvord, true, "Aufnr", "Ktext");
+		}
+		if (favourite.Rsnvar) {
+			this.filterSuggestionItems(this.getView().byId("causeInput"), favourite.Rsnvar, true, "Grund", "Grdtx");
+		}
+		if (favourite.Operation) {
+			this.filterSuggestionItems(this.getView().byId("operationInput"), favourite.Operation, true, "Vornr", "Ltxa1");
+		}
+		if (favourite.Iaufnr) {
+			this.filterSuggestionItems(this.getView().byId("internalorderInput"), favourite.Iaufnr, true, "Iaufnr", "Ktext");
+		}
+		if (favourite.Hda) {
+			this.getView().byId("hda").setSelected(favourite.Hda ? true : false);
+		}
+		if (favourite.Enote) {
+			this.getView().byId("Enote").setValue(favourite.Enote);
+		}
+		
 	},
 	/********************
 Favourites - END
@@ -331,6 +462,119 @@ Favourites - END
 	/********************
 Search Helps - START
 *********************/
+	bindSuggestionItems: function(oSource) {
+		if (oSource.getId().search("attendanceInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_attendanceSet", new sap.ui.core.ListItem({
+					key : "{Awart}",
+					text : "{Atext}",
+					additionalText : "{Awart}"
+				}));
+			}
+		} else if (oSource.getId().search("wbsInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/PrstpSet", new sap.ui.core.ListItem({
+					key : "{Posid}",
+					text : "{Post1}",
+					additionalText : "{Posid}"
+				}));
+			}
+		} else if (oSource.getId().search("netInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_networkSet", new sap.ui.core.ListItem({
+					key : "{Aufnr}",
+					text : "{Ktext}",
+					additionalText : "{Aufnr}"
+				}));
+			}
+		} else if (oSource.getId().search("orderInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/ZhtrsEtimeOrderShSet", new sap.ui.core.ListItem({
+					key : "{Aufnr}",
+					text : "{Ktext}",
+					additionalText : "{Aufnr}"
+				}));
+			}
+		} else if (oSource.getId().search("causeInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_causeSet", new sap.ui.core.ListItem({
+					key : "{Grund}",
+					text : "{Grdtx}",
+					additionalText : "{Grund}"
+				}));
+			}
+		} else if (oSource.getId().search("operationInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_operationSet", new sap.ui.core.ListItem({
+					key : "{Vornr}",
+					text : "{Ltxa1}",
+					additionalText : "{Vornr}"
+				}));
+			}
+		} else if (oSource.getId().search("internalorderInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_internalOrderSet", new sap.ui.core.ListItem({
+					key : "{Aufnr}",
+					text : "{Ktext}",
+					additionalText : "{Aufnr}"
+				}));
+			}
+		}
+	},
+
+	handleSuggest: function(evt) {
+		var oSource = evt.getSource();
+		// start by clearing the existing description
+		oSource.setDescription(null);
+		// ensure the suggestionItems aggregation is bound
+		this.bindSuggestionItems(evt.getSource());
+		var sValue = evt.getParameter("suggestValue");
+		var oFilter;
+		if (oSource.getId().search("attendanceInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("wbsInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("netInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("orderInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("causeInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("operationInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("internalorderInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Iaufnr", sap.ui.model.FilterOperator.Contains, sValue);
+		}
+		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
+		if (suggestionItemsBinding) {
+			// set the control as busy until we've received data for the filter
+			oSource.setBusy(true); 
+			var onFilterDataReceived = function() {
+				suggestionItemsBinding.detachDataReceived(onFilterDataReceived, this);
+				oSource.setBusy(false);
+			};
+			suggestionItemsBinding.attachDataReceived(onFilterDataReceived, this);
+			// apply the filter
+			suggestionItemsBinding.filter([oFilter]);
+		}
+	},
+
+	handleSuggestionSel: function(oEvent) {
+		// this.handleValueHelp(oEvent);
+		var selectedItem = oEvent.getParameter("selectedItem");
+		if (selectedItem) {
+			oEvent.getSource().setDescription(selectedItem.getKey());
+			this.checkInputIsValid(oEvent.getSource());
+		}
+	},
+
 	handleValueHelp: function(oEvent) {
 		var sInputValue = oEvent.getSource().getValue();
 		var source = oEvent.getSource().getId();
@@ -338,64 +582,64 @@ Search Helps - START
 		this.inputId = oEvent.getSource().getId();
 		// create value help dialog
 		if (source.search("favouriteDD") > -1) {
-			if (!this._valueHelpFavouritesDialog) {
-				this._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouritesDialog", this);
+			if (!this.getRouter()._valueHelpFavouritesDialog) {
+				this.getRouter()._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouritesDialog", this);
 				filter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpFavouritesDialog);
-				this._valueHelpFavouritesDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this.getRouter()._valueHelpFavouritesDialog);
+				this.getRouter()._valueHelpFavouritesDialog.getBinding("items").filter([filter]);
 			}
-			this._valueHelpFavouritesDialog.open(sInputValue);
+			this.getRouter()._valueHelpFavouritesDialog.open(sInputValue);
 		} else if (source.search("attendanceInput") > -1) {
-			if (!this._valueHelpAttDialog) {
-				this._valueHelpAttDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AttDialog", this);
+			if (!this.getRouter()._valueHelpAttDialog) {
+				this.getRouter()._valueHelpAttDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AttDialog", this);
 				filter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				var oBegda = this.oModel.getProperty(this.keyForView).Begda;
 				var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
-				this._valueHelpAttDialog.bindElement(sEntityPath);
-				this.getView().addDependent(this._valueHelpAttDialog); //this makes the SAP call
-				this._valueHelpAttDialog.getBinding("items").filter([filter]);
+				this.getRouter()._valueHelpAttDialog.bindElement(sEntityPath);
+				this.getView().addDependent(this.getRouter()._valueHelpAttDialog); //this makes the SAP call
+				this.getRouter()._valueHelpAttDialog.getBinding("items").filter([filter]);
 			}
-			this._valueHelpAttDialog.open(sInputValue);
+			this.getRouter()._valueHelpAttDialog.open(sInputValue);
 		} else if (source.search("wbsInput") > -1) {
-			if (!this._valueHelpWBSDialog) {
-				this._valueHelpWBSDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.WBSDialog", this);
+			if (!this.getRouter()._valueHelpWBSDialog) {
+				this.getRouter()._valueHelpWBSDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.WBSDialog", this);
 				filter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpWBSDialog);
-				this._valueHelpWBSDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this.getRouter()._valueHelpWBSDialog);
+				this.getRouter()._valueHelpWBSDialog.getBinding("items").filter([filter]);
 			}
-			this._valueHelpWBSDialog.open(sInputValue);
+			this.getRouter()._valueHelpWBSDialog.open(sInputValue);
 		} else if (source.search("netInput") > -1) {
-			if (!this._valueHelpNetDialog) {
-				this._valueHelpNetDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.NetworkDialog", this);
+			if (!this.getRouter()._valueHelpNetDialog) {
+				this.getRouter()._valueHelpNetDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.NetworkDialog", this);
 				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpNetDialog);
-				this._valueHelpNetDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this.getRouter()._valueHelpNetDialog);
+				this.getRouter()._valueHelpNetDialog.getBinding("items").filter([filter]);
 			}
-			this._valueHelpNetDialog.open(sInputValue);
+			this.getRouter()._valueHelpNetDialog.open(sInputValue);
 		} else if (source.search("orderInput") > -1) {
-			if (!this._valueHelpOrderDialog) {
-				this._valueHelpOrderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OrderDialog", this);
+			if (!this.getRouter()._valueHelpOrderDialog) {
+				this.getRouter()._valueHelpOrderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OrderDialog", this);
 				filter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getView().addDependent(this._valueHelpOrderDialog);
-				this._valueHelpOrderDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this.getRouter()._valueHelpOrderDialog);
+				this.getRouter()._valueHelpOrderDialog.getBinding("items").filter([filter]);
 			}
-			this._valueHelpOrderDialog.open(sInputValue);
+			this.getRouter()._valueHelpOrderDialog.open(sInputValue);
 		} else if (source.search("causeInput") > -1) {
-			if (!this._valueHelpCauseDialog) {
-				this._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
+			if (!this.getRouter()._valueHelpCauseDialog) {
+				this.getRouter()._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
 				filter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this._valueHelpCauseDialog.getBinding("items").filter([filter]);
-				this.getView().addDependent(this._valueHelpCauseDialog);
+				this.getRouter()._valueHelpCauseDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this.getRouter()._valueHelpCauseDialog);
 			}
-			this._valueHelpCauseDialog.open(sInputValue);
+			this.getRouter()._valueHelpCauseDialog.open(sInputValue);
 		} else if (source.search("operationInput") > -1) {
-			if (!this._valueHelpOperationDialog) {
-				this._valueHelpOperationDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OperationDialog", this);
+			if (!this.getRouter()._valueHelpOperationDialog) {
+				this.getRouter()._valueHelpOperationDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OperationDialog", this);
 				filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this._valueHelpOperationDialog.getBinding("items").filter([filter]);
-				this.getView().addDependent(this._valueHelpOperationDialog);
+				this.getRouter()._valueHelpOperationDialog.getBinding("items").filter([filter]);
+				this.getView().addDependent(this.getRouter()._valueHelpOperationDialog);
 			}
-			this._valueHelpOperationDialog.open(sInputValue);
+			this.getRouter()._valueHelpOperationDialog.open(sInputValue);
 		}
 	},
 
@@ -426,10 +670,11 @@ Search Helps - START
 			var inputDD = this.getView().byId(this.inputId);
 			inputDD.setValue(oSelectedItem.getTitle());
 			inputDD.setDescription(oSelectedItem.getDescription());
+			this.checkInputIsValid(inputDD);
 		}
-		if (evt.getSource().getBinding("items")) {
-			evt.getSource().getBinding("items").filter([]);
-		}
+		// if (evt.getSource().getBinding("items")) {
+		// 	evt.getSource().getBinding("items").filter([]);
+		// }
 	},
 	/********************
 Search Helps - END
@@ -448,7 +693,15 @@ Search Helps - END
 	// 	this.oModel.setProperty(path, sapDateTime);
 	// },
 
+	handleSaveRequest: function() {
+		this.sendRequest("SAV");	// send as status "Saved"
+	},
+
 	handleSendRequest: function() {
+		this.sendRequest("SUB");	// send as status "Submitted"
+	},
+
+	sendRequest: function(statusToSend) {
 		console.log(this.oModel);
 		//Housekeeping
 		// this.makeSAPDateTime('/Weekstart', false);
@@ -464,10 +717,16 @@ Search Helps - END
 		property = this.oModel.getProperty(path);
 		this.oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 
-		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
-		if (property) {
-			this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Vtken", "X");
+		// var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Vtken");
+		// if (property) {
+		// 	this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Vtken", "X");
+		// }
+
+		var property = this.oModel.getProperty(this.oNewDetailContext.getPath() + "/Status");
+		if (property && statusToSend) {
+			this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Status", statusToSend);
 		}
+
 		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
 		this.oModel.submitChanges(function() {
 			var msg = 'Request sent';

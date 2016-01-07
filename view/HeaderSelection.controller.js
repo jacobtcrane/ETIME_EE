@@ -34,7 +34,6 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			// create popover
 			if (! this._oPopover) {
 				this._oPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.CreateNewRequest", this);
-				this._oPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.CreateNewRequest", this);
 				this.getView().addDependent(this._oPopover);
 			}
 				// var pop = oView.byId("popover_id");

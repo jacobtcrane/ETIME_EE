@@ -5,6 +5,7 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 	metadata : {
 		name : "TDG Demo App",
 		version : "1.0",
+		handleValidation  : true,
 		includes : [],
 		dependencies : {
 			libs : ["sap.m", "sap.ui.layout"],
