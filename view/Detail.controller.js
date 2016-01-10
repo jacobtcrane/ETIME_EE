@@ -1,5 +1,6 @@
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("sap.ui.core.format.DateFormat");
+jQuery.sap.require("sap.ui.model.odata.ODataMessageParser");
 jQuery.sap.require("sap.m.MessageBox");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
@@ -139,14 +140,39 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		var oBegda = oEvent.getParameters().dateValue;
 		var oEndda = this.getView().byId("enduz").getDateValue();
 		this.displayTimeDif(oBegda, oEndda);
+		if (oEvent.getParameters().dateValue) {
+			
+        	oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
+		} else {
+        	oEvent.getSource().setValueState(sap.ui.core.ValueState.Warning);
+		}
 	},
 
 	onEnduzEntered: function(oEvent) {
 		var oEnduz = oEvent.getParameters().dateValue;
 		var oBeguz = this.getView().byId("beguz").getDateValue();
 		this.displayTimeDif(oBeguz, oEnduz);
+		if (oEvent.getParameters().dateValue) {
+        	oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
+        	this.checkEndTimeAfterStart();
+		} else {
+        	oEvent.getSource().setValueState(sap.ui.core.ValueState.Warning);
+		}
 	},
 
+	checkEndTimeAfterStart: function() {
+		"use strict";	
+		if (this.byId("beguz").getDateValue() && this.byId("enduz").getDateValue() &&
+			this.byId("beguz").getDateValue() >  this.byId("enduz").getDateValue() 
+			) {
+        	this.byId("enduz").setValueState(sap.ui.core.ValueState.Error);
+        	this.byId("enduz").setValueStateText("End time must be later than start time!");
+        	return false;
+		} else {
+			return true;
+		}
+	},
+	
 	getTimeDiff: function(oEnduz, oBeguz) {
 		var oTimeDiff = this.getView().byId("objectHeader");
 		var diffTime = oEnduz.getTime() - oBeguz.getTime();
@@ -193,6 +219,15 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}, true);
 	},
 
+	handleHDASelected: function(oEvent) {
+		"use strict";
+		if (oEvent.getParameter("selected") === true) {
+			this.byId("labelenote").setRequired(true);                         
+		} else {
+			this.byId("labelenote").setRequired(false);                         
+		}
+	},
+	
 	handleLiveSearch: function(oEvent) {
 		var sInputValue = oEvent.getSource().getValue();
 		if (sInputValue.length > 2) {
@@ -201,6 +236,42 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	handleLiveChange: function(oEvent) {
+		// check mutually exclusive inputs are not being maintained
+		// (only one of wbs/network/order or internal order can be entered)
+		var hasConflicts = false;
+		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
+		var hasNetwork = this.byId("netInput").getValue() ? true : false;
+		var hasOrder = this.byId("orderInput").getValue() ? true : false;
+		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
+		
+		if (oEvent.getSource().getId().search("wbsInput") > -1 && (
+			hasNetwork || hasOrder || hasInternalOrder
+			)) {
+			hasConflicts = true;
+		} else if (oEvent.getSource().getId().search("netInput") > -1 && (
+			hasWbs || hasOrder || hasInternalOrder
+			)) {
+			hasConflicts = true;
+		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
+			hasWbs || hasNetwork || hasInternalOrder
+			)) {
+			hasConflicts = true;
+		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
+			hasWbs || hasNetwork || hasOrder
+			)) {
+			hasConflicts = true;
+		}
+		if (hasConflicts) {
+			sap.m.MessageBox.show(
+			    "Only one cost assignment (WBS Element/Network/Order/Internal Order) is allowed\nRemove one before choosing another...", 
+			    sap.m.MessageBox.Icon.ERROR,
+			    "Multiple cost assignments",
+			    [sap.m.MessageBox.Action.CANCEL]
+			);
+			oEvent.getSource().setValue(null);
+			return false;
+		}
+
 		// clear the existing description on input changes
 		oEvent.getSource().setDescription(null);
 	},
@@ -222,7 +293,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			} else if (oEvent.getSource().getId().search("causeInput") > -1) {
 				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Grdtx", "Grund");
 			} else if (oEvent.getSource().getId().search("operationInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ltxa1", "Vornr");
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Aufnr", "Vornr");
+				// this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ltxa1", "Vornr");
 			} else if (oEvent.getSource().getId().search("internalorderInput") > -1) {
 				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Iaufnr");
 			}
@@ -513,8 +585,10 @@ Search Helps - START
 				// create binding to relevant service entityset if none assigned yet
 				oSource.bindAggregation("suggestionItems", "/VH_operationSet", new sap.ui.core.ListItem({
 					key : "{Vornr}",
-					text : "{Ltxa1}",
-					additionalText : "{Vornr}"
+					text : "{Aufnr}",
+					// text : "{Ltxa1}",	// current search help behind service cannot filter by description - must use order number instead
+					additionalText : "{Ltxa1}"
+					// additionalText : "{Vornr}"
 				}));
 			}
 		} else if (oSource.getId().search("internalorderInput") > -1) {
@@ -628,16 +702,17 @@ Search Helps - START
 			if (!this.getRouter()._valueHelpCauseDialog) {
 				this.getRouter()._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
 				filter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getRouter()._valueHelpCauseDialog.getBinding("items").filter([filter]);
 				this.getView().addDependent(this.getRouter()._valueHelpCauseDialog);
+				this.getRouter()._valueHelpCauseDialog.getBinding("items").filter([filter]);
 			}
 			this.getRouter()._valueHelpCauseDialog.open(sInputValue);
 		} else if (source.search("operationInput") > -1) {
 			if (!this.getRouter()._valueHelpOperationDialog) {
 				this.getRouter()._valueHelpOperationDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OperationDialog", this);
-				filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
-				this.getRouter()._valueHelpOperationDialog.getBinding("items").filter([filter]);
+				filter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.Contains, sInputValue);
+				// filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpOperationDialog);
+				this.getRouter()._valueHelpOperationDialog.getBinding("items").filter([filter]);
 			}
 			this.getRouter()._valueHelpOperationDialog.open(sInputValue);
 		}
@@ -655,9 +730,11 @@ Search Helps - START
 		} else if (evt.getSource().getId().search("FavouritesDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Guid", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("CauseDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
+			oFilter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sValue);
+			// oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("OperationDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.Contains, sValue);
+			// oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
 		}
 		if (evt.getSource().getBinding("items")) {
 			evt.getSource().getBinding("items").filter([oFilter]);
@@ -701,7 +778,65 @@ Search Helps - END
 		this.sendRequest("SUB");	// send as status "Submitted"
 	},
 
+	// due to the generic nature of the entity set backing this form
+	// we cannot rely on nullable constraints of bound odata fields 
+	// to have required fields enforced, but have to do it ourselves
+	validateRequiredFields: function() {
+		var isValidated = true;
+		// check required fields have been maintained
+		var aRequiredFields = [];
+		if (!this.byId("beguz").getDateValue()) {
+			aRequiredFields.push({
+				source : this.byId("beguz"),
+				msg : "Start time is required"
+			});
+		}
+		if (!this.byId("enduz").getDateValue()) {
+			aRequiredFields.push({
+				source : this.byId("enduz"),
+				msg : "End time is required"
+			});
+		}
+		if (!this.byId("attendanceInput").getDescription()) {
+			aRequiredFields.push({
+				source : this.byId("attendanceInput"),
+				msg : "Attendance type is required"
+			});
+		}
+		if (this.byId("hda").getSelected() && !this.byId("Enote").getValue()) {
+			aRequiredFields.push({
+				source : this.byId("Enote"),
+				msg : "Note is required for Higher Duties"
+			});
+		}
+		aRequiredFields.forEach(function(oRequiredField) {
+			oRequiredField.source.setValueStateText(oRequiredField.msg);
+            oRequiredField.source.setValueState(sap.ui.core.ValueState.Error);
+            isValidated = false;
+		}, this);
+		// check end time is after start time
+		if (!this.checkEndTimeAfterStart()) {
+			isValidated = false;
+		}
+		// check a cost assignment has been provided
+		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
+		var hasNetwork = this.byId("netInput").getValue() ? true : false;
+		var hasOrder = this.byId("orderInput").getValue() ? true : false;
+		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
+		if (!hasWbs && !hasNetwork && !hasOrder && !hasInternalOrder) {
+			var msg = "Cost assignment (one of WBS Element/Network/Order or Internal Order) is required";
+			this.byId("wbsInput").setValueStateText(msg);
+            this.byId("wbsInput").setValueState(sap.ui.core.ValueState.Warning);
+            isValidated = false;
+		}		
+		
+		return isValidated;
+	},
+	
 	sendRequest: function(statusToSend) {
+		if (!this.validateRequiredFields()) {
+			return false;
+		}
 		console.log(this.oModel);
 		//Housekeeping
 		// this.makeSAPDateTime('/Weekstart', false);
@@ -727,15 +862,43 @@ Search Helps - END
 			this.oModel.setProperty(this.oNewDetailContext.getPath() + "/Status", statusToSend);
 		}
 
+		// register model as processor with message manager
+		sap.ui.getCore().getMessageManager().registerMessageProcessor(this.oModel);
+		sap.ui.getCore().getMessageManager().removeAllMessages();
+		
 		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
-		this.oModel.submitChanges(function() {
+		this.oModel.submitChanges($.proxy(function() {
 			var msg = 'Request sent';
 			sap.m.MessageToast.show(msg);
 			this.fireDetailChanged(this.oNewDetailContext.getPath());
-		}, function() {
-			var msg = 'An error occurred during the sending of the request';
-			sap.m.MessageToast.show(msg);
-		});
+		}, this), $.proxy(function(oError) {
+			// v2.ODataModel automatically parses messages returned; we appear to have to do it manually
+			var oDataMessageParser = new sap.ui.model.odata.ODataMessageParser(
+				this.oModel.sServiceUrl + this.oNewDetailContext.getPath(), 
+				this.oModel.oServiceData.oMetadata
+			);
+			oDataMessageParser.setProcessor(this.oModel);
+			oDataMessageParser.parse(oError.response, oError.request);
+			// show odata errors in message popover
+			if (!this._messagePopover) {
+				this._messagePopover = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.MessagePopover", this);
+				this._messagePopover.setModel(sap.ui.getCore().getMessageManager().getMessageModel());
+				// filter out messages without an actual message
+				var oFilter = new sap.ui.model.Filter("message", sap.ui.model.FilterOperator.NE, "");
+				if (this._messagePopover.getBinding("items")) {
+					this._messagePopover.getBinding("items").filter([oFilter]);
+				}
+
+			}
+			if (statusToSend === "SAV") {
+				this._messagePopover.openBy(this.byId("saveButton"));
+			} else {
+				this._messagePopover.openBy(this.byId("sendButton"));
+			}
+
+			// var msg = 'An error occurred during the sending of the request';
+			// sap.m.MessageToast.show(msg);
+		},this));
 		//   {success: "handleSubmitSuccess", error: "handleSubmitError"});
 	},
 

@@ -10,7 +10,11 @@
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
 		<StandardListItem
-			title="{Ltxa1}"
+			title="{Aufnr}"
+			info="{Ltxa1}"
 			description="{Vornr}" />
+		<!--<StandardListItem-->
+		<!--	title="{Ltxa1}"-->
+		<!--	description="{Vornr}" />-->
 	</SelectDialog>
 </core:FragmentDefinition>

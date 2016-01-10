@@ -29,22 +29,24 @@
 					<!--<l:HorizontalLayout class="sapUiSmallMargin">-->
 					<!--	<l:VerticalLayout class="sapUiSmallMarginEnd">-->
 					<!--		<l:content>-->
-								<Label id="lblStartTime" text="Start Time"/>
-								<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" id="beguz" placeholder="Enter Time..." type="Time" value="{Beguz}"
-									valueFormat="PTHH'H'mm'M'ss'S'" width="120px"/>
+								<Label id="lblStartTime" text="Start Time" required="true" />
+								<DateTimeInput id="beguz" placeholder="Enter Time..." 
+									type="Time" value="{Beguz}" valueFormat="PTHH'H'mm'M'ss'S'" 
+									change="onBeguzEntered" class="sapUiSmallMarginBottom" width="8em"/>
 						<!--	</l:content>-->
 						<!--</l:VerticalLayout>-->
 						<!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
 						<!--	<l:content>-->
-								<Label id="lblEndTime" text="End Time"/>
-								<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" id="enduz" placeholder="Enter Time..." type="Time" value="{Enduz}"
-									valueFormat="PTHH'H'mm'M'ss'S'" width="120px"/>
+								<Label id="lblEndTime" text="End Time" required="true" />
+								<DateTimeInput id="enduz" placeholder="Enter Time..." 
+									type="Time" value="{Enduz}" valueFormat="PTHH'H'mm'M'ss'S'" 
+									change="onEnduzEntered" class="sapUiSmallMarginBottom" width="8em"/>
 								<!--{path:'Enduz',formatter:'com.broadspectrum.etime.ee.utils.Conversions.time'}-->
 					<!--		</l:content>-->
 					<!--	</l:VerticalLayout>-->
 					<!--</l:HorizontalLayout>-->
-					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left"/>
-					<Label id="labelatt" text="Attendance Type"/>
+					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left" />
+					<Label id="labelatt" text="Attendance Type" required="true" />
 					<Input id="attendanceInput" placeholder="Enter Attendance Type ..."
 						type="Text" value="{Awarttxt}" description="{Awart}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
@@ -135,7 +137,11 @@
 					<Input id="suboperationInput" placeholder="Enter Suboperation... " type="Text" value="{Operationtxt}"></Input>
 					<Label id="labelinternalorder" text="Internal Order"/>
 					<Input id="internalorderInput" placeholder="Enter Internal Order... " type="Text" value="{Iaufnrtxt}"></Input>
-					<CheckBox id="hda" selected="{Hda}" text="Higher Duties"/>
+					<CheckBox id="hda" selected="{Hda}" text="Higher Duties" select="handleHDASelected" >
+						<layoutData>
+							<l:GridData linebreak="true" indent="L4 M4" />
+						</layoutData>
+					</CheckBox>
 					<Label id="labelenote" text="Notes"/>
 					<TextArea editable="true" id="Enote" rows="4" value="{Enote}"/>
 					<Label id="labelmnote" text="Approver Notes"
@@ -149,11 +155,11 @@
 			<OverflowToolbar>
 				<OverflowToolbarButton icon="sap-icon://favorite" press="handleFavourites" text="Favorite"/>
 				<ToolbarSpacer/>
-				<Button press="handleSaveRequest" text="Save" type="Emphasized">
-					<layoutData><OverflowToolbarLayoutData moveToOverflow="true"/></layoutData>
-				</Button>
-				<Button press="handleSendRequest" text="Send" type="Accept">
+				<Button id="sendButton" press="handleSendRequest" text="Send" type="Accept">
 					<layoutData><OverflowToolbarLayoutData moveToOverflow="false"/></layoutData>
+				</Button>
+				<Button id="saveButton" press="handleSaveRequest" text="Save" type="Emphasized">
+					<layoutData><OverflowToolbarLayoutData moveToOverflow="true"/></layoutData>
 				</Button>
 				<!--<OverflowToolbarButton text="Send"  icon="sap-icon://email"/>-->
 			</OverflowToolbar>

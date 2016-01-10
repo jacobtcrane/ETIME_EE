@@ -25,7 +25,7 @@
 			<f:SimpleForm id="detailForm" columnsM="1" columnsL="1" editable="false" emptySpanL="1" emptySpanM="1" labelSpanL="4" labelSpanM="4"
 				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" width="100%">
 				<f:content>
-					<Label id="labelall" text="Allowance Type"/>
+					<Label id="labelall" text="Allowance Type / Quantity" required="true" />
 					<Input id="allowanceInput" placeholder="Enter Allowance Type ..."
 						type="Text" value="{Lgarttxt}" description="{Lgart}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"

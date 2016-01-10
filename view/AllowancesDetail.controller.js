@@ -405,7 +405,37 @@ Search Helps - END
 		this.sendRequest("SUB");	// send as status "Submitted"
 	},
 
+	// due to the generic nature of the entity set backing this form
+	// we cannot rely on nullable constraints of bound odata fields 
+	// to have required fields enforced, but have to do it ourselves
+	validateRequiredFields: function() {
+		var isValidated = true;
+		var aRequiredFields = [];
+		if (!this.byId("allowanceInput").getDescription()) {
+			aRequiredFields.push({
+				source : this.byId("allowanceInput"),
+				msg : "Allowance type is required"
+			});
+		}
+		if (!this.byId("quantity").getValue()) {
+			aRequiredFields.push({
+				source : this.byId("quantity"),
+				msg : "Allowance quantity is required"
+			});
+		}
+		aRequiredFields.forEach(function(oRequiredField) {
+			oRequiredField.source.setValueStateText(oRequiredField.msg);
+            oRequiredField.source.setValueState(sap.ui.core.ValueState.Error);
+            isValidated = false;
+		}, this);
+
+		return isValidated;
+	},
+	
 	sendRequest: function(statusToSend) {
+		if (!this.validateRequiredFields()) {
+			return false;
+		}
 		//Housekeeping
 		// com.broadspectrum.etime.ee.utils.Conversions.
 		var path = this.oNewDetailContext.getPath() + '/Weekstart';
