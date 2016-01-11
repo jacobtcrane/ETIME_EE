@@ -44,19 +44,21 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 		var datetime = new Date(property);
 		var sapDateTime;
 		if (isTime) {
-			sapDateTime = this.timeFormatter.format(datetime);
+			sapDateTime = this.timeFormatter.format(datetime, true);	// format date as UTC
 		} else {
-			sapDateTime = this.dateFormatter.format(datetime);
+			sapDateTime = this.dateFormatter.format(datetime, true);	// format time as UTC
 		}
 		return sapDateTime;
 		// this.oModel.setProperty(path, sapDateTime);
 	},
 	
 	timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
-		pattern: "PThh'H'mm'M'ss'S'"
+		pattern: "PThh'H'mm'M'ss'S'",
+		UTC: true
 	}),
 
 	dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
-		pattern: "yyyy-MM-ddThh:mm:ss"
+		pattern: "yyyy-MM-ddThh:mm:ss",
+		UTC: true
 	})
 };

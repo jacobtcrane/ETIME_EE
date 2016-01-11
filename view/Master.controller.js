@@ -24,18 +24,20 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		oEventBus.subscribe('HeaderSelection', 'headDateEvt', this.onDateSelected, this);
 		oEventBus.subscribe('Any', 'BusyDialogNeeded', this.onBusyDialogNeeded, this);
 		oEventBus.subscribe('Any', 'BusyDialogDone', this.onBusyDialogDone, this);
-		oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
+		// oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
+		oEventBus.subscribe("Detail", "Changed", this.filterList(), this);
 	},
 
 	onDateSelected: function(sChannel, sEvent, oData) {
-		var startDate = new Date(oData);
-		var startDateStr = this.oFormatYyyymmdd.format(startDate);
-		var sEntityPath = '/overviewSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr +
-			'T22:00:00\'';
-		// 			var sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')?$expand=overviewSet';
-		if (sEntityPath != null) {
-			this.bindView(sEntityPath);
-		}
+		// var startDate = new Date(oData);
+		// var startDateStr = this.oFormatYyyymmdd.format(startDate);
+		// var sEntityPath = '/overviewSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr +
+		// 	'T22:00:00\'';
+		// // 			var sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')?$expand=overviewSet';
+		// if (sEntityPath != null) {
+		// 	this.bindView(sEntityPath);
+		// }
+		this.filterList(this.getFilterForDate(oData));
 	},
 
 	onBusyDialogNeeded: function() {
@@ -68,31 +70,59 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		this.getEventBus().publish("Master", "NotFound");
 	},
 
-	bindView: function(sEntityPath) {
-		if (sEntityPath != null) {
-			var oView = this.getView();
-			var list = this.getView().byId("master1List");
+	// bindView: function(sEntityPath) {
+	// 	if (sEntityPath != null) {
+	// 		var oView = this.getView();
+	// 		var list = this.getView().byId("master1List");
 
-			var template = new sap.m.ObjectListItem({
-				// id : "master1ListItem",
-				type: "{device>/listItemType}",
-				press: "onSelect",
-				title: "{Datetxt}",
-				attributes: [new sap.m.ObjectAttribute({
-						text: "{Hourstxt}"
-					}),
-					new sap.m.ObjectAttribute({
-						text: "{Statustxt}"
-					})
-				]
+	// 		var template = new sap.m.ObjectListItem({
+	// 			// id : "master1ListItem",
+	// 			type: "{device>/listItemType}",
+	// 			press: "onSelect",
+	// 			title: "{Datetxt}",
+	// 			attributes: [new sap.m.ObjectAttribute({
+	// 					text: "{Hourstxt}"
+	// 				}),
+	// 				new sap.m.ObjectAttribute({
+	// 					text: "{Statustxt}"
+	// 				})
+	// 			]
 
-			});
+	// 		});
 
-			list.bindItems(sEntityPath, template, null, null);
-			this.keyForView = sEntityPath;
+	// 		list.bindItems(sEntityPath, template, null, null);
+	// 		this.keyForView = sEntityPath;
+	// 	}
+	// },
+
+	getFilterForDate: function(oDate) {
+		var startDate = new Date(oDate);
+		if (!startDate) {
+			return null;
+		}
+		// var startDateStr = this.oFormatYyyymmdd.format(startDate)  + "T22:00:00";
+		var aFilters = [];
+		// aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, "datetime'" + startDateStr + "'"));
+		// aFilters.push(new sap.ui.model.Filter("Weekend",   sap.ui.model.FilterOperator.GE, "datetime'" + startDateStr + "'"));
+		aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, startDate));
+		aFilters.push(new sap.ui.model.Filter("Weekend",   sap.ui.model.FilterOperator.GE, startDate));
+		return new sap.ui.model.Filter({
+			filters : aFilters,
+			and : true
+		});
+	},
+	
+	filterList: function(oFilter) {
+		var oBinding = this.getView().byId("master1List").getBinding("items");
+		if (!oFilter && this.oLastListFilter) {
+			oFilter = this.oLastListFilter;
+		}
+		if (oBinding && oFilter) {
+			oBinding.filter(oFilter);
+			this.oLastListFilter = oFilter;
 		}
 	},
-
+	
 	onRouteMatched: function(oEvent) {
 		var sName = oEvent.getParameter("name");
 

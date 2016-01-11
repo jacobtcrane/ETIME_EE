@@ -2,7 +2,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
                 'sap/ui/unified/DateRange',
                 'sap/ui/core/Fragment',
                 'com/broadspectrum/etime/ee/view/HeaderSummary.controller'],
-	function(Controller, DateRange, HeaderSummary,Fragment) {
+	function(Controller, DateRange, Fragment, HeaderSummary) {
 	"use strict";
 
 	var CalendarDateIntervalBasicController = Controller.extend("com.broadspectrum.etime.ee.view.HeaderSelection", {
@@ -12,7 +12,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			this.oFormatYyyymmdd = sap.ui.core.format.DateFormat.getInstance({pattern: "yyyy-MM-dd"});
 			this.oEventBus = sap.ui.getCore().getEventBus();
 			
-			 this.oCalendar = this.getView().byId("calendar_old");
+			this.oCalendar = this.getView().byId("calendar_old");
         	this.oCalendar.setWidth("300px");
         	this.oCalendar.setWeeksPerRow(1);
         	this.oCalendar.setSingleRow(true);
@@ -56,8 +56,11 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 		// 	// var enddate = this.getView().byId('calendar').getEndDate;
 		// },
 		onAfterRendering: function() {
-			 var oNewDate = this.oCalendar.getCurrentDate();
-			 this.oEventBus.publish('HeaderSelection','headDateEvt',oNewDate);
+			if (!this.didRenderFirstTime) {
+				var oNewDate = this.oCalendar.getCurrentDate();
+				this.oEventBus.publish('HeaderSelection','headDateEvt',oNewDate);
+				this.didRenderFirstTime = true;
+			}
 		},
 	
 	    getRouter : function () {

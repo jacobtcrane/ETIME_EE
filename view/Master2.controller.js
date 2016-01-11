@@ -34,13 +34,12 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 			this.bindView(sEntityPath);
 
 			var oEventBus = this.getEventBus();
-			var that = this;
-			this.byId("master2List").attachUpdateFinished(function() {
-				that.selectFirstItem();
-				oEventBus.publish("Master2", "LoadFinished", {
-					oListItem: that.getView().byId("master2List").getItems()[0]
-				});
-			});
+			this.byId("master2List").attachUpdateFinished($.proxy(function() {
+				this.selectFirstItem();
+				// oEventBus.publish("Master2", "LoadFinished", {
+				// 	oListItem: this.getView().byId("master2List").getItems()[0]
+				// });
+			}, this));
 		}
 
 		// if (oParameters.name === "master02" && jQuery.device.is.phone) {
@@ -72,29 +71,31 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	},
 
 	selectFirstItem: function() {
-		if(!jQuery.device.is.phone){
+		// if(!jQuery.device.is.phone){
 		var oList = this.getView().byId("master2List");
 		var aItems = oList.getItems();
-		if (aItems.length) {
+		if (aItems.length === 1) {
+			// if only one item in the list, go ahead and select it
 			oList.setSelectedItem(aItems[0], true);
-			var a = this.getView().getModel().getProperty(aItems[0].getBindingContext().getPath());
-			if (a.isAllowance === 'X') {
-				this.getRouter().myNavToWithoutHash({
-					currentView: this.getView(),
-					targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
-					targetViewType: "XML",
-					transition: "slide"
-				});
-			}else{
-				this.getRouter().myNavToWithoutHash({
-					currentView: this.getView(),
-					targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-					targetViewType: "XML",
-					transition: "slide"
-				});
-			}
+			// var a = this.getView().getModel().getProperty(aItems[0].getBindingContext().getPath());
+			// if (a.isAllowance === 'X') {
+			// 	this.getRouter().myNavToWithoutHash({
+			// 		currentView: this.getView(),
+			// 		targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
+			// 		targetViewType: "XML",
+			// 		transition: "slide"
+			// 	});
+			// }else{
+			// 	this.getRouter().myNavToWithoutHash({
+			// 		currentView: this.getView(),
+			// 		targetViewName: "com.broadspectrum.etime.ee.view.Detail",
+			// 		targetViewType: "XML",
+			// 		transition: "slide"
+			// 	});
+			// }
+			this.showDetail(aItems[0]);
 		}
-		}
+		// }
 	},
 
 	showEmptyView: function() {
@@ -131,7 +132,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		// source itself (will depend on the device-dependent mode)
 		var oList = this.getView().byId("master2List");
 		this.showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
-		oList.removeSelections();
 	},
 
 	showDetail: function(oItem) {
@@ -163,6 +163,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 				entity: oItem.getBindingContext().getPath().substr(1)
 			}, bReplace);
 		}
+		// remove list selections, else we can't perform detail nav next time
+		this.byId("master2List").removeSelections();
 	},
 
 	getEventBus: function() {

@@ -37,6 +37,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				var sEntityPath = "/" + oParameters.arguments.entity;
 				this.keyForView = sEntityPath;
 				this.bindView(sEntityPath);
+				// reset value state for all input controls
+				this.resetFormElementValueState();
 
 				if (this.oNewDetailContext) {
 					this.oModel.deleteCreatedEntry(this.oNewDetailContext);
@@ -71,41 +73,55 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.keyForView = this.oNewDetailContext.getPath();
 			this.getView().setBindingContext(this.oNewDetailContext);
 			// reset value state for all input controls
-			var aFormElements = this.byId("detailForm").getContent();
-			aFormElements.forEach(function(oFormElement) {
-				if (oFormElement instanceof sap.m.Input) {
-            		oFormElement.setValueState(sap.ui.core.ValueState.None);
-					oFormElement.setValueStateText(null);
-				}
-			});
+			this.resetFormElementValueState();
+			// reset favourites switch
+			var favswitch = this.getView().byId("favSwitch");
+			if (favswitch) {
+				favswitch.setState(false);
+			}
+			
 		}
 	},
 
+	resetFormElementValueState: function() {
+		// reset value state for all input controls
+		var aFormElements = this.byId("detailForm").getContent();
+		aFormElements.forEach(function(oFormElement) {
+			if (oFormElement instanceof sap.m.DateTimeInput || 
+				oFormElement instanceof sap.m.Input) {
+	    		oFormElement.setValueState(sap.ui.core.ValueState.None);
+				oFormElement.setValueStateText(null);
+			}
+		});
+	},
+	
 	bindView: function(sEntityPath) {
 		var oView = this.getView();
-		oView.bindElement(sEntityPath);
-
-		var rec = oView.getModel().getData(sEntityPath);
-		//Housekeeping
-		// rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
-		// rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
-		rec.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(rec.Beguz.ms), true);
-		rec.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(rec.Enduz.ms), true);
-		oView.getModel().setProperty(sEntityPath, rec);
 		//Check if the data is already on the client
-		if (!oView.getModel().getData(sEntityPath)) {
-
+		var oData = oView.getModel().getData(sEntityPath);
+		if (!oData) {
 			// Check that the entity specified was found
-			var oData = oView.getModel().getData(sEntityPath);
-			if (!oData) {
-				this.showEmptyView();
-				this.fireDetailNotFound();
-			} else {
-				this.fireDetailChanged(sEntityPath);
-			}
+			this.showEmptyView();
+			this.fireDetailNotFound();
 		} else {
-			this.fireDetailChanged(sEntityPath);
+			// this.fireDetailChanged(sEntityPath);
+			// convert from native odata in UTC to formatted string in local time
+			oData.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oData.Beguz.ms), true);
+			oData.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oData.Enduz.ms), true);
+			oView.getModel().setProperty(sEntityPath, oData);
+			// now we're ready to bind to the view
+			oView.bindElement(sEntityPath);
 		}
+
+
+
+		// var rec = oView.getModel().getData(sEntityPath);
+		// //Housekeeping
+		// // rec.Beguz = this.timeFormatter.format(new Date(rec.Beguz.ms));
+		// // rec.Enduz = this.timeFormatter.format(new Date(rec.Enduz.ms));
+		// rec.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(rec.Beguz.ms), true);
+		// rec.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(rec.Enduz.ms), true);
+		// oView.getModel().setProperty(sEntityPath, rec);
 	},
 
 	displayTimeDif: function(begda, endda) {
@@ -485,19 +501,21 @@ Favourites - START
 		record.Rsnvar = favourite.Rsnvar;
 		record.Enote = favourite.Enote;
 		record.Hda = favourite.Hda;
+		// convert from native odata in UTC to formatted string in local time
+		record.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(record.Beguz.ms), true);
+		record.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(record.Enduz.ms), true);
 		this.oModel.setProperty(this.keyForView, record);
-		
-		// updating the model as above doesn't update the view?
-		// update model via bound input fields instead
-		if (favourite.Beguz && favourite.Beguz.ms) {
-			this.getView().byId("beguz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(favourite.Beguz.ms), true));
-		}
-		if (favourite.Enduz && favourite.Enduz.ms) {
-			this.getView().byId("enduz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(favourite.Enduz.ms), true));
-		}
-		if (favourite.Vtken) {
-			this.getView().byId("vtken").setSelected(favourite.Vtken ? true : false);
-		}
+
+		// perform lookups for descritions of received values
+		// if (favourite.Beguz && favourite.Beguz.ms) {
+		// 	this.getView().byId("beguz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(favourite.Beguz.ms), true));
+		// }
+		// if (favourite.Enduz && favourite.Enduz.ms) {
+		// 	this.getView().byId("enduz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(favourite.Enduz.ms), true));
+		// }
+		// if (favourite.Vtken) {
+		// 	this.getView().byId("vtken").setSelected(favourite.Vtken ? true : false);
+		// }
 		if (favourite.Awart) {
 			this.filterSuggestionItems(this.getView().byId("attendanceInput"), favourite.Awart, true, "Awart", "Atext");
 		}
@@ -519,12 +537,12 @@ Favourites - START
 		if (favourite.Iaufnr) {
 			this.filterSuggestionItems(this.getView().byId("internalorderInput"), favourite.Iaufnr, true, "Iaufnr", "Ktext");
 		}
-		if (favourite.Hda) {
-			this.getView().byId("hda").setSelected(favourite.Hda ? true : false);
-		}
-		if (favourite.Enote) {
-			this.getView().byId("Enote").setValue(favourite.Enote);
-		}
+		// if (favourite.Hda) {
+		// 	this.getView().byId("hda").setSelected(favourite.Hda ? true : false);
+		// }
+		// if (favourite.Enote) {
+		// 	this.getView().byId("Enote").setValue(favourite.Enote);
+		// }
 		
 	},
 	/********************
@@ -834,7 +852,8 @@ Search Helps - END
 	},
 	
 	sendRequest: function(statusToSend) {
-		if (!this.validateRequiredFields()) {
+		if (statusToSend === "SUB" &&	// validate upon submit (not save)
+			!this.validateRequiredFields()) {
 			return false;
 		}
 		console.log(this.oModel);
@@ -868,9 +887,11 @@ Search Helps - END
 		
 		// 		this.oModel.setProperty(path,this.makeSAPdate(this.oModel.getProperty(path)));
 		this.oModel.submitChanges($.proxy(function() {
-			var msg = 'Request sent';
+			var msg = statusToSend === "SAV" ? "Record saved" : "Request sent";
 			sap.m.MessageToast.show(msg);
 			this.fireDetailChanged(this.oNewDetailContext.getPath());
+			// reset value state for all input controls
+			this.resetFormElementValueState();
 		}, this), $.proxy(function(oError) {
 			// v2.ODataModel automatically parses messages returned; we appear to have to do it manually
 			var oDataMessageParser = new sap.ui.model.odata.ODataMessageParser(
