@@ -29,11 +29,14 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		var oParameters = oEvent.getParameters();
 
 		if (oParameters.name === "master2") {
+		  //  if (this.byId("master2List")) {
+    // 		    this.byId("master2List").removeSelections(true);
+		  //  }
 			//  ?$filter
 			var sEntityPath = "/" + oParameters.arguments.entity;
 			this.bindView(sEntityPath);
 
-			var oEventBus = this.getEventBus();
+// 			var oEventBus = this.getEventBus();
 			this.byId("master2List").attachUpdateFinished($.proxy(function() {
 				this.selectFirstItem();
 				// oEventBus.publish("Master2", "LoadFinished", {
@@ -130,7 +133,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	onSelect: function(oEvent) {
 		// Get the list item either from the listItem parameter or from the event's
 		// source itself (will depend on the device-dependent mode)
-		var oList = this.getView().byId("master2List");
+// 		var oList = this.getView().byId("master2List");
 		this.showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
 	},
 
@@ -163,6 +166,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 				entity: oItem.getBindingContext().getPath().substr(1)
 			}, bReplace);
 		}
+		// publish event with binding context for detail view
+		this.getEventBus().publish("Master2", "ItemSelected", {
+			oBindingContext: oItem.getBindingContext()
+		});
+
 		// remove list selections, else we can't perform detail nav next time
 		this.byId("master2List").removeSelections();
 	},
