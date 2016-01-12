@@ -156,11 +156,20 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 		}
 
 		// Create and set domain model to the component
-		var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, {json: true,loadMetadataAsync: true});
+// 		var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, {json: true,loadMetadataAsync: true});
+		var oModel = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
 		oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
+		// for v2 models batching is used - set for which entity types changes will be submitted manually
+        oModel.setChangeBatchGroups({
+            "detail": {
+                batchGroupId: "detailChanges"
+            }
+        });
+        oModel.setDeferredBatchGroups(["detailChanges"]);
+		sap.ui.getCore().setModel(oModel);
 		this.setModel(oModel);
-	    this.setModel(oModel,"theOdataModel");
-	    this.setModel(oModel,"theOdataModelFav");
+        this.setModel(oModel,"theOdataModel");
+        this.setModel(oModel,"theOdataModelFav");
 
 		// Set device model
 		var oDeviceModel = new sap.ui.model.json.JSONModel({

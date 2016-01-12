@@ -44,7 +44,8 @@ sap.ui.define([
 			startDate = new Date(oData);
 			var startDateStr = this.oFormatYyyymmdd.format(startDate);
 
-			sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')';
+// 			sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')';
+			sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22%3A00%3A00\',Weekend=datetime\'' + startDateStr + 'T22%3A00%3A00\')';
 			// sEntityPath = '/headerSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr + 'T22:00:00\'';
 
 			if(sEntityPath != null){
