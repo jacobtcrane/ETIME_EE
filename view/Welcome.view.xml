@@ -3,13 +3,17 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core"
 	xmlns:mvc="sap.ui.core.mvc" >
-	<Page
-		enableScrolling="false">
-		<footer>
-			<Toolbar>
-			</Toolbar>
-		</footer>
+	<Page>
+		<!--<footer>-->
+		<!--	<Toolbar>-->
+		<!--	</Toolbar>-->
+		<!--</footer>-->
 		<content>
+        	<MessagePage id="messagePage" showHeader="false" 
+        	    text="Welcome to My Timesheets"
+        	    description="Select an item from the list to get started."
+        	    icon="sap-icon://timesheet">
+        	</MessagePage>		
 		</content>
 	</Page>
 </mvc:View>

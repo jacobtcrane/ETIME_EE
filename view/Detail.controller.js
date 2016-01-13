@@ -1056,6 +1056,8 @@ Search Helps - END
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
 					// show odata errors in message popover
 					this.showMessagePopover(this.byId("toolbar"));
+					// some errors screw up the model data, whilst our context object is still intact
+					this.setContextObjectToModel();
 				} else {
 					// raise a toast to the user!
 					var msg = statusToSend === "SAV" ? "Record saved" : "Request sent";
@@ -1068,6 +1070,8 @@ Search Helps - END
 			error: $.proxy(function() {
 				// show odata errors in message popover
 				this.showMessagePopover(this.byId("toolbar"));
+				// some errors screw up the model data, whilst our context object is still intact
+				this.setContextObjectToModel();
 				// var msg = 'An error occurred during the sending of the request';
 				// sap.m.MessageToast.show(msg);
 			}, this)
@@ -1087,6 +1091,13 @@ Search Helps - END
 	// 		this.showEmptyView();
 	// 	},
 
+    setContextObjectToModel: function() {
+        if (this.getContextObject() && this.getContextPath()) {
+            var oModel = this.getModel();
+    		oModel.setProperty(this.getContextPath(), this.getContextObject());
+        }
+    },
+    
 	showMessagePopover: function(oOpenBy) {
 		// prepare message popover dialog if not yet done
 		if (!this._messagePopover) {

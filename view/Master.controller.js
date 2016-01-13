@@ -13,10 +13,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		//  		this.getRouter().detachRoutePatternMatched(this.onRouteMatched, this);
 		// }, this);
 
-		//On phone devices, there is nothing to select from the list. There is no need to attach events.
-		if (sap.ui.Device.system.phone) {
-			return;
-		}
+		// 		//On phone devices, there is nothing to select from the list. There is no need to attach events.
+		// 		if (sap.ui.Device.system.phone) {
+		// 			return;
+		// 		}
 
 		this.getRouter().attachRoutePatternMatched(this.onRouteMatched, this);
 
@@ -40,21 +40,21 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		// we can't filter on dates if metadata is not loaded yet
 		var oModel = sap.ui.getCore().getModel();
 		if (!oModel.getServiceMetadata()) {
-    		oModel.attachEventOnce("metadataLoaded", function() {
-    		    this.filterList(this.getFilterForDate(oData));
-    		}, this);
+			oModel.attachEventOnce("metadataLoaded", function() {
+				this.filterList(this.getFilterForDate(oData));
+			}, this);
 		} else {
-		    this.filterList(this.getFilterForDate(oData));
+			this.filterList(this.getFilterForDate(oData));
 		}
 	},
 
 	onDetailChanged: function(sChannel, sEvent, oData) {
 		var oModel = sap.ui.getCore().getModel();
 		if (oData && oData.sEntityPath) {
-    		var property = oModel.getProperty(oData.sEntityPath);
-    		if (property && property.Begda) {
-    	        this.filterList(this.getFilterForDate(property.Begda));
-    		}
+			var property = oModel.getProperty(oData.sEntityPath);
+			if (property && property.Begda) {
+				this.filterList(this.getFilterForDate(property.Begda));
+			}
 		}
 	},
 
@@ -63,13 +63,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		// show busy dialog
 		this.getView().byId("theBusyDialog").open();
 	},
-	
+
 	onBusyDialogDone: function() {
 		"use strict";
 		// close busy dialog
 		this.getView().byId("theBusyDialog").close();
 	},
-	
+
 	showEmptyView: function() {
 		this.getRouter().myNavToWithoutHash({
 			currentView: this.getView(),
@@ -123,13 +123,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		// aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, "datetime'" + startDateStr + "'"));
 		// aFilters.push(new sap.ui.model.Filter("Weekend",   sap.ui.model.FilterOperator.GE, "datetime'" + startDateStr + "'"));
 		aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, startDate));
-		aFilters.push(new sap.ui.model.Filter("Weekend",   sap.ui.model.FilterOperator.GE, startDate));
+		aFilters.push(new sap.ui.model.Filter("Weekend", sap.ui.model.FilterOperator.GE, startDate));
 		return new sap.ui.model.Filter({
-			filters : aFilters,
-			and : true
+			filters: aFilters,
+			and: true
 		});
 	},
-	
+
 	filterList: function(oFilter) {
 		var oBinding = this.getView().byId("master1List").getBinding("items");
 		if (!oFilter && this.oLastListFilter) {
@@ -140,7 +140,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 			this.oLastListFilter = oFilter;
 		}
 	},
-	
+
 	onRouteMatched: function(oEvent) {
 		var sName = oEvent.getParameter("name");
 
@@ -148,19 +148,26 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 			return;
 		}
 
-		//Load the master2 view in desktop
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.Master2",
-			targetViewType: "XML"
-		});
-
-		//Load the welcome view in desktop
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.Welcome",
-			targetViewType: "XML"
-		});
+		//Load the welcome view on desktop; the master page on phone
+		if (sap.ui.Device.system.phone) {
+			this.getRouter().myNavToWithoutHash({
+				currentView: this.getView(),
+				targetViewName: "com.broadspectrum.etime.ee.view.Master",
+				targetViewType: "XML",
+				isMaster: true
+			});
+		} else {
+			this.getRouter().myNavToWithoutHash({
+				currentView: this.getView(),
+				targetViewName: "com.broadspectrum.etime.ee.view.Welcome",
+				targetViewType: "XML",
+				isMaster: false
+			});
+		}
+		var oSplitApp = this.getRouter()._findSplitApp(this.getView());
+		if (oSplitApp && !oSplitApp.isMasterShown()) {
+			oSplitApp.showMaster();
+		}
 	},
 
 	waitForInitialListLoading: function(fnToExecute) {
@@ -213,6 +220,14 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	showDetail: function(oItem) {
+		//Load the master2 view
+		this.getRouter().myNavToWithoutHash({
+			currentView: this.getView(),
+			targetViewName: "com.broadspectrum.etime.ee.view.Master2",
+			targetViewType: "XML",
+			isMaster: true
+		});
+
 		// If we're on a phone device, include nav in history
 		var bReplace = jQuery.device.is.phone ? false : true;
 		this.getRouter().navTo("master2", {

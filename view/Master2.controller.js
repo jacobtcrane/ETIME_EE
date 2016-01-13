@@ -3,10 +3,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	onInit: function() {
 		this.getRouter().attachRouteMatched(this.onRouteMatched, this);
 
-		//On phone devices, there is nothing to select from the list. There is no need to attach events.
-		if (!sap.ui.Device.system.phone) {
+// 		//On phone devices, there is nothing to select from the list. There is no need to attach events.
+// 		if (!sap.ui.Device.system.phone) {
 			this.getRouter().attachRoutePatternMatched(this.onRoutePatternMatched, this);
-		}
+// 		}
 	},
 
 	onRoutePatternMatched: function(oEvent) {
@@ -158,7 +158,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 				currentView: this.getView(),
 				targetViewName: "com.broadspectrum.etime.ee.view.Detail",
 				targetViewType: "XML",
-				transition: "slide"
+				transition: "slide",
+				isMaster: false
 			});
 
 			this.getRouter().navTo("detail", {
