@@ -32,6 +32,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 					oModel.setProperty(oData.oBindingContext.getPath(), oDetailEntity);
 				}
 				this.getView().setBindingContext(oData.oBindingContext);
+				this.addModelChangeListener();
 			} else {
 				this.showEmptyView();
 				this.fireDetailNotFound();
@@ -63,7 +64,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		if (oParameters.name === "detail") {
 			// for existing detail records, setup and binding is done in onMasterItemSelected;
 			// when the routing match occurs we just clean up in preparation
-			this.getView().unbindElement();
+			// 			this.getView().unbindElement();
 			// remove any unsaved new detail entities from the model
 			if (this.oNewDetailContext) {
 				oModel.deleteCreatedEntry(this.oNewDetailContext);
@@ -84,7 +85,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 		if (oParameters.name === "newdetail") {
 			//remove any existing view bindings
-			this.getView().unbindElement();
+			// 			this.getView().unbindElement();
 			// remove any unsaved new detail entities from the model
 			if (this.oNewDetailContext) {
 				oModel.deleteCreatedEntry(this.oNewDetailContext);
@@ -93,7 +94,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			var oSelectedDate = new Date(oParameters.arguments.entity);
 			// 			oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 			// 			oModel.refreshMetadata();
-			this.oNewDetailContext = oModel.createEntry("detailSet", this.prepareNewDetailEntity(oSelectedDate));
+			this.oNewDetailContext = oModel.createEntry("detailSet", {
+			        batchGroupId: "detailChanges",
+			        properties: this.prepareNewDetailEntity(oSelectedDate)
+	        });
 			// 			this.oDetailEntity = this.oNewDetailContext.getProperty();
 			// 			this.detailEntityPath = this.oNewDetailContext.getPath();
 			this.getView().setBindingContext(this.oNewDetailContext);
@@ -166,14 +170,33 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	formatEntityDates: function(oDetailEntity) {
 		var didChangeDates = false;
 		if (oDetailEntity.Beguz && oDetailEntity.Beguz.ms) {
-			oDetailEntity.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oDetailEntity.Beguz.ms), true);
+			oDetailEntity.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oDetailEntity.Beguz.ms), true, true);
 			didChangeDates = true;
 		}
 		if (oDetailEntity.Enduz && oDetailEntity.Enduz.ms) {
-			oDetailEntity.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oDetailEntity.Enduz.ms), true);
+			oDetailEntity.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oDetailEntity.Enduz.ms), true, true);
 			didChangeDates = true;
 		}
 		return didChangeDates;
+	},
+
+	addModelChangeListener: function() {
+		var oModel = this.getModel();
+		if (!this.oBinding || (this.oBinding && this.oBinding.getPath() !== this.getContextPath())) {
+		    if (this.oBinding) {
+		        this.oBinding.destroy();    // clean up existing binding and event handlers
+		    }
+		    this.oBinding = new sap.ui.model.Binding(oModel, this.getContextPath(), oModel.getContext(this.getContextPath()));
+		    var setStatustxtEdited = function() {
+		        this.oBinding.detachChange(setStatustxtEdited, this);
+				// mark the entity as edited via status text
+				var property = oModel.getProperty(this.getContextPath() + "/Statustxt");
+				if (property) {
+					oModel.setProperty(this.getContextPath() + "/Statustxt", "Edited");
+				}
+		    };
+			this.oBinding.attachChange(setStatustxtEdited, this);
+		}
 	},
 
 	// 	bindView: function() {
@@ -219,13 +242,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				endda.setDate(1);
 			}
 			var oTimeFormatter = sap.ui.core.format.DateFormat.getDateInstance({
-				pattern: "H':'mm"
+				pattern: "HH':'mm"
 			});
 			var oTimeFormatterUTC = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: "H':'mm",
 				UTC: true
 			});
-			Timetxt = (begda instanceof Date ? oTimeFormatter.format(begda) : "?") + " - " + (endda instanceof Date ? oTimeFormatter.format(endda) :
+			Timetxt = (begda instanceof Date ? oTimeFormatter.format(begda) : "?") + "-" + (endda instanceof Date ? oTimeFormatter.format(endda) :
 				"?");
 			if (endda instanceof Date &&
 				begda instanceof Date) {
@@ -323,6 +346,18 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		this.getEventBus().publish("Detail", "NotFound");
 	},
 
+    cleanup: function() {
+	    if (this.oBinding) {
+	        this.oBinding.destroy();
+	        this.oBinding = null;
+	    }
+		if (this.oNewDetailContext) {
+			this.oNewDetailContext = null;
+		}
+	    this.getView().unbindElement();
+	    this.getView().setBindingContext(null);
+    },
+    
 	onNavBack: function() {
 		var oRouter = this.getRouter();
 		var oModel = this.getModel();
@@ -331,14 +366,20 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				icon: sap.m.MessageBox.Icon.WARNING,
 				title: "Unsaved Changes",
 				actions: [sap.m.MessageBox.Action.CANCEL, sap.m.MessageBox.Action.OK],
-				onClose: function(oAction) {
+				onClose: $.proxy(function(oAction) {
 					if (oAction === sap.m.MessageBox.Action.OK) {
+                		if (this.oNewDetailContext) {
+                		    // remove new record from model, if any
+                			oModel.deleteCreatedEntry(this.oNewDetailContext);
+                		}
+						this.cleanup();
 						oModel.resetChanges();
 						oRouter.myNavBack("main");
 					}
-				}
+				}, this)
 			});
 		} else {
+			this.cleanup();
 			oRouter.myNavBack("main");
 		}
 	},
@@ -1005,61 +1046,33 @@ Search Helps - END
 
 		// remove all current messages from message manager
 		sap.ui.getCore().getMessageManager().removeAllMessages();
-		// prepare message popover dialog if not yet done
-		if (!this._messagePopover) {
-			this._messagePopover = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.MessagePopover", this);
-			this._messagePopover.setModel(sap.ui.getCore().getMessageManager().getMessageModel());
-		}
 
-		var that = this;
 		// note that we have to specify this submission is only for deferred batch group "detailChanges"
 		// otherwise all service calls get batched together and the success/error outcome is clouded
 		oModel.submitChanges({
 			batchGroupId: "detailChanges",
-			success: function() {
+			success: $.proxy(function() {
 				// TODO: until we can figure out why batching doesn't work, check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
 					// show odata errors in message popover
-					// filter out messages without an actual message
-					// 	var oFilter = new sap.ui.model.Filter("message", sap.ui.model.FilterOperator.NE, "");
-					// 	if (that._messagePopover.getBinding("items")) {
-					// 		that._messagePopover.getBinding("items").filter([oFilter]);
-					// 	}
-					// filter method only works in higher UI5 runtime, so take matters into our own hands...
-					var aFilteredMessages = $.map(sap.ui.getCore().getMessageManager().getMessageModel().oData, function(oMessage) {
-						if (oMessage.message) {
-							return oMessage;
-						}
-					});
-					sap.ui.getCore().getMessageManager().removeMessages(sap.ui.getCore().getMessageManager().getMessageModel().oData);
-					sap.ui.getCore().getMessageManager().addMessages(aFilteredMessages);
-
-					if (statusToSend === "SAV") {
-						that._messagePopover.openBy(that.byId("saveButton"));
-					} else {
-						that._messagePopover.openBy(that.byId("sendButton"));
-					}
+					this.showMessagePopover(this.byId("toolbar"));
 				} else {
+					// raise a toast to the user!
 					var msg = statusToSend === "SAV" ? "Record saved" : "Request sent";
+					this.fireDetailChanged(this.getContextPath());
+        			this.cleanup();
+					this.getRouter().myNavBack("main");
 					sap.m.MessageToast.show(msg);
-					that.fireDetailChanged(that.getContextPath());
-					// reset value state for all input controls
-					that.resetFormElementValueState();
 				}
-			},
-			error: function() {
+			}, this),
+			error: $.proxy(function() {
 				// show odata errors in message popover
-				if (statusToSend === "SAV") {
-					that._messagePopover.openBy(that.byId("saveButton"));
-				} else {
-					that._messagePopover.openBy(that.byId("sendButton"));
-				}
-
+				this.showMessagePopover(this.byId("toolbar"));
 				// var msg = 'An error occurred during the sending of the request';
 				// sap.m.MessageToast.show(msg);
-			}
-			//  success: this.handleSubmitSuccess, 
-			//  error: this.handleSubmitError
+			}, this)
+			//  success: $.proxy(this.handleSubmitSuccess, this), 
+			//  error: $.proxy(this.handleSubmitError, this)
 		});
 	},
 
@@ -1073,6 +1086,29 @@ Search Helps - END
 	// 		sap.m.MessageToast.show(msg);
 	// 		this.showEmptyView();
 	// 	},
+
+	showMessagePopover: function(oOpenBy) {
+		// prepare message popover dialog if not yet done
+		if (!this._messagePopover) {
+			this._messagePopover = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.MessagePopover", this);
+			this._messagePopover.setModel(sap.ui.getCore().getMessageManager().getMessageModel());
+		}
+		// filter out messages without an actual message
+		// 	var oFilter = new sap.ui.model.Filter("message", sap.ui.model.FilterOperator.NE, "");
+		// 	if (this._messagePopover.getBinding("items")) {
+		// 		this._messagePopover.getBinding("items").filter([oFilter]);
+		// 	}
+		// filter method only works in higher UI5 runtime, so take matters into our own hands...
+		var aFilteredMessages = $.map(sap.ui.getCore().getMessageManager().getMessageModel().oData, function(oMessage) {
+			if (oMessage.message) {
+				return oMessage;
+			}
+		});
+		sap.ui.getCore().getMessageManager().removeMessages(sap.ui.getCore().getMessageManager().getMessageModel().oData);
+		sap.ui.getCore().getMessageManager().addMessages(aFilteredMessages);
+
+		this._messagePopover.openBy(oOpenBy || this.getView());
+	},
 
 	getModel: function() {
 		return sap.ui.getCore().getModel();

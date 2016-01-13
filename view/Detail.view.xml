@@ -152,7 +152,7 @@
 			</f:SimpleForm>
 		</content>
 		<footer>
-			<OverflowToolbar>
+			<OverflowToolbar id="toolbar">
 				<OverflowToolbarButton id="favButton" icon="sap-icon://favorite" press="handleFavourites" text="Favorite"/>
 				<ToolbarSpacer/>
 				<Button id="sendButton" press="handleSendRequest" text="Send" type="Accept">

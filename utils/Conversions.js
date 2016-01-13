@@ -38,15 +38,23 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 			return false;
 		}
 	},
-	makeSAPDateTime: function(property, isTime) {
+	makeSAPDateTime: function(property, isTime, toUTC) {
 		// var path = this.oNewDetailContext.getPath() + field;
 		// var property = this.oModel.getProperty(field);
 		var datetime = new Date(property);
 		var sapDateTime;
 		if (isTime) {
-			sapDateTime = this.timeFormatter.format(datetime, true);	// format date as UTC
+		    if (toUTC) {
+			    sapDateTime = this.timeFormatterUTC.format(datetime, true);	// format date as UTC
+		    } else {
+    			sapDateTime = this.timeFormatter.format(datetime);
+		    }
 		} else {
-			sapDateTime = this.dateFormatter.format(datetime, true);	// format time as UTC
+		    if (toUTC) {
+    			sapDateTime = this.dateFormatterUTC.format(datetime, true);	// format time as UTC
+		    } else {
+    			sapDateTime = this.dateFormatter.format(datetime);
+		    }
 		}
 		return sapDateTime;
 		// this.oModel.setProperty(path, sapDateTime);
@@ -54,11 +62,22 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 	
 	timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
 		pattern: "PTHH'H'mm'M'ss'S'",
-		UTC: true
+		UTC: false
 	}),
 
 	dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
 		pattern: "yyyy-MM-ddTHH:mm:ss",
+		UTC: false
+	}),
+	
+	timeFormatterUTC: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "PTHH'H'mm'M'ss'S'",
+		UTC: true
+	}),
+
+	dateFormatterUTC: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "yyyy-MM-ddTHH:mm:ss",
 		UTC: true
 	})
+	
 };

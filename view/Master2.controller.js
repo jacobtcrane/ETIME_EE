@@ -37,12 +37,12 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 			this.bindView(sEntityPath);
 
 // 			var oEventBus = this.getEventBus();
-			this.byId("master2List").attachUpdateFinished($.proxy(function() {
+			this.byId("master2List").attachEventOnce("updateFinished", function() {
 				this.selectFirstItem();
 				// oEventBus.publish("Master2", "LoadFinished", {
 				// 	oListItem: this.getView().byId("master2List").getItems()[0]
 				// });
-			}, this));
+			}, this);
 		}
 
 		// if (oParameters.name === "master02" && jQuery.device.is.phone) {
@@ -63,13 +63,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		if (!oView.getModel().getData(sEntityPath)) {
 
 			// Check that the entity specified was found
-			oView.getElementBinding().attachEventOnce("dataReceived", jQuery.proxy(function() {
+			oView.getElementBinding().attachEventOnce("dataReceived", function() {
 				var oData = oView.getModel().getData(sEntityPath);
 				if (!oData) {
 					this.showEmptyView();
 					this.fireDetailNotFound();
 				}
-			}, this));
+			}, this);
 		}
 	},
 

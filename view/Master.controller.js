@@ -25,7 +25,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		oEventBus.subscribe('Any', 'BusyDialogNeeded', this.onBusyDialogNeeded, this);
 		oEventBus.subscribe('Any', 'BusyDialogDone', this.onBusyDialogDone, this);
 		// oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
-		oEventBus.subscribe("Detail", "Changed", this.filterList(), this);
+		oEventBus.subscribe("Detail", "Changed", this.onDetailChanged, this);
 	},
 
 	onDateSelected: function(sChannel, sEvent, oData) {
@@ -37,7 +37,25 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		// if (sEntityPath != null) {
 		// 	this.bindView(sEntityPath);
 		// }
-		this.filterList(this.getFilterForDate(oData));
+		// we can't filter on dates if metadata is not loaded yet
+		var oModel = sap.ui.getCore().getModel();
+		if (!oModel.getServiceMetadata()) {
+    		oModel.attachEventOnce("metadataLoaded", function() {
+    		    this.filterList(this.getFilterForDate(oData));
+    		}, this);
+		} else {
+		    this.filterList(this.getFilterForDate(oData));
+		}
+	},
+
+	onDetailChanged: function(sChannel, sEvent, oData) {
+		var oModel = sap.ui.getCore().getModel();
+		if (oData && oData.sEntityPath) {
+    		var property = oModel.getProperty(oData.sEntityPath);
+    		if (property && property.Begda) {
+    	        this.filterList(this.getFilterForDate(property.Begda));
+    		}
+		}
 	},
 
 	onBusyDialogNeeded: function() {

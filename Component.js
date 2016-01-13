@@ -159,6 +159,7 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 // 		var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, {json: true,loadMetadataAsync: true});
 		var oModel = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
 		oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
+		oModel.setRefreshAfterChange(true);
 		// for v2 models batching is used - set for which entity types changes will be submitted manually
         oModel.setChangeBatchGroups({
             "detail": {
