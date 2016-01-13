@@ -61,7 +61,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		// jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
 
 		// When navigating in the Detail page, update the binding context
-		if (oParameters.name === "detail") {
+		if (oParameters.name === "detail" ||
+		    oParameters.name === "allowancedetail") {
 			// for existing detail records, setup and binding is done in onMasterItemSelected;
 			// when the routing match occurs we just clean up in preparation
 			// 			this.getView().unbindElement();
@@ -80,10 +81,17 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getView().byId("favButton").setVisible(false);
 			// } else {	// With the commenting of the `jQuery.when` promise above, this return block exits the route matching, affecting the handling of other routes...
 			// 	return;
+			if (oParameters.name === "allowancedetail") {
+			    this.setupAllowanceDetail();
+			} else {
+			    this.setupAttendanceDetail();
+			}
+
 		}
 		// }, this));
 
-		if (oParameters.name === "newdetail") {
+		if (oParameters.name === "newdetail" ||
+		    oParameters.name === "newalldetail") {
 			//remove any existing view bindings
 			// 			this.getView().unbindElement();
 			// remove any unsaved new detail entities from the model
@@ -94,9 +102,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			var oSelectedDate = new Date(oParameters.arguments.entity);
 			// 			oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 			// 			oModel.refreshMetadata();
+			var isAllowance = oParameters.name === "newalldetail" ? true : false;
 			this.oNewDetailContext = oModel.createEntry("detailSet", {
 			        batchGroupId: "detailChanges",
-			        properties: this.prepareNewDetailEntity(oSelectedDate)
+			        properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
 	        });
 			// 			this.oDetailEntity = this.oNewDetailContext.getProperty();
 			// 			this.detailEntityPath = this.oNewDetailContext.getPath();
@@ -110,10 +119,15 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getView().byId("favButton").setVisible(true);
 			// reset favourites switch
 			this.getView().byId("favSwitch").setState(false);
+			if (oParameters.name === "newalldetail") {
+			    this.setupAllowanceDetail();
+			} else {
+			    this.setupAttendanceDetail();
+			}
 		}
 	},
 
-	prepareNewDetailEntity: function(oSelectedDate) {
+	prepareNewDetailEntity: function(oSelectedDate, isAllowance) {
 		return {
 			Acttyp: "",
 			Anzhl: "0.00",
@@ -121,15 +135,16 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			Awart: "",
 			Awarttxt: "",
 			Begda: oSelectedDate,
-			Beguz: "",
+			Beguz: "PT00H00M00S",
 			Costtxt: "",
 			Durationtxt: "",
-			Enduz: "",
+			Enduz: "PT00H00M00S",
 			Enote: "",
 			Hda: false,
 			Iaufnr: "",
 			Iaufnrtxt: "",
 			Isabs: false,
+			isAllowance: isAllowance ? true : false,
 			Lgart: "",
 			Lgarttxt: "",
 			Mnote: "",
@@ -155,6 +170,22 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
+    setupAttendanceDetail: function() {
+        // change view bindings for attendance
+        this.byId("objectHeader").bindProperty("number", "Durationtxt");
+        this.byId("objectHeaderAttr").bindProperty("text", "Timetxt");
+    },
+    
+    setupAllowanceDetail: function() {
+        // change view bindings for allowance
+        this.byId("objectHeader").bindProperty("number", "Anzhl");
+        this.byId("objectHeaderAttr").bindProperty("text", "Lgarttxt");
+    },
+    
+    isAttendance: function(isAllowance) {
+        return !isAllowance;
+    },
+    
 	resetFormElementValueState: function() {
 		// reset value state for all input controls
 		var aFormElements = this.byId("detailForm").getContent();
@@ -343,7 +374,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	fireDetailNotFound: function() {
-		this.getEventBus().publish("Detail", "NotFound");
+		this.getEventBus().publish("Detail", "NotFound", {});
 	},
 
     cleanup: function() {
@@ -384,11 +415,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-	onDetailSelect: function(oEvent) {
-		sap.ui.core.UIComponent.getRouterFor(this).navTo("detail", {
-			entity: oEvent.getSource().getBindingContext().getPath().slice(1)
-		}, true);
-	},
+// 	onDetailSelect: function(oEvent) {
+// 		sap.ui.core.UIComponent.getRouterFor(this).navTo("detail", {
+// 			entity: oEvent.getSource().getBindingContext().getPath().slice(1)
+// 		}, true);
+// 	},
 
 	handleHDASelected: function(oEvent) {
 		"use strict";
@@ -454,6 +485,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			var sValue = oEvent.getParameter("value");
 			if (oEvent.getSource().getId().search("attendanceInput") > -1) {
 				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Atext", "Awart");
+			} else if (oEvent.getSource().getId().search("allowanceInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Lgtxt", "Lgart");
 			} else if (oEvent.getSource().getId().search("wbsInput") > -1) {
 				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Post1", "Posid");
 			} else if (oEvent.getSource().getId().search("netInput") > -1) {
@@ -618,7 +651,8 @@ Favourites - START
 		var switchVal = oEvent.getSource().getState();
 		if (!this.getRouter()._favSelectDialog) {
 			this.getRouter()._favSelectDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouriteSelectDialog", this);
-			var filter = new sap.ui.model.Filter("Lgart", sap.ui.model.FilterOperator.EQ, "");
+    		var oDetailEntity = this.getContextObject();
+			var filter = new sap.ui.model.Filter("Lgart", oDetailEntity.isAllowance ? sap.ui.model.FilterOperator.NE : sap.ui.model.FilterOperator.EQ, "");
 			this.getView().addDependent(this.getRouter()._favSelectDialog);
 			this.getRouter()._favSelectDialog.getBinding("items").filter([filter]);
 		}
@@ -671,6 +705,12 @@ Favourites - START
 		if (oFavEntity.Awart) {
 			this.filterSuggestionItems(this.getView().byId("attendanceInput"), oFavEntity.Awart, true, "Awart", "Atext");
 		}
+		if (oFavEntity.Lgart) {
+			this.filterSuggestionItems(this.getView().byId("allowanceInput"), oFavEntity.Lgart, true, "Lgart", "Lgtxt");
+		}
+// 		if (oFavEntity.Anzhl) {
+// 			this.getView().byId("quantity").setValue(oFavEntity.Anzhl);
+// 		}
 		if (oFavEntity.Wbs) {
 			this.filterSuggestionItems(this.getView().byId("wbsInput"), oFavEntity.Wbs, true, "Posid", "Post1");
 		}
@@ -712,6 +752,15 @@ Search Helps - START
 					key: "{Awart}",
 					text: "{Atext}",
 					additionalText: "{Awart}"
+				}));
+			}
+		} else if (oSource.getId().search("allowanceInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_lgartSet", new sap.ui.core.ListItem({
+					key : "{Lgart}",
+					text : "{Lgtxt}",
+					additionalText : "{Lgart}"
 				}));
 			}
 		} else if (oSource.getId().search("wbsInput") > -1) {
@@ -783,6 +832,8 @@ Search Helps - START
 		var oFilter;
 		if (oSource.getId().search("attendanceInput") > -1) {
 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (oSource.getId().search("allowanceInput") > -1) {
+			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (oSource.getId().search("wbsInput") > -1) {
 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (oSource.getId().search("netInput") > -1) {
@@ -839,20 +890,35 @@ Search Helps - START
 			if (!this.getRouter()._valueHelpAttDialog) {
 				this.getRouter()._valueHelpAttDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AttDialog", this);
 				oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				var oBegda = oDetailEntity.Begda;
 				// var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
 				// this.getRouter()._valueHelpAttDialog.bindElement(sEntityPath);
 				this.getView().addDependent(this.getRouter()._valueHelpAttDialog); //this makes the SAP call
 				// filter on both date and text
-				this.getRouter()._valueHelpAttDialog.getBinding("items").filter({
+				this.getRouter()._valueHelpAttDialog.getBinding("items").filter([new sap.ui.model.Filter({
 					filters: [
                         oFilter,
-                        new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oBegda)
+                        new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
                     ],
 					and: true
-				});
+				})]);
 			}
 			this.getRouter()._valueHelpAttDialog.open(sInputValue);
+		} else if (source.search("allowanceInput") > -1) {
+			if (!this.getRouter()._valueHelpAllDialog) {
+				this.getRouter()._valueHelpAllDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AllowanceDialog", this);
+				oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this.getRouter()._valueHelpAllDialog); //this makes the SAP call
+				// filter on both date and text
+				this.getRouter()._valueHelpAllDialog.getBinding("items").filter([new sap.ui.model.Filter({
+					filters: [
+                        oFilter,
+                        new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
+                    ],
+					and: true
+				})]);
+				this.getRouter()._valueHelpAllDialog.getBinding("items").filter([oFilter]);
+			}
+			this.getRouter()._valueHelpAllDialog.open(sInputValue);
 		} else if (source.search("wbsInput") > -1) {
 			if (!this.getRouter()._valueHelpWBSDialog) {
 				this.getRouter()._valueHelpWBSDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.WBSDialog", this);
@@ -902,6 +968,8 @@ Search Helps - START
 		var oFilter;
 		if (evt.getSource().getId().search("AttDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("AllowanceDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("WBSDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("NetDialog") > -1 || evt.getSource().getId().search("OrderDialog") > -1) {
@@ -965,23 +1033,39 @@ Search Helps - END
 		var isValidated = true;
 		// check required fields have been maintained
 		var aRequiredFields = [];
-		if (!this.byId("beguz").getDateValue()) {
-			aRequiredFields.push({
-				source: this.byId("beguz"),
-				msg: "Start time is required"
-			});
-		}
-		if (!this.byId("enduz").getDateValue()) {
-			aRequiredFields.push({
-				source: this.byId("enduz"),
-				msg: "End time is required"
-			});
-		}
-		if (!this.byId("attendanceInput").getDescription()) {
-			aRequiredFields.push({
-				source: this.byId("attendanceInput"),
-				msg: "Attendance type is required"
-			});
+		var oDetailEntity = this.getContextObject();
+		if (oDetailEntity.isAllowance) {
+    		if (!this.byId("allowanceInput").getDescription()) {
+    			aRequiredFields.push({
+    				source : this.byId("allowanceInput"),
+    				msg : "Allowance type is required"
+    			});
+    		}
+    		if (!this.byId("quantity").getValue()) {
+    			aRequiredFields.push({
+    				source : this.byId("quantity"),
+    				msg : "Allowance quantity is required"
+    			});
+    		}
+		} else {
+    		if (!this.byId("beguz").getDateValue()) {
+    			aRequiredFields.push({
+    				source: this.byId("beguz"),
+    				msg: "Start time is required"
+    			});
+    		}
+    		if (!this.byId("enduz").getDateValue()) {
+    			aRequiredFields.push({
+    				source: this.byId("enduz"),
+    				msg: "End time is required"
+    			});
+    		}
+    		if (!this.byId("attendanceInput").getDescription()) {
+    			aRequiredFields.push({
+    				source: this.byId("attendanceInput"),
+    				msg: "Attendance type is required"
+    			});
+    		}
 		}
 		if (this.byId("hda").getSelected() && !this.byId("Enote").getValue()) {
 			aRequiredFields.push({

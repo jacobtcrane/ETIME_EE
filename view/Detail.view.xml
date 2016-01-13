@@ -4,7 +4,7 @@
 		<content>
 			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Atttxt}">
 				<attributes>
-					<ObjectAttribute text="{Timetxt}"/>
+					<ObjectAttribute id="objectHeaderAttr" text="{Timetxt}"/>
 				</attributes>
 				<firstStatus>
 					<ObjectStatus text="{Statustxt}"/>
@@ -29,25 +29,25 @@
 					<!--<l:HorizontalLayout class="sapUiSmallMargin">-->
 					<!--	<l:VerticalLayout class="sapUiSmallMarginEnd">-->
 					<!--		<l:content>-->
-								<Label id="lblStartTime" text="Start Time" required="true" />
-								<DateTimeInput id="beguz" placeholder="Enter Time..." 
+								<Label id="lblStartTime" text="Start Time" required="true" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
+								<DateTimeInput id="beguz" placeholder="Enter Time..." visible="{path:'isAllowance',formatter:'.isAttendance'}" 
 									type="Time" value="{Beguz}" valueFormat="PTHH'H'mm'M'ss'S'" 
 									change="onBeguzEntered" class="sapUiSmallMarginBottom" width="8em"/>
 						<!--	</l:content>-->
 						<!--</l:VerticalLayout>-->
 						<!--<l:VerticalLayout class="sapUiSmallMarginEnd">-->
 						<!--	<l:content>-->
-								<Label id="lblEndTime" text="End Time" required="true" />
-								<DateTimeInput id="enduz" placeholder="Enter Time..." 
+								<Label id="lblEndTime" text="End Time" required="true" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
+								<DateTimeInput id="enduz" placeholder="Enter Time..." visible="{path:'isAllowance',formatter:'.isAttendance'}" 
 									type="Time" value="{Enduz}" valueFormat="PTHH'H'mm'M'ss'S'" 
 									change="onEnduzEntered" class="sapUiSmallMarginBottom" width="8em"/>
 								<!--{path:'Enduz',formatter:'com.broadspectrum.etime.ee.utils.Conversions.time'}-->
 					<!--		</l:content>-->
 					<!--	</l:VerticalLayout>-->
 					<!--</l:HorizontalLayout>-->
-					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left" />
-					<Label id="labelatt" text="Attendance Type" required="true" />
-					<Input id="attendanceInput" placeholder="Enter Attendance Type ..."
+					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
+					<Label id="labelatt" text="Attendance Type" required="true" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
+					<Input id="attendanceInput" placeholder="Enter Attendance Type ..." visible="{path:'isAllowance',formatter:'.isAttendance'}"
 						type="Text" value="{Awarttxt}" description="{Awart}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
 						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
@@ -68,6 +68,15 @@
 					<!--		<core:Item text="{Post1}"/>-->
 					<!--	</suggestionItems>-->
 					<!--</Input>-->
+
+					<Label id="labelall" text="Allowance Type / Quantity" required="true" visible="{isAllowance}" />
+					<Input id="allowanceInput" placeholder="Enter Allowance Type ..." visible="{isAllowance}"
+						type="Text" value="{Lgarttxt}" description="{Lgart}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						/>
+					<Input id="quantity" placeholder="Enter Quantity ..." value="{Anzhl}" visible="{isAllowance}" />
+
 					<Label id="labelwbs" text="WBS Element"/>
 					<Input id="wbsInput" placeholder="Enter WBS Element ..."
 						type="Text" value="{Wbstxt}" description="{Wbs}" 
@@ -133,8 +142,9 @@
 					<!--		<core:Item text="{Ltxa1}"/>-->
 					<!--	</suggestionItems>-->
 					<!--</Input>-->
-					<Label id="labelsuboperation" text="Suboperation"/>
-					<Input id="suboperationInput" placeholder="Enter Suboperation... " type="Text" value="{Operationtxt}"></Input>
+					<!--Removed Suboperation temporarily as it is coupled to operation and causing issues-->
+					<!--<Label id="labelsuboperation" text="Suboperation"/>-->
+					<!--<Input id="suboperationInput" placeholder="Enter Suboperation... " type="Text" value="{Operationtxt}"></Input>-->
 					<Label id="labelinternalorder" text="Internal Order"/>
 					<Input id="internalorderInput" placeholder="Enter Internal Order... " type="Text" value="{Iaufnrtxt}"></Input>
 					<CheckBox id="hda" selected="{Hda}" text="Higher Duties" select="handleHDASelected" >
