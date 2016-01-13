@@ -85,7 +85,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	fireDetailNotFound: function() {
-		this.getEventBus().publish("Master", "NotFound");
+		this.getEventBus().publish("Master", "NotFound", {});
 	},
 
 	// bindView: function(sEntityPath) {
@@ -179,36 +179,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	onSearch: function(oEvent) {
-		// // Add search filter
-		// 			// add filter for search
-		// 	var aFilters = [];
-		var sQuery = oEvent.getSource().getValue();
-		if (sQuery && sQuery.length > 2) {
-			// 		var filter = new sap.ui.model.Filter("Statustxt", sap.ui.model.FilterOperator.Contains, sQuery);
-			// 		aFilters.push(filter);
-			// 	}
-
-			// update list binding
-			var list = this.getView().byId("master1List");
-			// var binding = list.getBinding("items");
-			var filt = this.keyForView + ' and ' + 'substringof(\'' + sQuery + '\',Statustxt)';
-			var template = new sap.m.ObjectListItem({
-				// id : "master1ListItem",
-				type: "{device>/listItemType}",
-				press: "onSelect",
-				title: "{Datetxt}",
-				attributes: [new sap.m.ObjectAttribute({
-						text: "{Hourstxt}"
-					}),
-					new sap.m.ObjectAttribute({
-						text: "{Statustxt}"
-					})
-				]
-
-			});
-
-			list.bindItems(filt, template, null, null);
+		var filters = [];
+		if (oEvent.getParameters().query) {
+			filters = [new sap.ui.model.Filter("Statustxt", sap.ui.model.FilterOperator.Contains, oEvent.getParameters().query)];
 		}
+		this.getView().byId("master1List").getBinding("items").filter(filters);
 	},
 
 	onSelect: function(oEvent) {

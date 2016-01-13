@@ -113,20 +113,24 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		this.getEventBus().publish("Master2", "NotFound");
 	},
 
+    formatMaster2ListItem: function(valueAttendance, valueAllowance, isAllowance) {
+        if (isAllowance) {
+            return valueAllowance;
+        } else {
+            return valueAttendance;
+        }
+    },
+    
 	onNavBack: function() {
 		// This is only relevant when running on phone devices
 		this.getRouter().myNavBack("main");
 	},
 
-	onSearch: function() {
-		// Add search filter
+	onSearch: function(oEvent) {
 		var filters = [];
-		var searchString = this.getView().byId("master2SearchField").getValue();
-		if (searchString && searchString.length > 0) {
-			filters = [new sap.ui.model.Filter("Statustxt", sap.ui.model.FilterOperator.Contains, searchString)];
+		if (oEvent.getParameters().query) {
+			filters = [new sap.ui.model.Filter("Statustxt", sap.ui.model.FilterOperator.Contains, oEvent.getParameters().query)];
 		}
-
-		// Update list binding
 		this.getView().byId("master2List").getBinding("items").filter(filters);
 	},
 
@@ -141,19 +145,19 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		// If we're on a phone device, include nav in history
 		var bReplace = jQuery.device.is.phone ? false : true;
 		var a = this.getView().getModel().getProperty(oItem.getBindingContext().getPath());
-		if (a.isAllowance === 'X') {
-			this.getRouter().myNavToWithoutHash({
-				currentView: this.getView(),
-				targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
-				targetViewType: "XML",
-				transition: "slide"
-			});
+// 		if (a.isAllowance) {
+// 			this.getRouter().myNavToWithoutHash({
+// 				currentView: this.getView(),
+// 				targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
+// 				targetViewType: "XML",
+// 				transition: "slide"
+// 			});
 
-			this.getRouter().navTo("allowancedetail", {
-				from: "master002",
-				entity: oItem.getBindingContext().getPath().substr(1)
-			}, bReplace);
-		} else {
+// 			this.getRouter().navTo("allowancedetail", {
+// 				from: "master002",
+// 				entity: oItem.getBindingContext().getPath().substr(1)
+// 			}, bReplace);
+// 		} else {
 			this.getRouter().myNavToWithoutHash({
 				currentView: this.getView(),
 				targetViewName: "com.broadspectrum.etime.ee.view.Detail",
@@ -162,11 +166,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 				isMaster: false
 			});
 
-			this.getRouter().navTo("detail", {
-				from: "master02",
+			this.getRouter().navTo(a.isAllowance ? "allowancedetail" : "detail", {
+				from: "master2",
 				entity: oItem.getBindingContext().getPath().substr(1)
 			}, bReplace);
-		}
+// 		}
 		// publish event with binding context for detail view
 		this.getEventBus().publish("Master2", "ItemSelected", {
 			oBindingContext: oItem.getBindingContext()

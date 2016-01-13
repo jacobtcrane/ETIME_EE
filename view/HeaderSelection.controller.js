@@ -13,7 +13,12 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			this.oEventBus = sap.ui.getCore().getEventBus();
 			
 			this.oCalendar = this.getView().byId("calendar_old");
-        	this.oCalendar.setWidth("300px");
+			// set calendar to full width on phone, else 320px
+    		if (sap.ui.Device.system.phone) {
+        	    this.oCalendar.setWidth("380px");
+    		} else {
+        	    this.oCalendar.setWidth("320px");
+    		}
         	this.oCalendar.setWeeksPerRow(1);
         	this.oCalendar.setSingleRow(true);
 	
@@ -102,7 +107,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			setTimeout($.proxy(function() {
 	            this.getRouter().myNavToWithoutHash({ 
 				    currentView : this.getView(),
-				    targetViewName : "com.broadspectrum.etime.ee.view.AllowancesDetail",
+				    targetViewName : "com.broadspectrum.etime.ee.view.Detail",
 				    targetViewType : "XML",
 				    transition: "slide"
 			    });

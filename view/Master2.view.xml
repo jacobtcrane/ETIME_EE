@@ -11,7 +11,10 @@
 		<content>
 			<List id="master2List" items="{detailSet}" mode="{device&gt;/listMode}" noDataText="{i18n&gt;masterListNoDataText}" select="onSelect" growing="true" growingScrollToLoad="true">
 				<items>
-					<ObjectListItem id="master2ListItem" type="{device&gt;/listItemType}" press="onSelect" title="{Timetxt}" number="{Durationtxt}" numberUnit="">
+					<ObjectListItem id="master2ListItem" type="{device&gt;/listItemType}" press="onSelect" 
+					    title="{parts:[{path:'Timetxt'},{path:'Lgart'},{path:'isAllowance'}], formatter:'.formatMaster2ListItem'}" 
+					    number="{parts:[{path:'Durationtxt'},{path:'Anzhl'},{path:'isAllowance'}], formatter:'.formatMaster2ListItem'}"
+					    numberUnit="">
 						<attributes>
 							<ObjectAttribute text="{Atttxt}"/>
 						</attributes>
