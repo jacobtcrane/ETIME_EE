@@ -1079,8 +1079,10 @@ Search Helps - END
 			isValidated = false;
 		}, this);
 		// check end time is after start time
+		if (oDetailEntity.isAttendance) {
 		if (!this.checkEndTimeAfterStart()) {
 			isValidated = false;
+		}
 		}
 		// check a cost assignment has been provided
 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
