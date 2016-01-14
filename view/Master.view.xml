@@ -47,6 +47,19 @@
 						</attributes>
 					</ObjectListItem>
 				</items>
+				<CustomListItem>
+					<HBox>
+						<VBox class="listDouble">
+							<Text text="{Datetxt}" class="dateOnMaster"/>
+							<Text text="{Hourstxt}"/>
+						</VBox>
+						<VBox class="statusOnMaster">
+							<Text text="{Statustxt}"/>
+						</VBox>						
+						<core:Icon class="iconOnMaster" color="#000000" src="sap-icon://payment-approval"
+							visible="{parts : [{path : 'Hasall'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
+					</HBox>
+				</CustomListItem>				
 			</List>
 		</content>
 		<dependents>

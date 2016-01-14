@@ -118,7 +118,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getView().byId("favPanel").setVisible(true);
 			this.getView().byId("favButton").setVisible(true);
 			// reset favourites switch
-			this.getView().byId("favSwitch").setState(false);
+// 			this.getView().byId("favSwitch").setState(false);
+            this.getView().byId("loadFavButton").setPressed(false);
 			if (oParameters.name === "newalldetail") {
 			    this.setupAllowanceDetail();
 			} else {
@@ -648,7 +649,8 @@ Favourites - START
 	},
 
 	handleFavSelect: function(oEvent) { //Generates Popover Search Help for selecting a favourite to populate from
-		var switchVal = oEvent.getSource().getState();
+// 		var switchVal = oEvent.getSource().getState();
+        var switchVal = oEvent.getSource().getPressed();
 		if (!this.getRouter()._favSelectDialog) {
 			this.getRouter()._favSelectDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouriteSelectDialog", this);
     		var oDetailEntity = this.getContextObject();
@@ -662,7 +664,7 @@ Favourites - START
 	},
 
 	_handlePopFromFavCan: function(oEvent) { //Handles fav popover cancelled
-		this.getView().byId("favSwitch").setState(false);
+		this.getView().byId("loadFavButton").setPressed(false);
 	},
 
 	handlePopulateFromFav: function(oEvent) { //Populates form with favourite values
