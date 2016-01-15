@@ -10,17 +10,15 @@
 					<ObjectStatus text="{Statustxt}"/>
 				</firstStatus>
 			</ObjectHeader>
-			<Panel id="favPanel">
-				<FlexBox justifyContent="Center" width="100%">
-					<!--<l:content>-->
-					<items>
-						<core:Icon class="size2" color="#64E4CE" src="sap-icon://favorite"/>
-						<Label id="labelFav" text="Populate Form from Favourite"/>
-						<Switch id="favSwitch" change="handleFavSelect" customTextOff="No" customTextOn="Yes" state="false"/>
-					</items>
-					<!--</l:content>-->
-					<!--</l:HorizontalLayout>-->
-				</FlexBox>
+			<Panel id="favPanel" class="favPanel">
+			<ToggleButton id="loadFavButton" class="centerToggleButton" icon="sap-icon://favorite" text="Load from Favourites" press="handleFavSelect"/>
+				<!--<FlexBox justifyContent="Center" width="100%">-->
+				<!--	<items>-->
+				<!--		<core:Icon class="size2" color="#64E4CE" src="sap-icon://favorite"/>-->
+				<!--		<Label id="labelFav" text="Populate Form from Favourite"/>-->
+				<!--		<Switch id="favSwitch" change="handleFavSelect" customTextOff="No" customTextOn="Yes" state="false"/>-->
+				<!--	</items>-->
+				<!--</FlexBox>-->
 			</Panel>
 			<f:SimpleForm id="detailForm" columnsM="1" columnsL="1" editable="false" emptySpanL="1" emptySpanM="1" labelSpanL="4" labelSpanM="4"
 				layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024" width="100%">
@@ -171,6 +169,10 @@
 				<Button id="saveButton" press="handleSaveRequest" text="Save" type="Emphasized">
 					<layoutData><OverflowToolbarLayoutData moveToOverflow="true"/></layoutData>
 				</Button>
+				<Button id="deleteButton" press="handleDeleteRequest" text="Delete" type="Reject"
+				visible="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.deleteButtonVisibilityTrigger'}" >
+					<layoutData><OverflowToolbarLayoutData moveToOverflow="true"/></layoutData>
+				</Button>				
 				<!--<OverflowToolbarButton text="Send"  icon="sap-icon://email"/>-->
 			</OverflowToolbar>
 		</footer>
