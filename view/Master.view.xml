@@ -36,18 +36,17 @@
                 growing="true"
 				growingScrollToLoad="true">
 				<items>
-					<ObjectListItem
-					    id="master1ListItem"
-						type="{device>/listItemType}"
-						press="onSelect" 
-						title="{Datetxt}">
-						<attributes>
-							<ObjectAttribute text="{Hourstxt}"/>
-							<ObjectAttribute text="{Statustxt}"/>
-						</attributes>
-					</ObjectListItem>
-				</items>
-				<CustomListItem>
+					<!--<ObjectListItem-->
+					<!--    id="master1ListItem"-->
+					<!--	type="{device>/listItemType}"-->
+					<!--	press="onSelect" -->
+					<!--	title="{Datetxt}">-->
+					<!--	<attributes>-->
+					<!--		<ObjectAttribute text="{Hourstxt}"/>-->
+					<!--		<ObjectAttribute text="{Statustxt}"/>-->
+					<!--	</attributes>-->
+					<!--</ObjectListItem>-->
+				<CustomListItem tap="onSelect" type="Active" id="master1ListItem">
 					<HBox>
 						<VBox class="listDouble">
 							<Text text="{Datetxt}" class="dateOnMaster"/>
@@ -59,7 +58,8 @@
 						<core:Icon class="iconOnMaster" color="#000000" src="sap-icon://payment-approval"
 							visible="{parts : [{path : 'Hasall'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
 					</HBox>
-				</CustomListItem>				
+				</CustomListItem>					
+				</items>
 			</List>
 		</content>
 		<dependents>
