@@ -1142,6 +1142,7 @@ Search Helps - END
 			success: $.proxy(function() {
 				// TODO: until we can figure out why batching doesn't work, check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
+				    oModel.setProperty(this.getContextPath() + "/Status", 'NEW');
 					// show odata errors in message popover
 					this.showMessagePopover(this.byId("toolbar"));
 					// some errors screw up the model data, whilst our context object is still intact
@@ -1151,11 +1152,14 @@ Search Helps - END
 					var msg = statusToSend === "SAV" ? "Record saved" : "Request sent";
 					this.fireDetailChanged(this.getContextPath());
         			this.cleanup();
+        // 			var model = this.getModel();
+        // 			model.clearBatch();
 					this.getRouter().myNavBack("main");
 					sap.m.MessageToast.show(msg);
 				}
 			}, this),
 			error: $.proxy(function() {
+			    oModel.setProperty(this.getContextPath() + "/Status", 'NEW');
 				// show odata errors in message popover
 				this.showMessagePopover(this.byId("toolbar"));
 				// some errors screw up the model data, whilst our context object is still intact
