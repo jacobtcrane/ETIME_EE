@@ -1154,6 +1154,7 @@ Search Helps - END
         			this.cleanup();
         // 			var model = this.getModel();
         // 			model.clearBatch();
+                    oModel.resetChanges();
 					this.getRouter().myNavBack("main");
 					sap.m.MessageToast.show(msg);
 				}
@@ -1191,6 +1192,7 @@ Search Helps - END
 					var msg = "Request Deleted";
 					this.fireDetailChanged(this.getContextPath());
         			this.cleanup();
+        			oModel.resetChanges();
 					this.getRouter().myNavBack("main");
 					sap.m.MessageToast.show(msg);
 				}
