@@ -1091,11 +1091,13 @@ Search Helps - END
 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
+		if (oDetailEntity.isAttendance){
 		if (!hasWbs && !hasNetwork && !hasOrder && !hasInternalOrder) {
 			var msg = "Cost assignment (one of WBS Element/Network/Order or Internal Order) is required";
 			this.byId("wbsInput").setValueStateText(msg);
 			this.byId("wbsInput").setValueState(sap.ui.core.ValueState.Warning);
 			isValidated = false;
+		}
 		}
 
 		return isValidated;
