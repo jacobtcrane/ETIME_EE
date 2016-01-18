@@ -632,6 +632,8 @@ Favourites - START
 			//remove the new detail entity from the model as we don't want to save that yet
 			oModel.deleteCreatedEntry(this.oNewDetailContext);
 		}
+//Reset the model to avoid calling detail updates here		
+		oModel.resetChanges();
 		oModel.createEntry("favTableSet", oNewFavEntity);
 		oModel.submitChanges(function() {
 			var msg = 'Favourite Added';
