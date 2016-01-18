@@ -5,7 +5,7 @@
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:l="sap.ui.layout" 
-	controllerName="com.broadspectrum.etime.ee.view.HeaderSummary" displayBlock="true">
+	controllerName="com.broadspectrum.etime.ee.view.HeaderSummary">
 	<!--<l:VerticalLayout>-->
 		<!--<l:content>-->
 	<Panel id="panel" xmlns:sap.m.Panel="sap.m.Panel" width="auto" class="sapUiResponsiveMargin">
@@ -22,7 +22,7 @@
 		    </sap.ui.layout.form:SimpleForm>
 	    </content>
 	 </Panel>
-		    <c:HorizontalDivider id="devider" width="100%"></c:HorizontalDivider>
+		    <!--<c:HorizontalDivider id="devider" width="100%"></c:HorizontalDivider>-->
 		<!--</l:content>-->
 	<!--</l:VerticalLayout>-->
 </core:View>

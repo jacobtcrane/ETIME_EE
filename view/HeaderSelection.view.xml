@@ -1,16 +1,23 @@
-<core:View xmlns:me="sap.me" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified" controllerName="com.broadspectrum.etime.ee.view.HeaderSelection" viewName="header" id="header" height="100px">
+<core:View controllerName="com.broadspectrum.etime.ee.view.HeaderSelection" id="header" viewName="header" xmlns:core="sap.ui.core"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:me="sap.me" xmlns:mvc="sap.ui.core.mvc" xmlns:u="sap.ui.unified" xmlns="sap.m">
 	<!--<Page>-->
-		<!--<content>-->
+	<!--<content>-->
 	<l:VerticalLayout>
 		<l:content>
-			<!--<u:CalendarDateInterval id="calendar" days="7" select="handleCalendarSelect" validationSuccess="test"/>-->
-			<me:Calendar id="calendar_old" width="100%" changeCurrentDate="handleCalendarSelect" tapOnDate="handleDaySelect" firstDayOffset="1">
-				
-			</me:Calendar>
+			<!--<me:Calendar id="calendar_old" width="100%" -->
+			<!--    changeCurrentDate="handleCalendarSelect" tapOnDate="handleDaySelect" firstDayOffset="1"/>-->
+			<!--<me:Calendar id="calendar_old" -->
+			<!--    tapOnDate="handleDaySelect" singleRow="true" weeksPerRow="1" firstDayOffset="1"/>-->
+			<!--<u:CalendarDateInterval id="calendar" days="7" select="handleDaySelect"/>-->
+			<FlexBox alignItems="Center" justifyContent="Center">
+				<items>
+					<u:Calendar id="calendar" select="handleDaySelect"/>
+				</items>
+			</FlexBox>
+			<u:CalendarLegend id="calendar_legend"/>
 		</l:content>
-			<!--<mvc:XMLView displayBlock="true" id="headSummary" viewName="com.broadspectrum.etime.ee.view.HeaderSummary"/>-->
-	</l:VerticalLayout>		
-		
+		<!--<mvc:XMLView displayBlock="true" id="headSummary" viewName="com.broadspectrum.etime.ee.view.HeaderSummary"/>-->
+	</l:VerticalLayout>
 	<!--</content>-->
 	<!--</Page>-->
 </core:View>
