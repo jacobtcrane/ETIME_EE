@@ -14,21 +14,42 @@
 		<content>
 			<l:VerticalLayout class="sapUiResponsiveMargin">
 				<l:content>
-					<!--<mvc:XMLView displayBlock="true" height="140px" id="headSelect" viewName="com.broadspectrum.etime.ee.view.HeaderSelection"/>-->
-					<!--<mvc:XMLView displayBlock="true" height="100px" id="headSummary" viewName="com.broadspectrum.etime.ee.view.HeaderSummary"/>-->
-					<mvc:XMLView displayBlock="true" id="headSelect" viewName="com.broadspectrum.etime.ee.view.HeaderSelection"/>
-					<mvc:XMLView displayBlock="true" id="headSummary" viewName="com.broadspectrum.etime.ee.view.HeaderSummary"/>
-					<List growing="true" growingScrollToLoad="true" id="master1List" items="{/overviewSet}" noDataText="{i18n]masterListNoDataText}"
-						mode="SingleSelectMaster" select="onSelect">
-						<items>
-							<ObjectListItem id="master1ListItem" title="{Datetxt}" type="{device]/listItemType}">
-								<attributes>
-									<ObjectAttribute text="{Hourstxt}"/>
-									<ObjectAttribute text="{Statustxt}"/>
-								</attributes>
-							</ObjectListItem>
-						</items>
-					</List>
+        			<mvc:XMLView displayBlock="true" id="headSelect" viewName="com.broadspectrum.etime.ee.view.HeaderSelection"/>
+        			<mvc:XMLView displayBlock="true" id="headSummary" viewName="com.broadspectrum.etime.ee.view.HeaderSummary"/>
+        			<List
+        				id="master1List"
+        				items="{/overviewSet}"
+        				mode="{device>/listMode}"
+        				noDataText="{i18n>masterListNoDataText}"
+        				select="onSelect"
+                        growing="true"
+        				growingScrollToLoad="true">
+        				<items>
+        					<!--<ObjectListItem-->
+        					<!--    id="master1ListItem"-->
+        					<!--	type="{device>/listItemType}"-->
+        					<!--	press="onSelect" -->
+        					<!--	title="{Datetxt}">-->
+        					<!--	<attributes>-->
+        					<!--		<ObjectAttribute text="{Hourstxt}"/>-->
+        					<!--		<ObjectAttribute text="{Statustxt}"/>-->
+        					<!--	</attributes>-->
+        					<!--</ObjectListItem>-->
+        				<CustomListItem tap="onSelect" type="Active" id="master1ListItem">
+        					<HBox>
+        						<VBox class="listDouble">
+        							<Text text="{Datetxt}" class="dateOnMaster"/>
+        							<Text text="{Hourstxt}"/>
+        						</VBox>
+        						<VBox class="statusOnMaster">
+        							<Text text="{Statustxt}"/>
+        						</VBox>						
+        						<core:Icon class="iconOnMaster" color="#000000" src="sap-icon://payment-approval"
+        							visible="{parts : [{path : 'Hasall'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
+        					</HBox>
+        				</CustomListItem>					
+        				</items>
+        			</List>
 				</l:content>
 			</l:VerticalLayout>
 		</content>

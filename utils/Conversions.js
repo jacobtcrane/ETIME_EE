@@ -78,6 +78,14 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 	dateFormatterUTC: sap.ui.core.format.DateFormat.getDateInstance({
 		pattern: "yyyy-MM-ddTHH:mm:ss",
 		UTC: true
-	})
+	}),
+
+	deleteButtonVisibilityTrigger: function(v) {
+		if (v == 'SUB' || v == 'SAV') {
+			return true;
+		} else {
+			return false;
+		}
+	}	
 	
 };

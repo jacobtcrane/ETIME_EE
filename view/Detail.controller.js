@@ -118,7 +118,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getView().byId("favPanel").setVisible(true);
 			this.getView().byId("favButton").setVisible(true);
 			// reset favourites switch
-			this.getView().byId("favSwitch").setState(false);
+// 			this.getView().byId("favSwitch").setState(false);
+            this.getView().byId("loadFavButton").setPressed(false);
 			if (oParameters.name === "newalldetail") {
 			    this.setupAllowanceDetail();
 			} else {
@@ -631,6 +632,8 @@ Favourites - START
 			//remove the new detail entity from the model as we don't want to save that yet
 			oModel.deleteCreatedEntry(this.oNewDetailContext);
 		}
+//Reset the model to avoid calling detail updates here		
+		oModel.resetChanges();
 		oModel.createEntry("favTableSet", oNewFavEntity);
 		oModel.submitChanges(function() {
 			var msg = 'Favourite Added';
@@ -648,7 +651,8 @@ Favourites - START
 	},
 
 	handleFavSelect: function(oEvent) { //Generates Popover Search Help for selecting a favourite to populate from
-		var switchVal = oEvent.getSource().getState();
+// 		var switchVal = oEvent.getSource().getState();
+        var switchVal = oEvent.getSource().getPressed();
 		if (!this.getRouter()._favSelectDialog) {
 			this.getRouter()._favSelectDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouriteSelectDialog", this);
     		var oDetailEntity = this.getContextObject();
@@ -662,7 +666,7 @@ Favourites - START
 	},
 
 	_handlePopFromFavCan: function(oEvent) { //Handles fav popover cancelled
-		this.getView().byId("favSwitch").setState(false);
+		this.getView().byId("loadFavButton").setPressed(false);
 	},
 
 	handlePopulateFromFav: function(oEvent) { //Populates form with favourite values
@@ -1079,19 +1083,23 @@ Search Helps - END
 			isValidated = false;
 		}, this);
 		// check end time is after start time
+		if (oDetailEntity.isAttendance) {
 		if (!this.checkEndTimeAfterStart()) {
 			isValidated = false;
+		}
 		}
 		// check a cost assignment has been provided
 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
+		if (oDetailEntity.isAttendance){
 		if (!hasWbs && !hasNetwork && !hasOrder && !hasInternalOrder) {
 			var msg = "Cost assignment (one of WBS Element/Network/Order or Internal Order) is required";
 			this.byId("wbsInput").setValueStateText(msg);
 			this.byId("wbsInput").setValueState(sap.ui.core.ValueState.Warning);
 			isValidated = false;
+		}
 		}
 
 		return isValidated;
@@ -1138,6 +1146,7 @@ Search Helps - END
 			success: $.proxy(function() {
 				// TODO: until we can figure out why batching doesn't work, check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
+				    oModel.setProperty(this.getContextPath() + "/Status", 'NEW');
 					// show odata errors in message popover
 					this.showMessagePopover(this.byId("toolbar"));
 					// some errors screw up the model data, whilst our context object is still intact
@@ -1147,6 +1156,47 @@ Search Helps - END
 					var msg = statusToSend === "SAV" ? "Record saved" : "Request sent";
 					this.fireDetailChanged(this.getContextPath());
         			this.cleanup();
+        // 			var model = this.getModel();
+        // 			model.clearBatch();
+                    oModel.resetChanges();
+					this.getRouter().myNavBack("main");
+					sap.m.MessageToast.show(msg);
+				}
+			}, this),
+			error: $.proxy(function() {
+			    oModel.setProperty(this.getContextPath() + "/Status", 'NEW');
+				// show odata errors in message popover
+				this.showMessagePopover(this.byId("toolbar"));
+				// some errors screw up the model data, whilst our context object is still intact
+				this.setContextObjectToModel();
+				// var msg = 'An error occurred during the sending of the request';
+				// sap.m.MessageToast.show(msg);
+			}, this)
+			//  success: $.proxy(this.handleSubmitSuccess, this), 
+			//  error: $.proxy(this.handleSubmitError, this)
+		});
+	},
+
+    handleDeleteRequest: function() {
+        var oModel = this.getModel();
+        oModel.setProperty(this.getContextPath() + "/Status", 'DEL');
+		// remove all current messages from message manager
+		sap.ui.getCore().getMessageManager().removeAllMessages();      
+		oModel.submitChanges({
+			batchGroupId: "detailChanges",
+			success: $.proxy(function() {
+				// TODO: until we can figure out why batching doesn't work, check for messages
+				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
+					// show odata errors in message popover
+					this.showMessagePopover(this.byId("toolbar"));
+					// some errors screw up the model data, whilst our context object is still intact
+					this.setContextObjectToModel();
+				} else {
+					// raise a toast to the user!
+					var msg = "Request Deleted";
+					this.fireDetailChanged(this.getContextPath());
+        			this.cleanup();
+        			oModel.resetChanges();
 					this.getRouter().myNavBack("main");
 					sap.m.MessageToast.show(msg);
 				}
@@ -1161,8 +1211,8 @@ Search Helps - END
 			}, this)
 			//  success: $.proxy(this.handleSubmitSuccess, this), 
 			//  error: $.proxy(this.handleSubmitError, this)
-		});
-	},
+		});		
+    },
 
 	// 	handleSubmitError: function() {
 	// 		var msg = 'An error occurred during the sending of the request';
