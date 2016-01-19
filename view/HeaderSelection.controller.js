@@ -179,7 +179,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 					var bReplace = jQuery.device.is.phone ? false : true;
 					this.getRouter().navTo("newalldetail", {
 						from: "newreq",
-						entity: this.oSelectedDate
+						entity: String(this.oSelectedDate)
 					}, bReplace);
 					this.oEventBus.publish('Any', 'BusyDialogDone', null);
 				}, this), 0);
