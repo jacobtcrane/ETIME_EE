@@ -26,6 +26,7 @@ sap.ui.controller("com.broadspectrum.etime.ee.view.Favourites", {
 			oEvent.getSource().attachEventOnce("updateFinished", oEvent.getSource().focus, oEvent.getSource());
 			
 		var sEntityPath = oItem.getBindingContext().getPath().substr(1);
+		sEntityPath = '/' + sEntityPath;
 		this.oModel.remove(sEntityPath,{fnSuccess:function() {
 			                                        var msg = 'Favourite deleted';
 			                                        sap.m.MessageToast.show(msg);
