@@ -633,7 +633,7 @@ Favourites - START
 			oModel.deleteCreatedEntry(this.oNewDetailContext);
 		}
 //Reset the model to avoid calling detail updates here		
-		oModel.resetChanges();
+// 		oModel.resetChanges();
 		oModel.createEntry("favTableSet", oNewFavEntity);
 		oModel.submitChanges(function() {
 			var msg = 'Favourite Added';
