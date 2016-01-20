@@ -13,21 +13,26 @@ sap.ui.controller("com.broadspectrum.etime.ee.view.Favourites", {
 		return sap.ui.core.UIComponent.getRouterFor(this);
 	},
 	
+	getModel: function() {
+		return sap.ui.getCore().getModel();
+	},
+	
 	onNavBack: function() {
-		// This is only relevant when running on phone devices
-// 		this.getRouter().myNavBack("newdetail01");
-		this.getRouter().backWithoutHash(this.getView(),false);
+		this.navHistoryBack();
+	},
+
+	navHistoryBack: function() {
+		window.history.go(-1);
 	},
 	
 	handleDelete: function(oEvent) {
-		this.oModel = this.getView().getModel("theOdataModel");
 		var oItem = oEvent.getParameter("listItem");
 		// after deletion put the focus back to the list
 			oEvent.getSource().attachEventOnce("updateFinished", oEvent.getSource().focus, oEvent.getSource());
 			
 		var sEntityPath = oItem.getBindingContext().getPath().substr(1);
 		sEntityPath = '/' + sEntityPath;
-		this.oModel.remove(sEntityPath,{fnSuccess:function() {
+		this.getModel().remove(sEntityPath,{fnSuccess:function() {
 			                                        var msg = 'Favourite deleted';
 			                                        sap.m.MessageToast.show(msg);
 		                                           }, 

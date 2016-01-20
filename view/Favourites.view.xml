@@ -2,9 +2,11 @@
 	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
 	<Page navButtonPress="onNavBack" showNavButton="true" title="Favourites">
 		<content>
-			<List delete="handleDelete" enableBusyIndicator="true" growing="true" id="favList" items="{/favTableSet}" mode="Delete">
+			<List id="favList" items="{/favTableSet}" mode="Delete" delete="handleDelete" 
+			    enableBusyIndicator="true" growing="true" >
 				<items>
-					<StandardListItem description="{Awart}" iconDensityAware="false" iconInset="false" title="{Description}"/>
+					<StandardListItem title="{Description}" description="{Awart}" 
+					    iconDensityAware="false" iconInset="false" />
 					<!--<StandardListItem id="favListItem" press="onSelect" title="{Description}" type="{device]/listItemType}">-->
 					<!--	<attributes>-->
 					<!--		<ObjectAttribute text="{Awart}"/>-->

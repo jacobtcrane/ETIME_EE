@@ -15,33 +15,34 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		// 			oEventBus.subscribe("Master2", "LoadFinished", this.onMasterLoaded, this);
 		// 		}
 
-		this.getEventBus().subscribe("Master2", "ItemSelected", this.onMasterItemSelected, this);
+// 		this.getEventBus().subscribe("Master2", "ItemSelected", this.onMasterItemSelected, this);
 
 		if (this.getRouter() != null) {
 			this.getRouter().attachRouteMatched(this.onRouteMatched, this);
 		}
+		this.oRoutingParams = {};
 	},
 
-	onMasterItemSelected: function(sChannel, sEvent, oData) {
-		if (oData.oBindingContext) {
-			var oModel = this.getModel();
-			var oDetailEntity = oModel.getProperty(oData.oBindingContext.getPath());
-			// update the view's binding context based on the master item selection
-			if (oDetailEntity) {
-				if (this.formatEntityDates(oDetailEntity)) {
-					oModel.setProperty(oData.oBindingContext.getPath(), oDetailEntity);
-				}
-				this.getView().setBindingContext(oData.oBindingContext);
-				this.addModelChangeListener();
-			} else {
-				this.showEmptyView();
-				this.fireDetailNotFound();
-			}
-		} else {
-			this.showEmptyView();
-			this.fireDetailNotFound();
-		}
-	},
+// 	onMasterItemSelected: function(sChannel, sEvent, oData) {
+// 		if (oData.oBindingContext) {
+// 			var oModel = this.getModel();
+// 			var oDetailEntity = oModel.getProperty(oData.oBindingContext.getPath());
+// 			// update the view's binding context based on the master item selection
+// 			if (oDetailEntity) {
+// 				if (this.formatEntityDates(oDetailEntity)) {
+// 					oModel.setProperty(oData.oBindingContext.getPath(), oDetailEntity);
+// 				}
+// 				this.getView().setBindingContext(oData.oBindingContext);
+// 				this.addModelChangeListener();
+// 			} else {
+// 				this.showEmptyView();
+// 				this.fireDetailNotFound();
+// 			}
+// 		} else {
+// 			this.showEmptyView();
+// 			this.fireDetailNotFound();
+// 		}
+// 	},
 
 	// 	onMasterLoaded: function(sChannel, sEvent, oData) {
 	// 		if (oData.oListItem) {
@@ -57,12 +58,26 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	onRouteMatched: function(oEvent) {
 		var oModel = this.getModel();
 		var oParameters = oEvent.getParameters();
+		var isAllowance = false;
+
 		// 		var from = oParameters.name;
 		// jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
 
 		// When navigating in the Detail page, update the binding context
-		if (oParameters.name === "detail" ||
-		    oParameters.name === "allowancedetail") {
+		if (oParameters.name === "attendance" ||
+		    oParameters.name === "allowance") {
+			isAllowance = oParameters.name === "allowance" ? true : false;
+            // extract routing parameters
+    		if (oParameters.arguments.OverviewEntity &&
+    			oParameters.arguments.DetailEntity) {
+    			this.oRoutingParams.OverviewEntity = oParameters.arguments.OverviewEntity;
+    			this.oRoutingParams.DetailEntity = oParameters.arguments.DetailEntity;
+    		} else {
+    			this.getRouter().navTo("notfound", {}, true); // don't create a history entry
+    			return;
+    		}
+			this.bindView("/" + this.oRoutingParams.DetailEntity);
+
 			// for existing detail records, setup and binding is done in onMasterItemSelected;
 			// when the routing match occurs we just clean up in preparation
 			// 			this.getView().unbindElement();
@@ -73,7 +88,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			}
 			// this.getContextPath() = "/" + oParameters.arguments.entity;
 			// this.oDetailEntity = oModel.getProperty(this.getContextPath());
-			// this.bindView();
 			// reset value state for all input controls
 			this.resetFormElementValueState();
 			// hide favourites panel and button
@@ -81,7 +95,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getView().byId("favButton").setVisible(false);
 			// } else {	// With the commenting of the `jQuery.when` promise above, this return block exits the route matching, affecting the handling of other routes...
 			// 	return;
-			if (oParameters.name === "allowancedetail") {
+			if (isAllowance) {
 			    this.setupAllowanceDetail();
 			} else {
 			    this.setupAttendanceDetail();
@@ -90,8 +104,18 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 		// }, this));
 
-		if (oParameters.name === "newdetail" ||
-		    oParameters.name === "newalldetail") {
+		if (oParameters.name === "attendance-create" ||
+		    oParameters.name === "attendance-create-today" ||
+		    oParameters.name === "allowance-create" ||
+		    oParameters.name === "allowance-create-today") {
+			isAllowance = String(oParameters.name).search("allowance-create") > -1 ? true : false;
+            // extract routing parameters
+    		if (oParameters.arguments.TimesheetDate) {
+    			this.oRoutingParams.TimesheetDate = oParameters.arguments.TimesheetDate;
+    		} else {
+    			this.oRoutingParams.TimesheetDate = String(new Date());
+    		}
+
 			//remove any existing view bindings
 			// 			this.getView().unbindElement();
 			// remove any unsaved new detail entities from the model
@@ -99,10 +123,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				oModel.deleteCreatedEntry(this.oNewDetailContext);
 			}
 			//create new record
-			var oSelectedDate = new Date(oParameters.arguments.entity);
+			var oSelectedDate = new Date(this.oRoutingParams.TimesheetDate);
 			// 			oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 			// 			oModel.refreshMetadata();
-			var isAllowance = oParameters.name === "newalldetail" ? true : false;
 			this.oNewDetailContext = oModel.createEntry("detailSet", {
 			        batchGroupId: "detailChanges",
 			        properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
@@ -120,11 +143,32 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			// reset favourites switch
 // 			this.getView().byId("favSwitch").setState(false);
             this.getView().byId("loadFavButton").setPressed(false);
-			if (oParameters.name === "newalldetail") {
+			if (isAllowance) {
 			    this.setupAllowanceDetail();
 			} else {
 			    this.setupAttendanceDetail();
 			}
+		}
+	},
+
+	bindView: function(sContextPath) {
+		if (sContextPath) {
+			var oModel = this.getModel();
+			var oDetailEntity = oModel.getProperty(sContextPath);
+			// update the view's binding context
+			if (oDetailEntity) {
+				if (this.formatEntityDates(oDetailEntity)) {
+					oModel.setProperty(sContextPath, oDetailEntity);
+				}
+				this.getView().bindElement(sContextPath);
+				this.addModelChangeListener();
+			} else {
+				this.showEmptyView();
+				this.fireDetailNotFound();
+			}
+		} else {
+			this.showEmptyView();
+			this.fireDetailNotFound();
 		}
 	},
 
@@ -182,7 +226,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
         this.byId("objectHeader").bindProperty("number", "Anzhl");
         this.byId("objectHeaderAttr").bindProperty("text", "Lgarttxt");
     },
-    
+
     isAttendance: function(isAllowance) {
         return !isAllowance;
     },
@@ -230,20 +274,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.oBinding.attachChange(setStatustxtEdited, this);
 		}
 	},
-
-	// 	bindView: function() {
-	// 	    var oModel = this.getModel();
-	// 		//Check if the data is already on the client
-	// 		if (!this.oDetailEntity) {
-	// 			// Check that the entity specified was found
-	// 			this.showEmptyView();
-	// 			this.fireDetailNotFound();
-	// 		} else {
-	// 			// this.fireDetailChanged(sEntityPath);
-	// 			// convert from native odata in UTC to formatted string in local time
-	// 		}
-
-	// 	},
 
 	getContextObject: function() {
 		var oModel = this.getModel();
@@ -361,11 +391,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	// }),
 
 	showEmptyView: function() {
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.NotFound",
-			targetViewType: "XML"
-		});
+		this.getRouter().navTo("notfound", {}, true); // don't create a history entry
 	},
 
 	fireDetailChanged: function(sEntityPath) {
@@ -391,7 +417,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
     },
     
 	onNavBack: function() {
-		var oRouter = this.getRouter();
 		var oModel = this.getModel();
 		if (this.getModel().hasPendingChanges()) {
 			sap.m.MessageBox.show("Exit without saving changes?", {
@@ -406,14 +431,18 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
                 		}
 						this.cleanup();
 						oModel.resetChanges();
-						oRouter.myNavBack("main");
+                		this.navHistoryBack();
 					}
 				}, this)
 			});
 		} else {
 			this.cleanup();
-			oRouter.myNavBack("main");
+    		this.navHistoryBack();
 		}
+	},
+
+	navHistoryBack: function() {
+		window.history.go(-1);
 	},
 
 // 	onDetailSelect: function(oEvent) {
@@ -570,17 +599,7 @@ Favourites - START
 
 	handleManageFavs: function(oEvent) { //Launches Manage Favourites View
 		this.getRouter()._oFavPopover.close();
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.Favourites",
-			targetViewType: "XML",
-			transition: "slide"
-		});
-
-		this.getRouter().navTo("favourites", {
-			from: "newdetail01",
-			entity: "favTableSet"
-		}, true);
+		this.getRouter().navTo("favourites");
 	},
 
 	handleAddFav: function(oEvent) { //Adds the Screen content as Faourite
@@ -1159,7 +1178,7 @@ Search Helps - END
         // 			var model = this.getModel();
         // 			model.clearBatch();
                     oModel.resetChanges();
-					this.getRouter().myNavBack("main");
+            		this.navHistoryBack();
 					sap.m.MessageToast.show(msg);
 				}
 			}, this),
@@ -1197,7 +1216,7 @@ Search Helps - END
 					this.fireDetailChanged(this.getContextPath());
         			this.cleanup();
         			oModel.resetChanges();
-					this.getRouter().myNavBack("main");
+            		this.navHistoryBack();
 					sap.m.MessageToast.show(msg);
 				}
 			}, this),

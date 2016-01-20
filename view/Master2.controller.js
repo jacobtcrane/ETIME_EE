@@ -2,39 +2,21 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 
 	onInit: function() {
 		this.getRouter().attachRouteMatched(this.onRouteMatched, this);
-
-// 		//On phone devices, there is nothing to select from the list. There is no need to attach events.
-// 		if (!sap.ui.Device.system.phone) {
-			this.getRouter().attachRoutePatternMatched(this.onRoutePatternMatched, this);
-// 		}
-	},
-
-	onRoutePatternMatched: function(oEvent) {
-		var sName = oEvent.getParameter("name");
-
-		if (sName !== "master2") {
-			return;
-		}
-
-		//		Load the detail view in desktop
-		// this.getRouter().myNavToWithoutHash({
-		// 	currentView: this.getView(),
-		// 	targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-		// 	targetViewType: "XML",
-		// 	transition: "slide"
-		// });
+		this.oRoutingParams = {};
 	},
 
 	onRouteMatched: function(oEvent) {
 		var oParameters = oEvent.getParameters();
 
-		if (oParameters.name === "master2") {
-		  //  if (this.byId("master2List")) {
-    // 		    this.byId("master2List").removeSelections(true);
-		  //  }
-			//  ?$filter
-			var sEntityPath = "/" + oParameters.arguments.entity;
-			this.bindView(sEntityPath);
+		if (oParameters.name === "timesheets") {
+            // extract routing parameters
+    		if (oParameters.arguments.OverviewEntity) {
+    			this.oRoutingParams.OverviewEntity = oParameters.arguments.OverviewEntity;
+    		} else {
+    			this.getRouter().navTo("notfound", {}, true); // don't create a history entry
+    			return;
+    		}
+			this.bindView("/" + this.oRoutingParams.OverviewEntity);
 
 // 			var oEventBus = this.getEventBus();
 			this.byId("master2List").attachEventOnce("updateFinished", function() {
@@ -44,15 +26,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 				// });
 			}, this);
 		}
-
-		// if (oParameters.name === "master02" && jQuery.device.is.phone) {
-		// 	this.getRouter().myNavToWithoutHash({
-		// 		currentView: this.getView(),
-		// 		targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-		// 		targetViewType: "XML",
-		// 		transition: "slide"
-		// 	});
-		// }
 	},
 
 	bindView: function(sEntityPath) {
@@ -74,39 +47,17 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	},
 
 	selectFirstItem: function() {
-		// if(!jQuery.device.is.phone){
 		var oList = this.getView().byId("master2List");
 		var aItems = oList.getItems();
 		if (aItems.length === 1) {
 			// if only one item in the list, go ahead and select it
 			oList.setSelectedItem(aItems[0], true);
-			// var a = this.getView().getModel().getProperty(aItems[0].getBindingContext().getPath());
-			// if (a.isAllowance === 'X') {
-			// 	this.getRouter().myNavToWithoutHash({
-			// 		currentView: this.getView(),
-			// 		targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
-			// 		targetViewType: "XML",
-			// 		transition: "slide"
-			// 	});
-			// }else{
-			// 	this.getRouter().myNavToWithoutHash({
-			// 		currentView: this.getView(),
-			// 		targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-			// 		targetViewType: "XML",
-			// 		transition: "slide"
-			// 	});
-			// }
 			this.showDetail(aItems[0]);
 		}
-		// }
 	},
 
 	showEmptyView: function() {
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.NotFound",
-			targetViewType: "XML"
-		});
+		this.getRouter().navTo("notfound", {}, true); // don't create a history entry
 	},
 
 	fireDetailNotFound: function() {
@@ -122,8 +73,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
     },
     
 	onNavBack: function() {
-		// This is only relevant when running on phone devices
-		this.getRouter().myNavBack("main");
+		this.navHistoryBack();
+	},
+
+	navHistoryBack: function() {
+		window.history.go(-1);
 	},
 
 	onSearch: function(oEvent) {
@@ -142,39 +96,17 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	},
 
 	showDetail: function(oItem) {
-		// If we're on a phone device, include nav in history
-		var bReplace = jQuery.device.is.phone ? false : true;
 		var a = this.getView().getModel().getProperty(oItem.getBindingContext().getPath());
-// 		if (a.isAllowance) {
-// 			this.getRouter().myNavToWithoutHash({
-// 				currentView: this.getView(),
-// 				targetViewName: "com.broadspectrum.etime.ee.view.AllowancesDetail",
-// 				targetViewType: "XML",
-// 				transition: "slide"
-// 			});
-
-// 			this.getRouter().navTo("allowancedetail", {
-// 				from: "master002",
-// 				entity: oItem.getBindingContext().getPath().substr(1)
-// 			}, bReplace);
-// 		} else {
-			this.getRouter().myNavToWithoutHash({
-				currentView: this.getView(),
-				targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-				targetViewType: "XML",
-				transition: "slide",
-				isMaster: false
+		this.getEventBus().publish("Any", "BusyDialogNeeded", null);
+		// the busy dialog animation does not start until the routing (and associated page loading)
+		// completes, so we throw this onto the call stack for deferred execution
+		setTimeout($.proxy(function() {
+			this.getRouter().navTo(a.isAllowance ? "allowance" : "attendance", {
+				OverviewEntity: this.oRoutingParams.OverviewEntity,
+				DetailEntity: oItem.getBindingContext().getPath().substr(1) // no slash in route parameter
 			});
-
-			this.getRouter().navTo(a.isAllowance ? "allowancedetail" : "detail", {
-				from: "master2",
-				entity: oItem.getBindingContext().getPath().substr(1)
-			}, bReplace);
-// 		}
-		// publish event with binding context for detail view
-		this.getEventBus().publish("Master2", "ItemSelected", {
-			oBindingContext: oItem.getBindingContext()
-		});
+			this.getEventBus().publish("Any", "BusyDialogDone", null);
+		}, this), 0);
 
 		// remove list selections, else we can't perform detail nav next time
 		this.byId("master2List").removeSelections();

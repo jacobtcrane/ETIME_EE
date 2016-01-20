@@ -2,31 +2,43 @@ jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
 	onInit: function() {
-		this.oInitialLoadFinishedDeferred = jQuery.Deferred();
 		this.oFormatYyyymmdd = sap.ui.core.format.DateFormat.getInstance({
 			pattern: "yyyy-MM-dd"
 		});
 
+		this.getRouter().attachRouteMatched(this.onRouteMatched, this);
+		this.getRouter().attachRoutePatternMatched(this.onRoutePatternMatched, this);
+		this.oRoutingParams = {};
+
 		var oEventBus = this.getEventBus();
-		// this.getView().byId("master1List").attachEventOnce("updateFinished", function() {
-		// 	this.oInitialLoadFinishedDeferred.resolve();
-		// 	oEventBus.publish("Master", "InitialLoadFinished", { oListItem : this.getView().byId("master1List").getItems()[0] });
-		//  		this.getRouter().detachRoutePatternMatched(this.onRouteMatched, this);
-		// }, this);
-
-		// 		//On phone devices, there is nothing to select from the list. There is no need to attach events.
-		// 		if (sap.ui.Device.system.phone) {
-		// 			return;
-		// 		}
-
-		this.getRouter().attachRoutePatternMatched(this.onRouteMatched, this);
-
 		oEventBus.subscribe("Master2", "NotFound", this.onNotFound, this);
 		oEventBus.subscribe('HeaderSelection', 'headDateEvt', this.onDateSelected, this);
 		oEventBus.subscribe('Any', 'BusyDialogNeeded', this.onBusyDialogNeeded, this);
 		oEventBus.subscribe('Any', 'BusyDialogDone', this.onBusyDialogDone, this);
 		// oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
 		oEventBus.subscribe("Detail", "Changed", this.onDetailChanged, this);
+	},
+
+	onRouteMatched: function(oEvent) {
+		var oParameters = oEvent.getParameters();
+		if (oParameters.name === "home") {
+			// nothing to do here
+		}
+	},
+
+	onRoutePatternMatched: function(oEvent) {
+		var oParameters = oEvent.getParameters();
+		if (oParameters.name === "home") {
+			if (!sap.ui.Device.system.phone) {
+				// load the welcome page on non-phone devices (splitapp behaves like a
+				// single nav controller on phones, so the master list has to be shown first)
+				// note that this has to happen on the RoutePatternMatched event as this
+				// only traps a route actually being matched. 
+				// intermediate RouteMatched events (such as "home" being loaded as a parent
+				// route of "detail", are not trapped by this event)
+				this.getRouter().navTo("welcome");
+			}
+		}
 	},
 
 	onDateSelected: function(sChannel, sEvent, oData) {
@@ -72,11 +84,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	showEmptyView: function() {
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.NotFound",
-			targetViewType: "XML"
-		});
+		this.getRouter().navTo("notfound", {}, true); // don't create a history entry
 	},
 
 	fireDetailChanged: function(sEntityPath) {
@@ -167,39 +175,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		}
 	},
 
-	onRouteMatched: function(oEvent) {
-		var sName = oEvent.getParameter("name");
-
-		if (sName !== "main") {
-			return;
-		}
-
-		//Load the welcome view on desktop; the master page on phone
-		if (sap.ui.Device.system.phone) {
-			this.getRouter().myNavToWithoutHash({
-				currentView: this.getView(),
-				targetViewName: "com.broadspectrum.etime.ee.view.Master",
-				targetViewType: "XML",
-				isMaster: true
-			});
-		} else {
-			this.getRouter().myNavToWithoutHash({
-				currentView: this.getView(),
-				targetViewName: "com.broadspectrum.etime.ee.view.Welcome",
-				targetViewType: "XML",
-				isMaster: false
-			});
-		}
-		var oSplitApp = this.getRouter()._findSplitApp(this.getView());
-		if (oSplitApp && !oSplitApp.isMasterShown()) {
-			oSplitApp.showMaster();
-		}
-	},
-
-	waitForInitialListLoading: function(fnToExecute) {
-		jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(fnToExecute, this));
-	},
-
 	onNotFound: function() {
 		this.getView().byId("master1List").removeSelections();
 	},
@@ -221,20 +196,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	showDetail: function(oItem) {
-		//Load the master2 view
-		this.getRouter().myNavToWithoutHash({
-			currentView: this.getView(),
-			targetViewName: "com.broadspectrum.etime.ee.view.Master2",
-			targetViewType: "XML",
-			isMaster: true
+		this.getRouter().navTo("timesheets", {
+			OverviewEntity: oItem.getBindingContext().getPath().substr(1) // no slash in router param
 		});
-
-		// If we're on a phone device, include nav in history
-		var bReplace = jQuery.device.is.phone ? false : true;
-		this.getRouter().navTo("master2", {
-			from: "main",
-			entity: oItem.getBindingContext().getPath().substr(1)
-		}, bReplace);
 	},
 
 	getEventBus: function() {

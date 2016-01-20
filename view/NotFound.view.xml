@@ -6,7 +6,10 @@
 		title="{i18n>notFoundTitle}"
 		enableScrolling="false">
 		<content>
-			<Text text="{i18n>notFoundText}" class="spacerTop" width="100%" textAlign="Center" />
+        	<MessagePage id="messagePage" showHeader="false" 
+        	    text="{i18n>notFoundText}"
+        	    icon="sap-icon://question-mark">
+        	</MessagePage>		
 		</content>
 		<footer>
 			<Toolbar>

@@ -1,9 +1,8 @@
 jQuery.sap.declare("com.broadspectrum.etime.ee.Component");
-jQuery.sap.require("com.broadspectrum.etime.ee.MyRouter");
 
 sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 	metadata : {
-		name : "TDG Demo App",
+		name : "My Timesheets App",
 		version : "1.0",
 		handleValidation  : true,
 		includes : [],
@@ -24,7 +23,7 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 
 		routing : {
 			config : {
-				routerClass : com.broadspectrum.etime.ee.MyRouter,
+				routerClass: "sap.m.routing.Router",
 				viewType : "XML",
 				viewPath : "com.broadspectrum.etime.ee.view",
 				clearTarget : false,
@@ -32,102 +31,99 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 			},
 			routes : [
 				{
-					pattern : "",
-					name : "main",
-					view : "Master",
-					viewLevel : 1,
-					targetAggregation : "masterPages",
-					targetControl : "idAppControl",
-					subroutes : [
+					name: "home",
+					pattern: "",
+					target: "home",
+					subroutes: [
 						{
-							pattern : "master2/{entity}",
-							name : "master2",
-							view : "Master2",
-        					viewLevel : 2,
-            				targetAggregation : "masterPages"
-						}
-				// 		,{
-				// 			pattern : "master02/{entity}",
-				// 			name : "newdetail",
-				// 			view : "Detail",
-    //     					viewLevel : 2,
-    //         				targetAggregation : "newdetailPages"
-				// 		}
-		    		]
-				},
-				{
-					pattern : "",
-					name : "newreq",
-					view : "Master",
-					viewLevel : 1,
-					targetAggregation : "masterPages",
-					subroutes : [
-					    {
-							pattern : "newdetail/{entity}",
-							name : "newdetail",
-							view : "Detail",
-        					viewLevel : 2,
-            				targetAggregation : "detailPages"
-						},
-					    {
-							pattern : "newalldetail/{entity}",
-							name : "newalldetail",
-							view : "AllowancesDetail",
-        					viewLevel : 2,
-            				targetAggregation : "detailPages"
-						}
-
-                    ]				    
-				},
-				{
-					pattern : "master02/{entity}",
-					name : "master02",
-					view : "Master2",
-					viewLevel : 2,
-					targetAggregation : "masterPages",
-					subroutes : [
+							name: "welcome",
+							pattern: "welcome",
+							target: "welcome",
+							subroutes: [
+								{
+									name: "timesheets",
+									pattern: "{OverviewEntity}/timesheets",
+									target: "timesheets",
+									subroutes: [
+										{
+											name: "attendance",
+											pattern: "{OverviewEntity}/timesheets/{DetailEntity}/attendance",
+											target: "detail"
+                                        },
+										{
+											name: "allowance",
+											pattern: "{OverviewEntity}/timesheets/{DetailEntity}/allowance",
+											target: "detail"
+                                        }
+                                    ]
+                                },
+								{
+									name: "attendance-create",
+									pattern: "timesheets/{TimesheetDate}/attendance/create",
+									target: "detail"
+                                },
+								{
+									name: "allowance-create",
+									pattern: "timesheets/{TimesheetDate}/allowance/create",
+									target: "detail"
+                                },
+								{
+									name: "attendance-create-today",
+									pattern: "timesheets/attendance/create",
+									target: "detail"
+                                },
+								{
+									name: "allowance-create-today",
+									pattern: "timesheets/allowance/create",
+									target: "detail"
+                                },
+								{
+									name: "favourites",
+									pattern: "favourites",
+									target: "favourites"
+                                }
+                            ]
+                        },
 						{
-							pattern : "master02/{entity}",
-							name : "detail",
-							view : "Detail",
-        					viewLevel : 3,
-            				targetAggregation : "detailPages"
-						}
-		    		]
+							pattern: "notfound",
+							name: "notfound",
+							target: "notfound"
+                        }
+                    ]
+                }
+			],
+			targets: {
+				home: {
+					viewName: "Master",
+					controlId: "idAppControl",
+					controlAggregation: "masterPages"
 				},
-				{
-					pattern : "master002/{entity}",
-					name : "master002",
-					view : "Master2",
-					viewLevel : 2,
-					targetAggregation : "masterPages",
-					subroutes : [
-						{
-							pattern : "master002/{entity}",
-							name : "allowancedetail",
-							view : "AllowancesDetail",
-        					viewLevel : 3,
-            				targetAggregation : "detailPages"
-						}
-		    		]
+				timesheets: {
+					viewName: "Master2",
+					controlId: "idAppControl",
+					controlAggregation: "masterPages"
 				},
-				{
-				    pattern : "newdetail/{entity}",
-					name : "newdetail01",
-					view : "Detail",
-					viewLevel : 3,
-					targetAggregation : "detailPages",
-					subroutes : [
-						{
-							pattern : "detail02/{entity}",
-							name : "favourites",
-							view : "Favourites",
-        					viewLevel : 3,
-            				targetAggregation : "detailPages"
-						}
-		    		]
+				welcome: {
+					viewName: "Welcome",
+					controlId: "idAppControl",
+					controlAggregation: "detailPages"
+				},
+				detail: {
+					viewName: "Detail",
+					controlId: "idAppControl",
+					controlAggregation: "detailPages"
+				},
+				favourites: {
+					viewName: "Favourites",
+					controlId: "idAppControl",
+					controlAggregation: "detailPages"
+				},
+				notfound: {
+					viewName: "NotFound",
+					controlId: "idAppControl",
+					controlAggregation: "detailPages"
 				}
-		    ]
+			}
 		}
 	},
 

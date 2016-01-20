@@ -42,9 +42,9 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 					this._oPopover = sap.ui.xmlfragment("popover", "com.broadspectrum.etime.ee.dialogs.CreateNewRequest", this);
 					this.getView().addDependent(this._oPopover);
 					if (sap.ui.Device.system.phone) {
-					    // calendar control pushes popover out of view: raise over calendar instead
-                        this._oPopover.setPlacement(sap.m.PlacementType.Top);
-                        this._oPopover.setOffsetY(150);
+						// calendar control pushes popover out of view: raise over calendar instead
+						this._oPopover.setPlacement(sap.m.PlacementType.Top);
+						this._oPopover.setOffsetY(150);
 					}
 				}
 				// this.oSelectedDate = oEvent.getParameters().date; //new Date(oEvent.getParameters().date);
@@ -124,10 +124,10 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 					this.oEventBus.publish('HeaderSelection', 'headDateEvt', this.oSelectedDate);
 					this.didRenderFirstTime = true;
 					jQuery.sap.delayedCall(2000, this, function() {
-    				    sap.m.MessageToast.show("Select a date to view timesheets entered; select again to create a new attendance or allowance...", {
-    				        duration: 3000,
-    				        of: this.oCalendar
-    				    });
+						sap.m.MessageToast.show("Select a date to view timesheets entered; select again to create a new attendance or allowance...", {
+							duration: 3000,
+							of: this.oCalendar
+						});
 					});
 				}
 			},
@@ -138,50 +138,28 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			//Attendance
 			handleNewAttPress: function(oEvent) {
 				this._oPopover.close();
-				this.oEventBus.publish('Any', 'BusyDialogNeeded', null); // we need to raise the busy dialog synchronous
+				this.oEventBus.publish("Any", "BusyDialogNeeded", null);
 				// the busy dialog animation does not start until the routing (and associated page loading)
 				// completes, so we throw this onto the call stack for deferred execution
 				setTimeout($.proxy(function() {
-					this.getRouter().myNavToWithoutHash({
-						currentView: this.getView(),
-						targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-						targetViewType: "XML",
-						transition: "slide"
+					this.getRouter().navTo("attendance-create", {
+						TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
 					});
-					// If we're on a phone device, include nav in history
-					var bReplace = jQuery.device.is.phone ? false : true;
-					this.getRouter().navTo("newdetail", {
-						from: "newreq",
-						entity: String(this.oSelectedDate)
-					}, bReplace);
-					// 			var oNavCon = sap.ui.core.Fragment.byId("popover", "navCon");
-					// 			var oDetailPage = sap.ui.core.Fragment.byId("popover", "detail");
-					// 			oNavCon.to(oDetailPage);
-					// 			oDetailPage.bindElement(this.oContext.getPath());
-					this.oEventBus.publish('Any', 'BusyDialogDone', null);
+    				this.oEventBus.publish("Any", "BusyDialogDone", null);
 				}, this), 0);
 			},
 
 			//Allowance
 			handleNewAllPress: function(oEvent) {
 				this._oPopover.close();
-				this.oEventBus.publish('Any', 'BusyDialogNeeded', null); // we need to raise the busy dialog synchronous
+				this.oEventBus.publish("Any", "BusyDialogNeeded", null);
 				// the busy dialog animation does not start until the routing (and associated page loading)
 				// completes, so we throw this onto the call stack for deferred execution
 				setTimeout($.proxy(function() {
-					this.getRouter().myNavToWithoutHash({
-						currentView: this.getView(),
-						targetViewName: "com.broadspectrum.etime.ee.view.Detail",
-						targetViewType: "XML",
-						transition: "slide"
+					this.getRouter().navTo("allowance-create", {
+						TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
 					});
-					// If we're on a phone device, include nav in history
-					var bReplace = jQuery.device.is.phone ? false : true;
-					this.getRouter().navTo("newalldetail", {
-						from: "newreq",
-						entity: String(this.oSelectedDate)
-					}, bReplace);
-					this.oEventBus.publish('Any', 'BusyDialogDone', null);
+    				this.oEventBus.publish("Any", "BusyDialogDone", null);
 				}, this), 0);
 
 			}
