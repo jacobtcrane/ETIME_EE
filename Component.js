@@ -2,6 +2,16 @@ jQuery.sap.declare("com.broadspectrum.etime.ee.Component");
 jQuery.sap.require("com.broadspectrum.etime.ee.MyRouter");
 
 sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
+    		createContent : function(){
+		    this.view = sap.ui.view({
+		        id:'App',
+		        viewName: 'com.broadspectrum.etime.ee.view.App',
+		        type : sap.ui.core.mvc.ViewType.XML, 
+		        viewData : { component : this }  
+		    });
+		    return this.view;  
+		},
+    
 	metadata : {
 		name : "TDG Demo App",
 		version : "1.0",
