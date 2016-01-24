@@ -73,7 +73,7 @@
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
 						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
-					<Input id="quantity" placeholder="Enter Quantity ..." value="{Anzhl}" visible="{isAllowance}" />
+					<Input id="quantity" placeholder="Enter Quantity ..." value="{Anzhl}" change="onQuantityEntered" visible="{isAllowance}" />
 
 					<Label id="labelwbs" text="WBS Element"/>
 					<Input id="wbsInput" placeholder="Enter WBS Element ..."

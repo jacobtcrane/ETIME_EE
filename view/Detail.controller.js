@@ -351,7 +351,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		this.displayTimeDif(oBeguz, oEnduz);
 		if (oEvent.getParameters().dateValue) {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
-			this.checkEndTimeAfterStart();
+//Remove check to accomodate time extending after midnight			
+// 			this.checkEndTimeAfterStart();
 		} else {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Warning);
 		}
@@ -369,6 +370,16 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			return true;
 		}
 	},
+	
+	onQuantityEntered: function(oEvent) {
+		var oQuantity = oEvent.getParameters().value;
+		if (oQuantity < 0) {
+			oEvent.getSource().setValueState(sap.ui.core.ValueState.Error);
+		} else {
+			oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
+			oEvent.getSource().setValueStateText("Only positive numbers are allowed");
+		}
+	},	
 
 	// 	getTimeDiff: function(oEnduz, oBeguz) {
 	// 		var diffTime = oEnduz.getTime() - oBeguz.getTime();
