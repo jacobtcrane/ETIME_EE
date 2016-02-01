@@ -1093,7 +1093,14 @@ Search Helps - END
 					msg: "Allowance type is required"
 				});
 			}
-			if (!this.byId("quantity").getValue()) {
+// 			if (!this.byId("quantity").getValue()) {
+// 				aRequiredFields.push({
+// 					source: this.byId("quantity"),
+// 					msg: "Allowance quantity is required"
+// 				});
+// 			}
+            var quant = this.byId("quantity").getValue();
+			if ( quant == null || quant == '0.00' || quant == 0 ) {
 				aRequiredFields.push({
 					source: this.byId("quantity"),
 					msg: "Allowance quantity is required"
@@ -1139,6 +1146,7 @@ Search Helps - END
 		// check a cost assignment has been provided
 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
+		var hasOperation = this.byId("operationInput").getValue() ? true : false;
 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
 		if (oDetailEntity.isAttendance) {
@@ -1149,6 +1157,13 @@ Search Helps - END
 				isValidated = false;
 			}
 		}
+        //check Operation is entered for network	
+        if (hasNetwork === true && hasOperation === false){
+				var msg2 = "Operation is required when entering a Network";
+				this.byId("operationInput").setValueStateText(msg2);
+				this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
+				isValidated = false;   
+        }
 
 		return isValidated;
 	},

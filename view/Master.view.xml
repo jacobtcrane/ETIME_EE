@@ -3,14 +3,14 @@
 	<Page id="master1Page" title="{i18n>master1Title}">
 		<!--<headerContent>-->
 		<!--</headerContent>-->
-		<subHeader>
-			<Bar id="master1SearchBar">
-				<contentMiddle>
-					<SearchField id="master1SearchField" placeholder="{i18n]master1SearchPlaceholder}" search="onSearch" showRefreshButton="{device]/isNoTouch}"
-						tooltip="{i18n>master1SearchTooltip}" width="100%"></SearchField>
-				</contentMiddle>
-			</Bar>
-		</subHeader>
+		<!--<subHeader>-->
+		<!--	<Bar id="master1SearchBar">-->
+		<!--		<contentMiddle>-->
+		<!--			<SearchField id="master1SearchField" placeholder="{i18n]master1SearchPlaceholder}" search="onSearch" showRefreshButton="{device]/isNoTouch}"-->
+		<!--				tooltip="{i18n>master1SearchTooltip}" width="100%"></SearchField>-->
+		<!--		</contentMiddle>-->
+		<!--	</Bar>-->
+		<!--</subHeader>-->
 		<content>
 			<l:VerticalLayout class="sapUiResponsiveMargin">
 				<l:content>
