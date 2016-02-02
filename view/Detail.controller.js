@@ -501,12 +501,12 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			hasWbs || hasOrder || hasInternalOrder
 		)) {
 			hasConflicts = true;
-		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
-			hasWbs || hasNetwork || hasInternalOrder
-		)) {
-			hasConflicts = true;
 		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
 			hasWbs || hasNetwork || hasOrder
+		)) {
+			hasConflicts = true;			
+		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
+			hasWbs || hasNetwork || hasInternalOrder
 		)) {
 			hasConflicts = true;
 		}
