@@ -144,7 +144,12 @@
 					<!--<Label id="labelsuboperation" text="Suboperation"/>-->
 					<!--<Input id="suboperationInput" placeholder="Enter Suboperation... " type="Text" value="{Operationtxt}"></Input>-->
 					<Label id="labelinternalorder" text="Internal Order"/>
-					<Input id="internalorderInput" placeholder="Enter Internal Order... " type="Text" value="{Iaufnrtxt}"></Input>
+					<!--<Input id="internalorderInput" placeholder="Enter Internal Order... " type="Text" value="{Iaufnrtxt}"></Input>-->
+					<Input id="internalorderInput" placeholder="Enter Internal Order ..."
+						type="Text" value="{Iaufnrtxt}" description="{Iaufnr}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						/>					
 					<CheckBox id="hda" selected="{Hda}" text="Higher Duties" select="handleHDASelected" >
 						<layoutData>
 							<l:GridData linebreak="true" indent="L4 M4" />

@@ -865,7 +865,7 @@ Search Helps - START
 		} else if (oSource.getId().search("internalorderInput") > -1) {
 			if (!oSource.getBinding("suggestionItems")) {
 				// create binding to relevant service entityset if none assigned yet
-				oSource.bindAggregation("suggestionItems", "/VH_internalOrderSet", new sap.ui.core.ListItem({
+				oSource.bindAggregation("suggestionItems", "/VH_internalorderSet", new sap.ui.core.ListItem({
 					key: "{Aufnr}",
 					text: "{Ktext}",
 					additionalText: "{Aufnr}"
@@ -987,6 +987,14 @@ Search Helps - START
 				this.getRouter()._valueHelpNetDialog.getBinding("items").filter([oFilter]);
 			}
 			this.getRouter()._valueHelpNetDialog.open(sInputValue);
+		} else if (source.search("internalorderInput") > -1) {
+			if (!this.getRouter()._valueHelpInternalorderDialog) {
+				this.getRouter()._valueHelpInternalorderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.InternalorderDialog", this);
+				oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+				this.getView().addDependent(this.getRouter()._valueHelpInternalorderDialog);
+				this.getRouter()._valueHelpInternalorderDialog.getBinding("items").filter([oFilter]);
+			}
+			this.getRouter()._valueHelpInternalorderDialog.open(sInputValue);	
 		} else if (source.search("orderInput") > -1) {
 			if (!this.getRouter()._valueHelpOrderDialog) {
 				this.getRouter()._valueHelpOrderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OrderDialog", this);
@@ -994,7 +1002,7 @@ Search Helps - START
 				this.getView().addDependent(this.getRouter()._valueHelpOrderDialog);
 				this.getRouter()._valueHelpOrderDialog.getBinding("items").filter([oFilter]);
 			}
-			this.getRouter()._valueHelpOrderDialog.open(sInputValue);
+			this.getRouter()._valueHelpOrderDialog.open(sInputValue);			
 		} else if (source.search("causeInput") > -1) {
 			if (!this.getRouter()._valueHelpCauseDialog) {
 				this.getRouter()._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
@@ -1034,7 +1042,11 @@ Search Helps - START
 		} else if (evt.getSource().getId().search("OperationDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.Contains, sValue);
 			// oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("InternalorderDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+			// oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
 		}
+		
 		if (evt.getSource().getBinding("items")) {
 			evt.getSource().getBinding("items").filter([oFilter]);
 		}
@@ -1164,6 +1176,13 @@ Search Helps - END
 				this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
 				isValidated = false;   
         }
+       //check Operation is entered for Internal Order 
+        if (hasOrder === true && hasOperation === false){
+				var msg3 = "Operation is required when entering a Work Order";
+				this.byId("operationInput").setValueStateText(msg3);
+				this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
+				isValidated = false;   
+        }        
 
 		return isValidated;
 	},
