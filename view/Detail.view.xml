@@ -48,7 +48,7 @@
 					<Input id="attendanceInput" placeholder="Enter Attendance Type ..." visible="{path:'isAllowance',formatter:'.isAttendance'}"
 						type="Text" value="{Awarttxt}" description="{Awart}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Awart}" liveChange="handleLiveSearch"-->
 					<!--	placeholder="Enter Attendance Type ..." showSuggestion="true" id="attendanceInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_attendanceSet}" type="Text"-->
@@ -71,7 +71,7 @@
 					<Input id="allowanceInput" placeholder="Enter Allowance Type ..." visible="{isAllowance}"
 						type="Text" value="{Lgarttxt}" description="{Lgart}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<Input id="quantity" placeholder="Enter Quantity ..." value="{Anzhl}" change="onQuantityEntered" visible="{isAllowance}" />
 
@@ -79,7 +79,7 @@
 					<Input id="wbsInput" placeholder="Enter WBS Element ..."
 						type="Text" value="{Wbstxt}" description="{Wbs}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Wbs}" liveChange="handleLiveSearch" placeholder="Enter WBS Element ..."-->
 					<!--	showSuggestion="true" id="wbsInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/PrstpSet}" text="{Post1}" type="Text"-->
@@ -92,7 +92,7 @@
 					<Input id="netInput" placeholder="Enter Network ..."
 						type="Text" value="{Networktxt}" description="{Nwh}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Nwh}" liveChange="handleLiveSearch" placeholder="Enter Network ..."-->
 					<!--	showSuggestion="true" id="netInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_networkSet}" text="{Ktext}" type="Text" value="{Networktxt}"-->
@@ -105,7 +105,7 @@
 					<Input id="orderInput" placeholder="Enter Order ..."
 						type="Text" value="{Ordertxt}" description="{Srvord}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Srvord}" liveChange="handleLiveSearch" placeholder="Enter Order ..."-->
 					<!--	showSuggestion="true" id="orderInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/ZhtrsEtimeOrderShSet}" text="{Ktext}" type="Text"-->
@@ -118,7 +118,7 @@
 					<Input id="causeInput" placeholder="Enter Cause ..."
 						type="Text" value="{Rsnvartxt}" description="{Rsnvar}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Rsnvar}" liveChange="handleLiveSearch" placeholder="Enter Cause ..."-->
 					<!--	showSuggestion="true" id="causeInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_causeSet}" text="{Grdtx}" type="Text" value="{Rsnvartxt}"-->
@@ -131,7 +131,7 @@
 					<Input id="operationInput" placeholder="Enter Operation ..."
 						type="Text" value="{Operationtxt}" description="{Operation}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Operation}" liveChange="handleLiveSearch"-->
 					<!--	placeholder="Enter Operation ..." showSuggestion="true" id="operationInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_operationSet}" text="{Ltxa1}"-->
@@ -148,7 +148,7 @@
 					<Input id="internalorderInput" placeholder="Enter Internal Order ..."
 						type="Text" value="{Iaufnrtxt}" description="{Iaufnr}" 
 						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="3" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
 						/>					
 					<CheckBox id="hda" selected="{Hda}" text="Higher Duties" select="handleHDASelected" >
 						<layoutData>

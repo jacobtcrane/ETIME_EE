@@ -109,6 +109,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			oParameters.name === "allowance-create" ||
 			oParameters.name === "allowance-create-today") {
 			isAllowance = String(oParameters.name).search("allowance-create") > -1 ? true : false;
+
+			this.isNew = true;
+
 			// extract routing parameters
 			if (oParameters.arguments.TimesheetDate) {
 				this.oRoutingParams.TimesheetDate = oParameters.arguments.TimesheetDate;
@@ -129,13 +132,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			// check model metadata has been loaded before attempting to create new entry
 			// (for in case the page was loaded from a bookmark)
 			oModel.oMetadata.loaded().then($.proxy(function() {
-    			this.oNewDetailContext = oModel.createEntry("detailSet", {
-    				batchGroupId: "detailChanges",
-    				properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
-    			});
-                this.getView().setBindingContext(this.oNewDetailContext);
+				this.oNewDetailContext = oModel.createEntry("detailSet", {
+					batchGroupId: "detailChanges",
+					properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
+				});
+				this.getView().setBindingContext(this.oNewDetailContext);
 			}, this)).catch(function(error) {
-			    jQuery.sap.log.error("Error loading model metadata: " + error);
+				jQuery.sap.log.error("Error loading model metadata: " + error);
 			});
 			// 			this.oDetailEntity = this.oNewDetailContext.getProperty();
 			// 			this.detailEntityPath = this.oNewDetailContext.getPath();
@@ -154,6 +157,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			} else {
 				this.setupAttendanceDetail();
 			}
+		} else{
+		    this.isNew = false;
 		}
 	},
 
@@ -504,7 +509,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
 			hasWbs || hasNetwork || hasOrder
 		)) {
-			hasConflicts = true;			
+			hasConflicts = true;
 		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
 			hasWbs || hasNetwork || hasInternalOrder
 		)) {
@@ -994,7 +999,7 @@ Search Helps - START
 				this.getView().addDependent(this.getRouter()._valueHelpInternalorderDialog);
 				this.getRouter()._valueHelpInternalorderDialog.getBinding("items").filter([oFilter]);
 			}
-			this.getRouter()._valueHelpInternalorderDialog.open(sInputValue);	
+			this.getRouter()._valueHelpInternalorderDialog.open(sInputValue);
 		} else if (source.search("orderInput") > -1) {
 			if (!this.getRouter()._valueHelpOrderDialog) {
 				this.getRouter()._valueHelpOrderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OrderDialog", this);
@@ -1002,7 +1007,7 @@ Search Helps - START
 				this.getView().addDependent(this.getRouter()._valueHelpOrderDialog);
 				this.getRouter()._valueHelpOrderDialog.getBinding("items").filter([oFilter]);
 			}
-			this.getRouter()._valueHelpOrderDialog.open(sInputValue);			
+			this.getRouter()._valueHelpOrderDialog.open(sInputValue);
 		} else if (source.search("causeInput") > -1) {
 			if (!this.getRouter()._valueHelpCauseDialog) {
 				this.getRouter()._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
@@ -1046,7 +1051,7 @@ Search Helps - START
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
 			// oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
 		}
-		
+
 		if (evt.getSource().getBinding("items")) {
 			evt.getSource().getBinding("items").filter([oFilter]);
 		}
@@ -1083,11 +1088,19 @@ Search Helps - END
 	// },
 
 	handleSaveRequest: function() {
-		this.sendRequest("SAV"); // send as status "Saved"
+		if (this.isNew) {
+			this.sendRequest("SVN"); // send as status "Saved"
+		} else {
+			this.sendRequest("SAV"); // send as status "Saved"
+		}
 	},
 
 	handleSendRequest: function() {
-		this.sendRequest("SUB"); // send as status "Submitted"
+		if (this.isNew) {
+			this.sendRequest("SBN"); // send as status "Submitted"
+		} else {
+			this.sendRequest("SUB"); // send as status "Submitted"
+		}
 	},
 
 	// due to the generic nature of the entity set backing this form
@@ -1105,14 +1118,14 @@ Search Helps - END
 					msg: "Allowance type is required"
 				});
 			}
-// 			if (!this.byId("quantity").getValue()) {
-// 				aRequiredFields.push({
-// 					source: this.byId("quantity"),
-// 					msg: "Allowance quantity is required"
-// 				});
-// 			}
-            var quant = this.byId("quantity").getValue();
-			if ( quant == null || quant == '0.00' || quant == 0 ) {
+			// 			if (!this.byId("quantity").getValue()) {
+			// 				aRequiredFields.push({
+			// 					source: this.byId("quantity"),
+			// 					msg: "Allowance quantity is required"
+			// 				});
+			// 			}
+			var quant = this.byId("quantity").getValue();
+			if (quant == null || quant == '0.00' || quant <= 0) {
 				aRequiredFields.push({
 					source: this.byId("quantity"),
 					msg: "Allowance quantity is required"
@@ -1169,27 +1182,27 @@ Search Helps - END
 				isValidated = false;
 			}
 		}
-        //check Operation is entered for network	
-        if (hasNetwork === true && hasOperation === false){
-				var msg2 = "Operation is required when entering a Network";
-				this.byId("operationInput").setValueStateText(msg2);
-				this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
-				isValidated = false;   
-        }
-       //check Operation is entered for Internal Order 
-        if (hasOrder === true && hasOperation === false){
-				var msg3 = "Operation is required when entering a Work Order";
-				this.byId("operationInput").setValueStateText(msg3);
-				this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
-				isValidated = false;   
-        }        
+		//check Operation is entered for network	
+		if (hasNetwork === true && hasOperation === false) {
+			var msg2 = "Operation is required when entering a Network";
+			this.byId("operationInput").setValueStateText(msg2);
+			this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
+			isValidated = false;
+		}
+		//check Operation is entered for Order 
+		if (hasOrder === true && hasOperation === false) {
+			var msg3 = "Operation is required when entering a Work Order";
+			this.byId("operationInput").setValueStateText(msg3);
+			this.byId("operationInput").setValueState(sap.ui.core.ValueState.Error);
+			isValidated = false;
+		}
 
 		return isValidated;
 	},
 
 	sendRequest: function(statusToSend) {
 		var oModel = this.getModel();
-		if (statusToSend === "SUB" && // validate upon submit (not save)
+		if ((statusToSend === "SUB" || statusToSend === "SBN")&& // validate upon submit (not save)
 			!this.validateRequiredFields()) {
 			return false;
 		}

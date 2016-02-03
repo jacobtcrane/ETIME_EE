@@ -142,6 +142,30 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	filterList: function(oFilter) {
 		var oBinding = this.getView().byId("master1List").getBinding("items");
         // publish working week dates upon data received
+        // if (!this.didAttachToFilterListDataReceived) {
+        //     this.didAttachToFilterListDataReceived = true;
+        //     oBinding.attachDataReceived($.proxy(function(oEvent) {
+        //         var oData = oEvent.getParameter("data");
+        //         if (oData && oData.results && oData.results.length) {
+        //             var oOverview = oData.results[0];
+        //             if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
+        //                 if (!this.oLastWeekstart || !this.oLastWeekend) {
+        //                     this.oLastWeekstart = new Date();
+        //                     this.oLastWeekend = new Date();
+        //                 }
+        //                 if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
+        //                     this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
+        //                     this.oLastWeekstart = oOverview.Weekstart;
+        //                     this.oLastWeekend = oOverview.Weekend;
+        //     				this.getEventBus().publish('Master', 'WorkingWeekReceived', {
+        //     				    oWeekstart: this.oLastWeekstart,
+        //     				    oWeekend: this.oLastWeekend
+        //     				});
+        //                 }
+        //             }
+        //         }
+        //     }, this));
+        // }
         if (!this.didAttachToFilterListDataReceived) {
             this.didAttachToFilterListDataReceived = true;
             oBinding.attachDataReceived($.proxy(function(oEvent) {
@@ -165,6 +189,16 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
                     }
                 }
             }, this));
+        }
+        else{
+        //This needs to publish the WorkingWeekReceived event with the start and end dates.  Currently it only gets sent
+        //if there is already time in that week
+        //   var lView = this.getView();
+        //   var lList = lView.byId("master1List");
+        //   var lWstart = lList.getProperty("Weekstart");
+        //   var lWend = lList.getProperty("Weekend");          
+        //   var lWstart = this.getView().byId("master1List").getProperty("Weekstart");
+        //   var lWend = this.getView().byId("master1List").getProperty("Weekstart");
         }
 		if (!oFilter && this.oLastListFilter) {
 			oFilter = this.oLastListFilter;
