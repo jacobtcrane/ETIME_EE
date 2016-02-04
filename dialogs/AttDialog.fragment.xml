@@ -7,8 +7,8 @@
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
-		<StandardListItem
-			title="{Atext}"
-			description="{Awart}" />
+		<DisplayListItem
+			label="{Atext}"
+			value="{Awart}" />
 	</SelectDialog>
 </core:FragmentDefinition>

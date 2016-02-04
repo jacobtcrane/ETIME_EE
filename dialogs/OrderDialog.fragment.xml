@@ -9,8 +9,8 @@
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
-		<StandardListItem
-			title="{Ktext}"
-			description="{Aufnr}" />
+		<DisplayListItem
+			label="{Ktext}"
+			value="{Aufnr}" />
 	</SelectDialog>
 </core:FragmentDefinition>

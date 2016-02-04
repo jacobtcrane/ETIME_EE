@@ -482,48 +482,48 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-	handleLiveSearch: function(oEvent) {
-		var sInputValue = oEvent.getSource().getValue();
-		if (sInputValue.length > 2) {
-			this.handleValueHelp(oEvent);
-		}
-	},
+// 	handleLiveSearch: function(oEvent) {
+// 		var sInputValue = oEvent.getSource().getValue();
+// 		if (sInputValue.length > 2) {
+// 			this.handleValueHelp(oEvent);
+// 		}
+// 	},
 
 	handleLiveChange: function(oEvent) {
-		// check mutually exclusive inputs are not being maintained
-		// (only one of wbs/network/order or internal order can be entered)
-		var hasConflicts = false;
-		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
-		var hasNetwork = this.byId("netInput").getValue() ? true : false;
-		var hasOrder = this.byId("orderInput").getValue() ? true : false;
-		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
+// 		// check mutually exclusive inputs are not being maintained
+// 		// (only one of wbs/network/order or internal order can be entered)
+// 		var hasConflicts = false;
+// 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
+// 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
+// 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
+// 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
 
-		if (oEvent.getSource().getId().search("wbsInput") > -1 && (
-			hasNetwork || hasOrder || hasInternalOrder
-		)) {
-			hasConflicts = true;
-		} else if (oEvent.getSource().getId().search("netInput") > -1 && (
-			hasWbs || hasOrder || hasInternalOrder
-		)) {
-			hasConflicts = true;
-		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
-			hasWbs || hasNetwork || hasOrder
-		)) {
-			hasConflicts = true;
-		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
-			hasWbs || hasNetwork || hasInternalOrder
-		)) {
-			hasConflicts = true;
-		}
-		if (hasConflicts) {
-			sap.m.MessageBox.show(
-				"Only one cost assignment (WBS Element/Network/Order/Internal Order) is allowed\nRemove one before choosing another...",
-				sap.m.MessageBox.Icon.ERROR,
-				"Multiple cost assignments", [sap.m.MessageBox.Action.CANCEL]
-			);
-			oEvent.getSource().setValue(null);
-			return false;
-		}
+// 		if (oEvent.getSource().getId().search("wbsInput") > -1 && (
+// 			hasNetwork || hasOrder || hasInternalOrder
+// 		)) {
+// 			hasConflicts = true;
+// 		} else if (oEvent.getSource().getId().search("netInput") > -1 && (
+// 			hasWbs || hasOrder || hasInternalOrder
+// 		)) {
+// 			hasConflicts = true;
+// 		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
+// 			hasWbs || hasNetwork || hasOrder
+// 		)) {
+// 			hasConflicts = true;
+// 		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
+// 			hasWbs || hasNetwork || hasInternalOrder
+// 		)) {
+// 			hasConflicts = true;
+// 		}
+// 		if (hasConflicts) {
+// 			sap.m.MessageBox.show(
+// 				"Only one cost assignment (WBS Element/Network/Order/Internal Order) is allowed\nRemove one before choosing another...",
+// 				sap.m.MessageBox.Icon.ERROR,
+// 				"Multiple cost assignments", [sap.m.MessageBox.Action.CANCEL]
+// 			);
+// 			oEvent.getSource().setValue(null);
+// 			return false;
+// 		}
 
 		// clear the existing description on input changes
 		oEvent.getSource().setDescription(null);
@@ -536,22 +536,21 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		if (!oEvent.getSource().getDescription()) {
 			var sValue = oEvent.getParameter("value");
 			if (oEvent.getSource().getId().search("attendanceInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Atext", "Awart");
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Awart", "Atext");
 			} else if (oEvent.getSource().getId().search("allowanceInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Lgtxt", "Lgart");
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Lgart", "Lgtxt");
 			} else if (oEvent.getSource().getId().search("wbsInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Post1", "Posid");
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Posid", "Post1");
 			} else if (oEvent.getSource().getId().search("netInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Aufnr");
-			} else if (oEvent.getSource().getId().search("orderInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Aufnr");
-			} else if (oEvent.getSource().getId().search("causeInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Grdtx", "Grund");
-			} else if (oEvent.getSource().getId().search("operationInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Aufnr", "Vornr");
-				// this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ltxa1", "Vornr");
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Aufnr", "Ktext");
 			} else if (oEvent.getSource().getId().search("internalorderInput") > -1) {
-				this.filterSuggestionItems(oEvent.getSource(), sValue, false, "Ktext", "Iaufnr");
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Aufnr", "Ktext");
+			} else if (oEvent.getSource().getId().search("orderInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Aufnr", "Ktext");
+			} else if (oEvent.getSource().getId().search("causeInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Grund", "Grdtx");
+			} else if (oEvent.getSource().getId().search("operationInput") > -1) {
+				this.filterSuggestionItems(oEvent.getSource(), sValue, true, "Vornr", "Ltxa1");
 			}
 		} else {
 			this.checkInputIsValid(oEvent.getSource());
@@ -561,7 +560,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	checkInputIsValid: function(oSource) {
 		"use strict";
 		if (!oSource.getDescription()) {
-			var msg = 'Please choose an item from the list, or use the value help!';
+			var msg = 'Invalid entry: please check your input or use the value help!';
 			oSource.setValueStateText(msg);
 			oSource.setValueState(sap.ui.core.ValueState.Error);
 			return false;
@@ -575,9 +574,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		// ensure the suggestionItems aggregation is bound
 		this.bindSuggestionItems(oSource);
 		if (filterValueIsKey) {
-			oSource.setDescription(filterValue);
-		} else {
 			oSource.setValue(filterValue);
+		} else {
+			oSource.setDescription(filterValue);
 		}
 		var oFilter = new sap.ui.model.Filter(filterPath, sap.ui.model.FilterOperator.EQ, filterValue);
 		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
@@ -588,9 +587,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				var data = oDataReceivedEvent.getParameter("data");
 				if (data && data.results && data.results.length === 1) {
 					if (filterValueIsKey) {
-						oSource.setValue(data.results[0][dataField]);
-					} else {
 						oSource.setDescription(data.results[0][dataField]);
+					} else {
+						oSource.setValue(data.results[0][dataField]);
 					}
 				}
 				this.checkInputIsValid(oSource);
@@ -784,7 +783,7 @@ Favourites - START
 			this.filterSuggestionItems(this.getView().byId("operationInput"), oFavEntity.Operation, true, "Vornr", "Ltxa1");
 		}
 		if (oFavEntity.Iaufnr) {
-			this.filterSuggestionItems(this.getView().byId("internalorderInput"), oFavEntity.Iaufnr, true, "Iaufnr", "Ktext");
+			this.filterSuggestionItems(this.getView().byId("internalorderInput"), oFavEntity.Iaufnr, true, "Aufnr", "Ktext");
 		}
 		// if (oFavEntity.Hda) {
 		// 	this.getView().byId("hda").setSelected(oFavEntity.Hda ? true : false);
@@ -838,6 +837,15 @@ Search Helps - START
 					additionalText: "{Aufnr}"
 				}));
 			}
+		} else if (oSource.getId().search("internalorderInput") > -1) {
+			if (!oSource.getBinding("suggestionItems")) {
+				// create binding to relevant service entityset if none assigned yet
+				oSource.bindAggregation("suggestionItems", "/VH_internalorderSet", new sap.ui.core.ListItem({
+					key: "{Aufnr}",
+					text: "{Ktext}",
+					additionalText: "{Aufnr}"
+				}));
+			}
 		} else if (oSource.getId().search("orderInput") > -1) {
 			if (!oSource.getBinding("suggestionItems")) {
 				// create binding to relevant service entityset if none assigned yet
@@ -867,64 +875,55 @@ Search Helps - START
 					// additionalText : "{Vornr}"
 				}));
 			}
-		} else if (oSource.getId().search("internalorderInput") > -1) {
-			if (!oSource.getBinding("suggestionItems")) {
-				// create binding to relevant service entityset if none assigned yet
-				oSource.bindAggregation("suggestionItems", "/VH_internalorderSet", new sap.ui.core.ListItem({
-					key: "{Aufnr}",
-					text: "{Ktext}",
-					additionalText: "{Aufnr}"
-				}));
-			}
 		}
 	},
 
 	handleSuggest: function(evt) {
-		var oSource = evt.getSource();
-		// start by clearing the existing description
-		oSource.setDescription(null);
-		// ensure the suggestionItems aggregation is bound
-		this.bindSuggestionItems(evt.getSource());
-		var sValue = evt.getParameter("suggestValue");
-		var oFilter;
-		if (oSource.getId().search("attendanceInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("allowanceInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("wbsInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("netInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("orderInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("causeInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("operationInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
-		} else if (oSource.getId().search("internalorderInput") > -1) {
-			oFilter = new sap.ui.model.Filter("Iaufnr", sap.ui.model.FilterOperator.Contains, sValue);
-		}
-		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
-		if (suggestionItemsBinding) {
-			// set the control as busy until we've received data for the filter
-			oSource.setBusy(true);
-			var onFilterDataReceived = function() {
-				suggestionItemsBinding.detachDataReceived(onFilterDataReceived, this);
-				oSource.setBusy(false);
-			};
-			suggestionItemsBinding.attachDataReceived(onFilterDataReceived, this);
-			// apply the filter
-			suggestionItemsBinding.filter([oFilter]);
-		}
+// 		var oSource = evt.getSource();
+// 		// start by clearing the existing description
+// 		oSource.setDescription(null);
+// 		// ensure the suggestionItems aggregation is bound
+// 		this.bindSuggestionItems(evt.getSource());
+// 		var sValue = evt.getParameter("suggestValue");
+// 		var oFilter;
+// 		if (oSource.getId().search("attendanceInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("allowanceInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("wbsInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("netInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("internalorderInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Iaufnr", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("orderInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("causeInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
+// 		} else if (oSource.getId().search("operationInput") > -1) {
+// 			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+// 		}
+// 		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
+// 		if (suggestionItemsBinding) {
+// 			// set the control as busy until we've received data for the filter
+// 			oSource.setBusy(true);
+// 			var onFilterDataReceived = function() {
+// 				suggestionItemsBinding.detachDataReceived(onFilterDataReceived, this);
+// 				oSource.setBusy(false);
+// 			};
+// 			suggestionItemsBinding.attachDataReceived(onFilterDataReceived, this);
+// 			// apply the filter
+// 			suggestionItemsBinding.filter([oFilter]);
+// 		}
 	},
 
 	handleSuggestionSel: function(oEvent) {
-		// this.handleValueHelp(oEvent);
-		var selectedItem = oEvent.getParameter("selectedItem");
-		if (selectedItem) {
-			oEvent.getSource().setDescription(selectedItem.getKey());
-			this.checkInputIsValid(oEvent.getSource());
-		}
+// 		// this.handleValueHelp(oEvent);
+// 		var selectedItem = oEvent.getParameter("selectedItem");
+// 		if (selectedItem) {
+// 			oEvent.getSource().setDescription(selectedItem.getKey());
+// 			this.checkInputIsValid(oEvent.getSource());
+// 		}
 	},
 
 	handleValueHelp: function(oEvent) {
@@ -1061,8 +1060,8 @@ Search Helps - START
 		var oSelectedItem = evt.getParameter("selectedItem");
 		if (oSelectedItem) {
 			var inputDD = this.getView().byId(this.inputId);
-			inputDD.setValue(oSelectedItem.getTitle());
-			inputDD.setDescription(oSelectedItem.getDescription());
+			inputDD.setValue(oSelectedItem.getValue());
+			inputDD.setDescription(oSelectedItem.getLabel());
 			this.checkInputIsValid(inputDD);
 		}
 		// if (evt.getSource().getBinding("items")) {

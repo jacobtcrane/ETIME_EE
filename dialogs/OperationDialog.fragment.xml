@@ -9,12 +9,8 @@
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
-		<StandardListItem
-			title="{Aufnr}"
-			info="{Ltxa1}"
-			description="{Vornr}" />
-		<!--<StandardListItem-->
-		<!--	title="{Ltxa1}"-->
-		<!--	description="{Vornr}" />-->
+		<DisplayListItem
+			label="{Ltxa1}"
+			value="{Vornr}" />
 	</SelectDialog>
 </core:FragmentDefinition>

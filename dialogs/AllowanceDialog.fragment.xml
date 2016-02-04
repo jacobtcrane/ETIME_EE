@@ -1,14 +1,14 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<SelectDialog
-	    id = "AllDialog"
+	    id = "AllowanceDialog"
 	    title = "Allowances"
 		class="sapUiPopupWithPadding"
 		items="{/VH_lgartSet}"
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
-		<StandardListItem
-			title="{Lgtxt}"
-			description="{Lgart}" />
+		<DisplayListItem
+			label="{Lgtxt}"
+			value="{Lgart}" />
 	</SelectDialog>
 </core:FragmentDefinition>

@@ -9,8 +9,8 @@
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
-		<StandardListItem
-			title="{Grdtx}"
-			description="{Grund}" />
+		<DisplayListItem
+			label="{Grdtx}"
+			value="{Grund}" />
 	</SelectDialog>
 </core:FragmentDefinition>

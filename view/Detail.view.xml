@@ -46,9 +46,9 @@
 					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
 					<Label id="labelatt" text="Attendance Type" required="true" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
 					<Input id="attendanceInput" placeholder="Enter Attendance Type ..." visible="{path:'isAllowance',formatter:'.isAttendance'}"
-						type="Text" value="{Awarttxt}" description="{Awart}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Awart}" description="{Awarttxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Awart}" liveChange="handleLiveSearch"-->
 					<!--	placeholder="Enter Attendance Type ..." showSuggestion="true" id="attendanceInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_attendanceSet}" type="Text"-->
@@ -69,17 +69,17 @@
 
 					<Label id="labelall" text="Allowance Type / Quantity" required="true" visible="{isAllowance}" />
 					<Input id="allowanceInput" placeholder="Enter Allowance Type ..." visible="{isAllowance}"
-						type="Text" value="{Lgarttxt}" description="{Lgart}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Lgart}" description="{Lgarttxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<Input id="quantity" placeholder="Enter Quantity ..." value="{Anzhl}" change="onQuantityEntered" visible="{isAllowance}" />
 
 					<Label id="labelwbs" text="WBS Element"/>
 					<Input id="wbsInput" placeholder="Enter WBS Element ..."
-						type="Text" value="{Wbstxt}" description="{Wbs}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Wbs}" description="{Wbstxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Wbs}" liveChange="handleLiveSearch" placeholder="Enter WBS Element ..."-->
 					<!--	showSuggestion="true" id="wbsInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/PrstpSet}" text="{Post1}" type="Text"-->
@@ -90,9 +90,9 @@
 					<!--</Input>-->
 					<Label id="labelnet" text="Network"/>
 					<Input id="netInput" placeholder="Enter Network ..."
-						type="Text" value="{Networktxt}" description="{Nwh}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Nwh}" description="{Networktxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Nwh}" liveChange="handleLiveSearch" placeholder="Enter Network ..."-->
 					<!--	showSuggestion="true" id="netInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_networkSet}" text="{Ktext}" type="Text" value="{Networktxt}"-->
@@ -103,9 +103,9 @@
 					<!--</Input>-->
 					<Label id="labelorder" text="Order"/>
 					<Input id="orderInput" placeholder="Enter Order ..."
-						type="Text" value="{Ordertxt}" description="{Srvord}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Srvord}" description="{Ordertxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Srvord}" liveChange="handleLiveSearch" placeholder="Enter Order ..."-->
 					<!--	showSuggestion="true" id="orderInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/ZhtrsEtimeOrderShSet}" text="{Ktext}" type="Text"-->
@@ -116,9 +116,9 @@
 					<!--</Input>-->
 					<Label id="labelcause" text="Cause"/>
 					<Input id="causeInput" placeholder="Enter Cause ..."
-						type="Text" value="{Rsnvartxt}" description="{Rsnvar}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Rsnvar}" description="{Rsnvartxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Rsnvar}" liveChange="handleLiveSearch" placeholder="Enter Cause ..."-->
 					<!--	showSuggestion="true" id="causeInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_causeSet}" text="{Grdtx}" type="Text" value="{Rsnvartxt}"-->
@@ -129,9 +129,9 @@
 					<!--</Input>-->
 					<Label id="labeloperation" text="Operation"/>
 					<Input id="operationInput" placeholder="Enter Operation ..."
-						type="Text" value="{Operationtxt}" description="{Operation}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Operation}" description="{Operationtxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>
 					<!--<Input showValueHelp="true" valueHelpRequest="handleValueHelp" description="{Operation}" liveChange="handleLiveSearch"-->
 					<!--	placeholder="Enter Operation ..." showSuggestion="true" id="operationInput" suggestionItemSelected="handleSuggestionSel" suggestionItems="{/VH_operationSet}" text="{Ltxa1}"-->
@@ -146,9 +146,9 @@
 					<Label id="labelinternalorder" text="Internal Order"/>
 					<!--<Input id="internalorderInput" placeholder="Enter Internal Order... " type="Text" value="{Iaufnrtxt}"></Input>-->
 					<Input id="internalorderInput" placeholder="Enter Internal Order ..."
-						type="Text" value="{Iaufnrtxt}" description="{Iaufnr}" 
-						showValueHelp="true" valueHelpRequest="handleValueHelp" valueLiveUpdate="true" liveChange="handleLiveChange" change="handleInputChange"
-						showSuggestion="true" startSuggestion="30" suggest="handleSuggest" suggestionItemSelected="handleSuggestionSel"
+						type="Text" value="{Iaufnr}" description="{Iaufnrtxt}" 
+						showValueHelp="true" valueHelpRequest="handleValueHelp" liveChange="handleLiveChange" change="handleInputChange"
+						showSuggestion="false"
 						/>					
 					<CheckBox id="hda" selected="{Hda}" text="Higher Duties" select="handleHDASelected" >
 						<layoutData>

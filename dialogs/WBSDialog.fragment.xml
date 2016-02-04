@@ -9,8 +9,8 @@
 		search="_handleValueHelpSearch"
 		confirm="_handleValueHelpClose"
 		cancel="_handleValueHelpClose">
-		<StandardListItem
-			title="{Post1}"
-			description="{Posid}" />
+		<DisplayListItem
+			label="{Post1}"
+			value="{Posid}" />
 	</SelectDialog>
 </core:FragmentDefinition>
