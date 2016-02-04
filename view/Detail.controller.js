@@ -604,16 +604,20 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		if (suggestionItemsBinding) {
 			// attach handler to the filter's DataReceived event to update the input field value
 			var onSuggestionItemBindingDataReceived = function(oDataReceivedEvent) {
-				suggestionItemsBinding.detachDataReceived(onSuggestionItemBindingDataReceived, this);
+				// detach handler once we've received results for our filter
+				// note that we may receive on false hit for the initial aggregation binding, which we ignore
 				var data = oDataReceivedEvent.getParameter("data");
-				if (data && data.results && data.results.length === 1) {
-					if (filterValueIsKey) {
-						oSource.setDescription(data.results[0][dataField]);
-					} else {
-						oSource.setValue(data.results[0][dataField]);
+				if (data) {
+					suggestionItemsBinding.detachDataReceived(onSuggestionItemBindingDataReceived, this);
+					if (data.results && data.results.length === 1) {
+						if (filterValueIsKey) {
+							oSource.setDescription(data.results[0][dataField]);
+						} else {
+							oSource.setValue(data.results[0][dataField]);
+						}
 					}
+					this.checkInputIsValid(oSource);
 				}
-				this.checkInputIsValid(oSource);
 			};
 			suggestionItemsBinding.attachDataReceived(onSuggestionItemBindingDataReceived, this);
 			// now apply the filter
