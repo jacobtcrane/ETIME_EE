@@ -533,6 +533,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.byId("operationInput").setValue(null);
 			this.byId("operationInput").setDescription(null);
 		}
+		// clear cause if changing order
+		if ((oEvent.getSource().getId().search("orderInput") > -1 && oEvent.getSource().getId().search("internalorderInput") === -1)) {
+			this.byId("causeInput").setValue(null);
+			this.byId("causeInput").setDescription(null);
+		}
 	},
 
 	handleInputChange: function(oEvent) {
@@ -584,11 +589,21 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		} else {
 			oSource.setDescription(filterValue);
 		}
-		var oFilter;
-		// for operation input, add network/order as additional filter
+		var oFilter, sAufnr;
 		if (oSource.getId().search("operationInput") > -1) {
-			var sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
+			// for operation input, add network/order as additional filter
+			sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
 			sAufnr = sAufnr || "MISSING";
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
+                    new sap.ui.model.Filter(filterPath, sap.ui.model.FilterOperator.EQ, filterValue)
+                ],
+				and: true
+			});
+		} else if (oSource.getId().search("causeInput") > -1) {
+			// for cause input, add order as additional filter
+			sAufnr = this.byId("orderInput").getValue() || "MISSING";
 			oFilter = new sap.ui.model.Filter({
 				filters: [
                     new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
@@ -956,7 +971,7 @@ Search Helps - START
 		var oDetailEntity = this.getContextObject();
 		var sInputValue = oEvent.getSource().getValue();
 		var source = oEvent.getSource().getId();
-		var oFilter;
+		var oFilter, sAufnr;
 		this.inputId = oEvent.getSource().getId();
 		// create value help dialog
 		if (source.search("favouriteDD") > -1) {
@@ -1034,7 +1049,15 @@ Search Helps - START
 				this.getRouter()._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
 				this.getView().addDependent(this.getRouter()._valueHelpCauseDialog);
 			}
-			oFilter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
+			// include order number in filter
+			sAufnr = this.byId("orderInput").getValue() || "MISSING";
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
+                    new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue)
+                ],
+				and: true
+			});
 			this.getRouter()._valueHelpCauseDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpCauseDialog.open(sInputValue);
 		} else if (source.search("operationInput") > -1) {
@@ -1043,7 +1066,7 @@ Search Helps - START
 				this.getView().addDependent(this.getRouter()._valueHelpOperationDialog);
 			}
 			// include network/order number in filter
-			var sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
+			sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
 			sAufnr = sAufnr || "MISSING";
 			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr);
 			this.getRouter()._valueHelpOperationDialog.getBinding("items").filter([oFilter]);
@@ -1116,6 +1139,11 @@ Search Helps - START
 				(this.inputId.search("orderInput") > -1 && this.inputId.search("internalorderInput") === -1)) {
 				this.byId("operationInput").setValue(null);
 				this.byId("operationInput").setDescription(null);
+			}
+			// clear cause if changing order
+			if ((this.inputId.search("orderInput") > -1 && this.inputId.search("internalorderInput") === -1)) {
+				this.byId("causeInput").setValue(null);
+				this.byId("causeInput").setDescription(null);
 			}
 
 		}
