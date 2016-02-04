@@ -157,8 +157,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			} else {
 				this.setupAttendanceDetail();
 			}
-		} else{
-		    this.isNew = false;
+		} else {
+			this.isNew = false;
 		}
 	},
 
@@ -482,51 +482,57 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-// 	handleLiveSearch: function(oEvent) {
-// 		var sInputValue = oEvent.getSource().getValue();
-// 		if (sInputValue.length > 2) {
-// 			this.handleValueHelp(oEvent);
-// 		}
-// 	},
+	// 	handleLiveSearch: function(oEvent) {
+	// 		var sInputValue = oEvent.getSource().getValue();
+	// 		if (sInputValue.length > 2) {
+	// 			this.handleValueHelp(oEvent);
+	// 		}
+	// 	},
 
 	handleLiveChange: function(oEvent) {
-// 		// check mutually exclusive inputs are not being maintained
-// 		// (only one of wbs/network/order or internal order can be entered)
-// 		var hasConflicts = false;
-// 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
-// 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
-// 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
-// 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
+		// 		// check mutually exclusive inputs are not being maintained
+		// 		// (only one of wbs/network/order or internal order can be entered)
+		// 		var hasConflicts = false;
+		// 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
+		// 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
+		// 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
+		// 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
 
-// 		if (oEvent.getSource().getId().search("wbsInput") > -1 && (
-// 			hasNetwork || hasOrder || hasInternalOrder
-// 		)) {
-// 			hasConflicts = true;
-// 		} else if (oEvent.getSource().getId().search("netInput") > -1 && (
-// 			hasWbs || hasOrder || hasInternalOrder
-// 		)) {
-// 			hasConflicts = true;
-// 		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
-// 			hasWbs || hasNetwork || hasOrder
-// 		)) {
-// 			hasConflicts = true;
-// 		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
-// 			hasWbs || hasNetwork || hasInternalOrder
-// 		)) {
-// 			hasConflicts = true;
-// 		}
-// 		if (hasConflicts) {
-// 			sap.m.MessageBox.show(
-// 				"Only one cost assignment (WBS Element/Network/Order/Internal Order) is allowed\nRemove one before choosing another...",
-// 				sap.m.MessageBox.Icon.ERROR,
-// 				"Multiple cost assignments", [sap.m.MessageBox.Action.CANCEL]
-// 			);
-// 			oEvent.getSource().setValue(null);
-// 			return false;
-// 		}
+		// 		if (oEvent.getSource().getId().search("wbsInput") > -1 && (
+		// 			hasNetwork || hasOrder || hasInternalOrder
+		// 		)) {
+		// 			hasConflicts = true;
+		// 		} else if (oEvent.getSource().getId().search("netInput") > -1 && (
+		// 			hasWbs || hasOrder || hasInternalOrder
+		// 		)) {
+		// 			hasConflicts = true;
+		// 		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
+		// 			hasWbs || hasNetwork || hasOrder
+		// 		)) {
+		// 			hasConflicts = true;
+		// 		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
+		// 			hasWbs || hasNetwork || hasInternalOrder
+		// 		)) {
+		// 			hasConflicts = true;
+		// 		}
+		// 		if (hasConflicts) {
+		// 			sap.m.MessageBox.show(
+		// 				"Only one cost assignment (WBS Element/Network/Order/Internal Order) is allowed\nRemove one before choosing another...",
+		// 				sap.m.MessageBox.Icon.ERROR,
+		// 				"Multiple cost assignments", [sap.m.MessageBox.Action.CANCEL]
+		// 			);
+		// 			oEvent.getSource().setValue(null);
+		// 			return false;
+		// 		}
 
 		// clear the existing description on input changes
 		oEvent.getSource().setDescription(null);
+		// clear operation if changing network/order
+		if (oEvent.getSource().getId().search("netInput") > -1 ||
+			(oEvent.getSource().getId().search("orderInput") > -1 && oEvent.getSource().getId().search("internalorderInput") === -1)) {
+			this.byId("operationInput").setValue(null);
+			this.byId("operationInput").setDescription(null);
+		}
 	},
 
 	handleInputChange: function(oEvent) {
@@ -578,7 +584,22 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		} else {
 			oSource.setDescription(filterValue);
 		}
-		var oFilter = new sap.ui.model.Filter(filterPath, sap.ui.model.FilterOperator.EQ, filterValue);
+		var oFilter;
+		// for operation input, add network/order as additional filter
+		if (oSource.getId().search("operationInput") > -1) {
+			var sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
+			sAufnr = sAufnr || "MISSING";
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
+                    new sap.ui.model.Filter(filterPath, sap.ui.model.FilterOperator.EQ, filterValue)
+                ],
+				and: true
+			});
+		} else {
+			oFilter = new sap.ui.model.Filter(filterPath, sap.ui.model.FilterOperator.EQ, filterValue);
+		}
+
 		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
 		if (suggestionItemsBinding) {
 			// attach handler to the filter's DataReceived event to update the input field value
@@ -879,51 +900,51 @@ Search Helps - START
 	},
 
 	handleSuggest: function(evt) {
-// 		var oSource = evt.getSource();
-// 		// start by clearing the existing description
-// 		oSource.setDescription(null);
-// 		// ensure the suggestionItems aggregation is bound
-// 		this.bindSuggestionItems(evt.getSource());
-// 		var sValue = evt.getParameter("suggestValue");
-// 		var oFilter;
-// 		if (oSource.getId().search("attendanceInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("allowanceInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("wbsInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("netInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("internalorderInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Iaufnr", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("orderInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("causeInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
-// 		} else if (oSource.getId().search("operationInput") > -1) {
-// 			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
-// 		}
-// 		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
-// 		if (suggestionItemsBinding) {
-// 			// set the control as busy until we've received data for the filter
-// 			oSource.setBusy(true);
-// 			var onFilterDataReceived = function() {
-// 				suggestionItemsBinding.detachDataReceived(onFilterDataReceived, this);
-// 				oSource.setBusy(false);
-// 			};
-// 			suggestionItemsBinding.attachDataReceived(onFilterDataReceived, this);
-// 			// apply the filter
-// 			suggestionItemsBinding.filter([oFilter]);
-// 		}
+		// 		var oSource = evt.getSource();
+		// 		// start by clearing the existing description
+		// 		oSource.setDescription(null);
+		// 		// ensure the suggestionItems aggregation is bound
+		// 		this.bindSuggestionItems(evt.getSource());
+		// 		var sValue = evt.getParameter("suggestValue");
+		// 		var oFilter;
+		// 		if (oSource.getId().search("attendanceInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("allowanceInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("wbsInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("netInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("internalorderInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Iaufnr", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("orderInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("causeInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		} else if (oSource.getId().search("operationInput") > -1) {
+		// 			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+		// 		}
+		// 		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
+		// 		if (suggestionItemsBinding) {
+		// 			// set the control as busy until we've received data for the filter
+		// 			oSource.setBusy(true);
+		// 			var onFilterDataReceived = function() {
+		// 				suggestionItemsBinding.detachDataReceived(onFilterDataReceived, this);
+		// 				oSource.setBusy(false);
+		// 			};
+		// 			suggestionItemsBinding.attachDataReceived(onFilterDataReceived, this);
+		// 			// apply the filter
+		// 			suggestionItemsBinding.filter([oFilter]);
+		// 		}
 	},
 
 	handleSuggestionSel: function(oEvent) {
-// 		// this.handleValueHelp(oEvent);
-// 		var selectedItem = oEvent.getParameter("selectedItem");
-// 		if (selectedItem) {
-// 			oEvent.getSource().setDescription(selectedItem.getKey());
-// 			this.checkInputIsValid(oEvent.getSource());
-// 		}
+		// 		// this.handleValueHelp(oEvent);
+		// 		var selectedItem = oEvent.getParameter("selectedItem");
+		// 		if (selectedItem) {
+		// 			oEvent.getSource().setDescription(selectedItem.getKey());
+		// 			this.checkInputIsValid(oEvent.getSource());
+		// 		}
 	},
 
 	handleValueHelp: function(oEvent) {
@@ -937,118 +958,140 @@ Search Helps - START
 		if (source.search("favouriteDD") > -1) {
 			if (!this.getRouter()._valueHelpFavouritesDialog) {
 				this.getRouter()._valueHelpFavouritesDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.FavouritesDialog", this);
-				oFilter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpFavouritesDialog);
-				this.getRouter()._valueHelpFavouritesDialog.getBinding("items").filter([oFilter]);
 			}
+			oFilter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
+			this.getRouter()._valueHelpFavouritesDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpFavouritesDialog.open(sInputValue);
 		} else if (source.search("attendanceInput") > -1) {
 			if (!this.getRouter()._valueHelpAttDialog) {
 				this.getRouter()._valueHelpAttDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AttDialog", this);
-				oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue);
-				// var sEntityPath = '/VH_attendanceSet?$filter=Begda le datetime\'' + com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oBegda, false) + '\'';
-				// this.getRouter()._valueHelpAttDialog.bindElement(sEntityPath);
 				this.getView().addDependent(this.getRouter()._valueHelpAttDialog); //this makes the SAP call
-				// filter on both date and text
-				this.getRouter()._valueHelpAttDialog.getBinding("items").filter([new sap.ui.model.Filter({
-					filters: [
-                        oFilter,
-                        new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
-                    ],
-					and: true
-				})]);
 			}
+			// filter on both date and text
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sInputValue),
+                    new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
+                ],
+				and: true
+			});
+			this.getRouter()._valueHelpAttDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpAttDialog.open(sInputValue);
 		} else if (source.search("allowanceInput") > -1) {
 			if (!this.getRouter()._valueHelpAllDialog) {
 				this.getRouter()._valueHelpAllDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.AllowanceDialog", this);
-				oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpAllDialog); //this makes the SAP call
-				// filter on both date and text
-				this.getRouter()._valueHelpAllDialog.getBinding("items").filter([new sap.ui.model.Filter({
-					filters: [
-                        oFilter,
-                        new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
-                    ],
-					and: true
-				})]);
-				this.getRouter()._valueHelpAllDialog.getBinding("items").filter([oFilter]);
 			}
+			// filter on both date and text
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sInputValue),
+                    new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
+                ],
+				and: true
+			});
+			this.getRouter()._valueHelpAllDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpAllDialog.open(sInputValue);
 		} else if (source.search("wbsInput") > -1) {
 			if (!this.getRouter()._valueHelpWBSDialog) {
 				this.getRouter()._valueHelpWBSDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.WBSDialog", this);
-				oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpWBSDialog);
-				this.getRouter()._valueHelpWBSDialog.getBinding("items").filter([oFilter]);
 			}
+			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
+			this.getRouter()._valueHelpWBSDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpWBSDialog.open(sInputValue);
 		} else if (source.search("netInput") > -1) {
 			if (!this.getRouter()._valueHelpNetDialog) {
 				this.getRouter()._valueHelpNetDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.NetworkDialog", this);
-				oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpNetDialog);
-				this.getRouter()._valueHelpNetDialog.getBinding("items").filter([oFilter]);
 			}
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+			this.getRouter()._valueHelpNetDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpNetDialog.open(sInputValue);
 		} else if (source.search("internalorderInput") > -1) {
 			if (!this.getRouter()._valueHelpInternalorderDialog) {
 				this.getRouter()._valueHelpInternalorderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.InternalorderDialog", this);
-				oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpInternalorderDialog);
-				this.getRouter()._valueHelpInternalorderDialog.getBinding("items").filter([oFilter]);
 			}
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+			this.getRouter()._valueHelpInternalorderDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpInternalorderDialog.open(sInputValue);
 		} else if (source.search("orderInput") > -1) {
 			if (!this.getRouter()._valueHelpOrderDialog) {
 				this.getRouter()._valueHelpOrderDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OrderDialog", this);
-				oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpOrderDialog);
-				this.getRouter()._valueHelpOrderDialog.getBinding("items").filter([oFilter]);
 			}
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
+			this.getRouter()._valueHelpOrderDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpOrderDialog.open(sInputValue);
 		} else if (source.search("causeInput") > -1) {
 			if (!this.getRouter()._valueHelpCauseDialog) {
 				this.getRouter()._valueHelpCauseDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.CauseDialog", this);
-				oFilter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpCauseDialog);
-				this.getRouter()._valueHelpCauseDialog.getBinding("items").filter([oFilter]);
 			}
+			oFilter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue);
+			this.getRouter()._valueHelpCauseDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpCauseDialog.open(sInputValue);
 		} else if (source.search("operationInput") > -1) {
 			if (!this.getRouter()._valueHelpOperationDialog) {
 				this.getRouter()._valueHelpOperationDialog = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.OperationDialog", this);
-				oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.Contains, sInputValue);
-				// filter = new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sInputValue);
 				this.getView().addDependent(this.getRouter()._valueHelpOperationDialog);
-				this.getRouter()._valueHelpOperationDialog.getBinding("items").filter([oFilter]);
 			}
+			// include network/order number in filter
+			var sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
+			sAufnr = sAufnr || "MISSING";
+			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr);
+			this.getRouter()._valueHelpOperationDialog.getBinding("items").filter([oFilter]);
 			this.getRouter()._valueHelpOperationDialog.open(sInputValue);
 		}
 	},
 
 	_handleValueHelpSearch: function(evt) {
 		var sValue = evt.getParameter("value");
+		var oDetailEntity = this.getContextObject();
 		var oFilter;
 		if (evt.getSource().getId().search("AttDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
+			// filter on both date and text
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue),
+                    new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
+                ],
+				and: true
+			});
 		} else if (evt.getSource().getId().search("AllowanceDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
+			// filter on both date and text
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue),
+                    new sap.ui.model.Filter("Begda", sap.ui.model.FilterOperator.LE, oDetailEntity.Begda)
+                ],
+				and: true
+			});
 		} else if (evt.getSource().getId().search("WBSDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("NetDialog") > -1 || evt.getSource().getId().search("OrderDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("FavouritesDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Guid", sap.ui.model.FilterOperator.Contains, sValue);
+			oFilter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("CauseDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sValue);
-			// oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
 		} else if (evt.getSource().getId().search("OperationDialog") > -1) {
-			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.Contains, sValue);
-			// oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+			// include network/order number in filter
+			var sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
+			sAufnr = sAufnr || "MISSING";
+			oFilter = new sap.ui.model.Filter({
+				filters: [
+                    new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
+                    new sap.ui.model.Filter("Ltxa1", sap.ui.model.FilterOperator.Contains, sValue)
+                ],
+				and: true
+			});
 		} else if (evt.getSource().getId().search("InternalorderDialog") > -1) {
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-			// oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
+		} else if (evt.getSource().getId().search("OrderDialog") > -1) {
+			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
 		}
 
 		if (evt.getSource().getBinding("items")) {
@@ -1063,6 +1106,14 @@ Search Helps - START
 			inputDD.setValue(oSelectedItem.getValue());
 			inputDD.setDescription(oSelectedItem.getLabel());
 			this.checkInputIsValid(inputDD);
+
+			// clear operation if changing network/order
+			if (this.inputId.search("netInput") > -1 ||
+				(this.inputId.search("orderInput") > -1 && this.inputId.search("internalorderInput") === -1)) {
+				this.byId("operationInput").setValue(null);
+				this.byId("operationInput").setDescription(null);
+			}
+
 		}
 		// if (evt.getSource().getBinding("items")) {
 		// 	evt.getSource().getBinding("items").filter([]);
@@ -1201,7 +1252,7 @@ Search Helps - END
 
 	sendRequest: function(statusToSend) {
 		var oModel = this.getModel();
-		if ((statusToSend === "SUB" || statusToSend === "SBN")&& // validate upon submit (not save)
+		if ((statusToSend === "SUB" || statusToSend === "SBN") && // validate upon submit (not save)
 			!this.validateRequiredFields()) {
 			return false;
 		}
