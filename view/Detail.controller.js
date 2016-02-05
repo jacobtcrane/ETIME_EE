@@ -575,13 +575,18 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	checkInputIsValid: function(oSource) {
 		"use strict";
-		if (!oSource.getDescription()) {
-			var msg = "Invalid entry: please check your input or use the value help!";
-			oSource.setValueStateText(msg);
-			oSource.setValueState(sap.ui.core.ValueState.Error);
-			return false;
+		if (!oSource.getValue()) {
+			oSource.setValueState(sap.ui.core.ValueState.None);
+			return true;
 		} else {
-			oSource.setValueState(sap.ui.core.ValueState.Success);
+			if (!oSource.getDescription()) {
+				var msg = "Invalid entry: please check your input or use the value help!";
+				oSource.setValueStateText(msg);
+				oSource.setValueState(sap.ui.core.ValueState.Error);
+				return false;
+			} else {
+				oSource.setValueState(sap.ui.core.ValueState.Success);
+			}
 		}
 	},
 
@@ -652,7 +657,7 @@ Favourites - START
 		// var oView = this.getView();
 
 		// create popover
-        var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
+		var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
 		// delay because addDependent will do a async rerendering and the popover will immediately close without it
 		var oFavButton = oEvent.getSource();
 		jQuery.sap.delayedCall(0, this, function() {
@@ -661,7 +666,7 @@ Favourites - START
 	},
 
 	handleManageFavs: function(oEvent) { //Launches Manage Favourites View
-        var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
+		var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
 		oFavPopover.close();
 		this.getRouter().navTo("favourites");
 	},
@@ -669,7 +674,7 @@ Favourites - START
 	handleAddFav: function(oEvent) { //Adds the Screen content as Faourite
 		var oModel = this.getModel();
 		var oDetailEntity = this.getContextObject();
-        var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
+		var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
 		var aElements = oFavPopover.findElements(true);
 		var favouriteName;
 		for (var i = 0; i < aElements.length; i++) {
@@ -748,7 +753,8 @@ Favourites - START
 		var switchVal = oEvent.getSource().getPressed();
 		var oFavSelectDialog = com.broadspectrum.etime.ee.util.Dialogs.getFavSelectDialog(this);
 		var oDetailEntity = this.getContextObject();
-		var oFilter = new sap.ui.model.Filter("Lgart", oDetailEntity.isAllowance ? sap.ui.model.FilterOperator.NE : sap.ui.model.FilterOperator.EQ, "");
+		var oFilter = new sap.ui.model.Filter("Lgart", oDetailEntity.isAllowance ? sap.ui.model.FilterOperator.NE : sap.ui.model.FilterOperator.EQ,
+			"");
 		oFavSelectDialog.getBinding("items").filter([oFilter]);
 		if (switchVal) {
 			oFavSelectDialog.open();
@@ -973,12 +979,12 @@ Search Helps - START
 		this.inputId = oEvent.getSource().getId();
 		// create value help dialog
 		if (source.search("favouriteDD") > -1) {
-            var oValueHelpFavouritesDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpFavouritesDialog(this);
+			var oValueHelpFavouritesDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpFavouritesDialog(this);
 			oFilter = new sap.ui.model.Filter("Description", sap.ui.model.FilterOperator.Contains, sInputValue);
 			oValueHelpFavouritesDialog.getBinding("items").filter([oFilter]);
 			oValueHelpFavouritesDialog.open(sInputValue);
 		} else if (source.search("attendanceInput") > -1) {
-            var oValueHelpAttDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpAttDialog(this);
+			var oValueHelpAttDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpAttDialog(this);
 			// filter on both date and text
 			oFilter = new sap.ui.model.Filter({
 				filters: [
@@ -990,7 +996,7 @@ Search Helps - START
 			oValueHelpAttDialog.getBinding("items").filter([oFilter]);
 			oValueHelpAttDialog.open(sInputValue);
 		} else if (source.search("allowanceInput") > -1) {
-            var oValueHelpAllDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpAllDialog(this);
+			var oValueHelpAllDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpAllDialog(this);
 			// filter on both date and text
 			oFilter = new sap.ui.model.Filter({
 				filters: [
@@ -1002,41 +1008,41 @@ Search Helps - START
 			oValueHelpAllDialog.getBinding("items").filter([oFilter]);
 			oValueHelpAllDialog.open(sInputValue);
 		} else if (source.search("wbsInput") > -1) {
-            var oValueHelpWBSDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpWBSDialog(this);
+			var oValueHelpWBSDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpWBSDialog(this);
 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sInputValue);
 			oValueHelpWBSDialog.getBinding("items").filter([oFilter]);
 			oValueHelpWBSDialog.open(sInputValue);
 		} else if (source.search("netInput") > -1) {
-            var oValueHelpNetDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpNetDialog(this);
+			var oValueHelpNetDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpNetDialog(this);
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 			oValueHelpNetDialog.getBinding("items").filter([oFilter]);
 			oValueHelpNetDialog.open(sInputValue);
 		} else if (source.search("internalorderInput") > -1) {
-            var oValueHelpInternalorderDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpInternalorderDialog(this);
+			var oValueHelpInternalorderDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpInternalorderDialog(this);
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 			oValueHelpInternalorderDialog.getBinding("items").filter([oFilter]);
 			oValueHelpInternalorderDialog.open(sInputValue);
 		} else if (source.search("orderInput") > -1) {
-            var oValueHelpOrderDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpOrderDialog(this);
+			var oValueHelpOrderDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpOrderDialog(this);
 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sInputValue);
 			oValueHelpOrderDialog.getBinding("items").filter([oFilter]);
 			oValueHelpOrderDialog.open(sInputValue);
 		} else if (source.search("causeInput") > -1) {
-            var oValueHelpCauseDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpCauseDialog(this);
+			var oValueHelpCauseDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpCauseDialog(this);
 			// include order number in filter
 			sAufnr = this.byId("orderInput").getValue() || "00000000";
-// 			oFilter = new sap.ui.model.Filter({
-// 				filters: [
-//                     new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
-//                     new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue)
-//                 ],
-// 				and: true
-// 			});
+			// 			oFilter = new sap.ui.model.Filter({
+			// 				filters: [
+			//                     new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
+			//                     new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue)
+			//                 ],
+			// 				and: true
+			// 			});
 			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr);
 			oValueHelpCauseDialog.getBinding("items").filter([oFilter]);
 			oValueHelpCauseDialog.open(sInputValue);
 		} else if (source.search("operationInput") > -1) {
-            var oValueHelpOperationDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpOperationDialog(this);
+			var oValueHelpOperationDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpOperationDialog(this);
 			// include network/order number in filter
 			sAufnr = this.byId("netInput").getValue() ? this.byId("netInput").getValue() : this.byId("orderInput").getValue();
 			sAufnr = sAufnr || "00000000";
@@ -1381,7 +1387,7 @@ Search Helps - END
 	},
 
 	showMessagePopover: function(oOpenBy) {
-        var oMessagePopover = com.broadspectrum.etime.ee.util.Dialogs.getMessagePopover(this);
+		var oMessagePopover = com.broadspectrum.etime.ee.util.Dialogs.getMessagePopover(this);
 		oMessagePopover.openBy(oOpenBy || this.getView());
 	},
 

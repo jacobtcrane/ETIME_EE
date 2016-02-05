@@ -1,7 +1,10 @@
-sap.ui.define(['sap/ui/core/mvc/Controller',
-                'sap/ui/unified/DateRange',
-                'sap/ui/core/Fragment',
-                'com/broadspectrum/etime/ee/view/HeaderSummary.controller'],
+// stop ESLint complaining about global namspaces "com", "window", etc.
+/*global window*/
+
+sap.ui.define(["sap/ui/core/mvc/Controller",
+                "sap/ui/unified/DateRange",
+                "sap/ui/core/Fragment",
+                "com/broadspectrum/etime/ee/view/HeaderSummary.controller"],
 	function(Controller, DateRange, Fragment, HeaderSummary) {
 		"use strict";
 
@@ -16,8 +19,8 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 					pattern: "yyyy-MM-dd",
 					UTC: true
 				});
-				this.oEventBus = sap.ui.getCore().getEventBus();
-				this.oEventBus.subscribe('Master', 'WorkingWeekReceived', this.handleWorkingWeekReceived, this);
+				this.getEventBus().subscribe("Master", "WorkingWeekReceived", this.handleWorkingWeekReceived, this);
+				this.getEventBus().subscribe("HeaderSummary", "MinMaxDatesReceived", this.handleMinMaxDatesReceived, this);
 
 				this.oCalendar = this.getView().byId("calendar");
 				// this.oCalendarOld = this.getView().byId("calendar_old");
@@ -32,7 +35,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 
 				// var oView = this.getView();
 
-				// oView.bindElement("/headerSet"); 
+				// oView.bindElement("/headerSet");
 
 			},
 
@@ -49,6 +52,15 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 				}
 				// this.oSelectedDate = oEvent.getParameters().date; //new Date(oEvent.getParameters().date);
 				var oSelectedDate = this.oCalendar.getSelectedDates()[0].getStartDate();
+				if (oSelectedDate instanceof Date && this.oMinMaxDates && (
+					oSelectedDate < this.oMinMaxDates.startDate ||
+					oSelectedDate > this.oMinMaxDates.endDate
+				)) {
+					jQuery.sap.delayedCall(0, this, function() {
+    					sap.m.MessageToast.show("Selected date is outside the allowed timesheet min/max dates! Please select a different date.");
+					});
+					return false;
+				}
 				if (!this.oSelectedDate || (this.oSelectedDate && this.oSelectedDate.getTime() !== oSelectedDate.getTime())) {
 					// publish selected date if different from last
 					this.oSelectedDate = oSelectedDate;
@@ -58,7 +70,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 					//     return;
 					// }
 					// 			var selDateStr = this.oFormatYyyymmdd.format(this.oSelectedDate);
-					this.oEventBus.publish('HeaderSelection', 'headDateEvt', this.oSelectedDate);
+					this.getEventBus().publish("HeaderSelection", "headDateEvt", this.oSelectedDate);
 					// if the new request popover is open, close it upon selection of a different date
 					if (this._oPopover.isOpen()) {
 						this._oPopover.close();
@@ -84,18 +96,61 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 
 			handleWorkingWeekReceived: function(sChannel, sEvent, oData) {
 				if (oData && oData.oWeekstart instanceof Date && oData.oWeekend instanceof Date) {
-					// 	this.oCalendar.setStartDate(oWeekstart);    // for CalendarDateInterval
-					// mark working week on calendar
-					// this.oCalendar.removeAllSpecialDates();  // bug in Calendar! destroy aggregation ourselves...
-					this.oCalendar.removeAllAggregation("specialDates");
-					this.oCalendarLegend.removeAllItems();
-					this.oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+					this.oWorkingWeek = {
+						text: "Working week",
 						tooltip: "Working week: " + this.oFormatYyyymmdd.format(oData.oWeekstart) + " to " + this.oFormatYyyymmdd.format(oData.oWeekend),
-						startDate: new Date(oData.oWeekstart),
-						endDate: new Date(oData.oWeekend)
+						startDate: oData.oWeekstart,
+						endDate: oData.oWeekend,
+						// 		type: sap.ui.unified.CalendarDayType.Type06 // green    // type is currently ignored by CalendarLegendItem, so go in sequence
+						type: sap.ui.unified.CalendarDayType.Type01 // yellow
+					};
+					this.addSpecialDatesToCalendar();
+				}
+			},
+
+			handleMinMaxDatesReceived: function(sChannel, sEvent, oData) {
+				if (oData && oData.oMindate instanceof Date && oData.oMaxdate instanceof Date) {
+					this.oMinMaxDates = {
+						text: "Timesheet min/max",
+						tooltip: "Timesheet entry min/max: " + this.oFormatYyyymmdd.format(oData.oMindate) + " to " + this.oFormatYyyymmdd.format(oData.oMaxdate),
+						startDate: oData.oMindate,
+						endDate: oData.oMaxdate,
+						type: sap.ui.unified.CalendarDayType.Type02 // orange
+					};
+					this.addSpecialDatesToCalendar();
+				}
+			},
+
+			addSpecialDatesToCalendar: function() {
+				this.oCalendar.removeAllAggregation("specialDates");
+				this.oCalendarLegend.removeAllItems();
+				var oSpecialDate;
+				if (this.oWorkingWeek) {
+					// mark working week on calendar
+					oSpecialDate = this.oWorkingWeek;
+					this.oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						tooltip: oSpecialDate.tooltip,
+						startDate: oSpecialDate.startDate,
+						endDate: oSpecialDate.endDate,
+						type: oSpecialDate.type
 					}));
 					this.oCalendarLegend.addItem(new sap.ui.unified.CalendarLegendItem({
-						text: "Working week"
+						text: oSpecialDate.text,
+						type: oSpecialDate.type
+					}));
+				}
+				if (this.oMinMaxDates) {
+					// mark min/max dates on calendar
+					oSpecialDate = this.oMinMaxDates;
+					this.oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						tooltip: oSpecialDate.tooltip,
+						startDate: oSpecialDate.startDate,
+						endDate: oSpecialDate.endDate,
+						type: oSpecialDate.type
+					}));
+					this.oCalendarLegend.addItem(new sap.ui.unified.CalendarLegendItem({
+						text: oSpecialDate.text,
+						type: oSpecialDate.type
 					}));
 				}
 			},
@@ -103,7 +158,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 			// 		handleCalendarSelect: function(oEvent) {
 			// 			// var oCalendar = this.byId("calendar_old");
 			// 			 var oNewDate = this.oCalendar.getCurrentDate();
-			// 			 this.oEventBus.publish('HeaderSelection','headDateEvt',oNewDate);
+			// 			 this.getEventBus().publish('HeaderSelection','headDateEvt',oNewDate);
 			// 		},
 
 			// onBeforeRendering: function() {
@@ -121,7 +176,7 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 						}));
 					}
 					this.oSelectedDate = this.oCalendar.getSelectedDates()[0].getStartDate();
-					this.oEventBus.publish('HeaderSelection', 'headDateEvt', this.oSelectedDate);
+					this.getEventBus().publish("HeaderSelection", "headDateEvt", this.oSelectedDate);
 					this.didRenderFirstTime = true;
 					jQuery.sap.delayedCall(2000, this, function() {
 						sap.m.MessageToast.show("Select a date to view timesheets entered; select again to create a new attendance or allowance...", {
@@ -132,34 +187,38 @@ sap.ui.define(['sap/ui/core/mvc/Controller',
 				}
 			},
 
+			getEventBus: function() {
+				return sap.ui.getCore().getEventBus();
+			},
+
 			getRouter: function() {
 				return sap.ui.core.UIComponent.getRouterFor(this);
 			},
 			//Attendance
 			handleNewAttPress: function(oEvent) {
 				this._oPopover.close();
-				this.oEventBus.publish("Any", "BusyDialogNeeded", null);
+				this.getEventBus().publish("Any", "BusyDialogNeeded", null);
 				// the busy dialog animation does not start until the routing (and associated page loading)
 				// completes, so we throw this onto the call stack for deferred execution
-				setTimeout($.proxy(function() {
+				window.setTimeout($.proxy(function() {
 					this.getRouter().navTo("attendance-create", {
 						TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
 					});
-    				this.oEventBus.publish("Any", "BusyDialogDone", null);
+					this.getEventBus().publish("Any", "BusyDialogDone", null);
 				}, this), 0);
 			},
 
 			//Allowance
 			handleNewAllPress: function(oEvent) {
 				this._oPopover.close();
-				this.oEventBus.publish("Any", "BusyDialogNeeded", null);
+				this.getEventBus().publish("Any", "BusyDialogNeeded", null);
 				// the busy dialog animation does not start until the routing (and associated page loading)
 				// completes, so we throw this onto the call stack for deferred execution
-				setTimeout($.proxy(function() {
+				window.setTimeout($.proxy(function() {
 					this.getRouter().navTo("allowance-create", {
 						TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
 					});
-    				this.oEventBus.publish("Any", "BusyDialogDone", null);
+					this.getEventBus().publish("Any", "BusyDialogDone", null);
 				}, this), 0);
 
 			}
