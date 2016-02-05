@@ -269,6 +269,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		});
 	},
 
+	formatDateForDisplay: function(oBegda) {
+        return oBegda ? com.broadspectrum.etime.ee.utils.Conversions.dateFormatterBasicDateOnly.format(new Date(oBegda)) : "";
+	},
+	
 	formatEntityDates: function(oDetailEntity) {
 		var didChangeDates = false;
 		if (oDetailEntity.Beguz && oDetailEntity.Beguz.ms) {

@@ -69,11 +69,11 @@ sap.ui.define([
 					var oHeader;
 					var oData = oEvent.getParameter("data");
 					if (oData && oData.results && oData.results.length) {
-					    // oData contains an array of results
+                        // oData contains an array of results
 						oHeader = oData.results[0];
 					}
 					if (oData && oData.Mindate || oData.Maxdate) {
-					    // oData contains a single result
+                        // oData contains a single result
 						oHeader = oData;
 					}
 					if (oHeader && oHeader.Mindate && oHeader.Maxdate) {

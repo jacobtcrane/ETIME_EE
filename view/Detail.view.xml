@@ -4,6 +4,7 @@
 		<content>
 			<ObjectHeader id="objectHeader" number="{Durationtxt}" numberUnit="" title="{Atttxt}">
 				<attributes>
+					<ObjectAttribute id="objectHeaderDate" text="{path:'Begda', formatter:'.formatDateForDisplay'}"/>
 					<ObjectAttribute id="objectHeaderAttr" text="{Timetxt}"/>
 				</attributes>
 				<firstStatus>
