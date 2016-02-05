@@ -15,7 +15,7 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 		name : "My Timesheets App",
 		version : "1.0",
 		handleValidation  : true,
-		includes : [],
+		includes: ['css/style.css'],
 		dependencies : {
 			libs : ["sap.m", "sap.ui.layout"],
 			components : []
