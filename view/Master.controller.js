@@ -12,9 +12,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
 		var oEventBus = this.getEventBus();
 		oEventBus.subscribe("Master2", "NotFound", this.onNotFound, this);
-		oEventBus.subscribe('HeaderSelection', 'headDateEvt', this.onDateSelected, this);
-		oEventBus.subscribe('Any', 'BusyDialogNeeded', this.onBusyDialogNeeded, this);
-		oEventBus.subscribe('Any', 'BusyDialogDone', this.onBusyDialogDone, this);
+		oEventBus.subscribe("HeaderSelection", "headDateEvt", this.onDateSelected, this);
+		oEventBus.subscribe("Any", "BusyDialogNeeded", this.onBusyDialogNeeded, this);
+		oEventBus.subscribe("Any", "BusyDialogDone", this.onBusyDialogDone, this);
 		// oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
 		oEventBus.subscribe("Detail", "Changed", this.onDetailChanged, this);
 	},
@@ -33,7 +33,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 				// load the welcome page on non-phone devices (splitapp behaves like a
 				// single nav controller on phones, so the master list has to be shown first)
 				// note that this has to happen on the RoutePatternMatched event as this
-				// only traps a route actually being matched. 
+				// only traps a route actually being matched.
 				// intermediate RouteMatched events (such as "home" being loaded as a parent
 				// route of "detail", are not trapped by this event)
 				this.getRouter().navTo("welcome");
@@ -141,65 +141,64 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
 	filterList: function(oFilter) {
 		var oBinding = this.getView().byId("master1List").getBinding("items");
-        // publish working week dates upon data received
-        // if (!this.didAttachToFilterListDataReceived) {
-        //     this.didAttachToFilterListDataReceived = true;
-        //     oBinding.attachDataReceived($.proxy(function(oEvent) {
-        //         var oData = oEvent.getParameter("data");
-        //         if (oData && oData.results && oData.results.length) {
-        //             var oOverview = oData.results[0];
-        //             if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
-        //                 if (!this.oLastWeekstart || !this.oLastWeekend) {
-        //                     this.oLastWeekstart = new Date();
-        //                     this.oLastWeekend = new Date();
-        //                 }
-        //                 if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
-        //                     this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
-        //                     this.oLastWeekstart = oOverview.Weekstart;
-        //                     this.oLastWeekend = oOverview.Weekend;
-        //     				this.getEventBus().publish('Master', 'WorkingWeekReceived', {
-        //     				    oWeekstart: this.oLastWeekstart,
-        //     				    oWeekend: this.oLastWeekend
-        //     				});
-        //                 }
-        //             }
-        //         }
-        //     }, this));
-        // }
-        if (!this.didAttachToFilterListDataReceived) {
-            this.didAttachToFilterListDataReceived = true;
-            oBinding.attachDataReceived($.proxy(function(oEvent) {
-                var oData = oEvent.getParameter("data");
-                if (oData && oData.results && oData.results.length) {
-                    var oOverview = oData.results[0];
-                    if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
-                        if (!this.oLastWeekstart || !this.oLastWeekend) {
-                            this.oLastWeekstart = new Date();
-                            this.oLastWeekend = new Date();
-                        }
-                        if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
-                            this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
-                            this.oLastWeekstart = oOverview.Weekstart;
-                            this.oLastWeekend = oOverview.Weekend;
-            				this.getEventBus().publish('Master', 'WorkingWeekReceived', {
-            				    oWeekstart: this.oLastWeekstart,
-            				    oWeekend: this.oLastWeekend
-            				});
-                        }
-                    }
-                }
-            }, this));
-        }
-        else{
-        //This needs to publish the WorkingWeekReceived event with the start and end dates.  Currently it only gets sent
-        //if there is already time in that week
-        //   var lView = this.getView();
-        //   var lList = lView.byId("master1List");
-        //   var lWstart = lList.getProperty("Weekstart");
-        //   var lWend = lList.getProperty("Weekend");          
-        //   var lWstart = this.getView().byId("master1List").getProperty("Weekstart");
-        //   var lWend = this.getView().byId("master1List").getProperty("Weekstart");
-        }
+		// publish working week dates upon data received
+		// if (!this.didAttachToFilterListDataReceived) {
+		//     this.didAttachToFilterListDataReceived = true;
+		//     oBinding.attachDataReceived($.proxy(function(oEvent) {
+		//         var oData = oEvent.getParameter("data");
+		//         if (oData && oData.results && oData.results.length) {
+		//             var oOverview = oData.results[0];
+		//             if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
+		//                 if (!this.oLastWeekstart || !this.oLastWeekend) {
+		//                     this.oLastWeekstart = new Date();
+		//                     this.oLastWeekend = new Date();
+		//                 }
+		//                 if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
+		//                     this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
+		//                     this.oLastWeekstart = oOverview.Weekstart;
+		//                     this.oLastWeekend = oOverview.Weekend;
+		//     				this.getEventBus().publish('Master', 'WorkingWeekReceived', {
+		//     				    oWeekstart: this.oLastWeekstart,
+		//     				    oWeekend: this.oLastWeekend
+		//     				});
+		//                 }
+		//             }
+		//         }
+		//     }, this));
+		// }
+		if (!this.didAttachToFilterListDataReceived) {
+			this.didAttachToFilterListDataReceived = true;
+			oBinding.attachDataReceived($.proxy(function(oEvent) {
+				var oData = oEvent.getParameter("data");
+				if (oData && oData.results && oData.results.length) {
+					var oOverview = oData.results[0];
+					if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
+						if (!this.oLastWeekstart || !this.oLastWeekend) {
+							this.oLastWeekstart = new Date();
+							this.oLastWeekend = new Date();
+						}
+						if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
+							this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
+							this.oLastWeekstart = oOverview.Weekstart;
+							this.oLastWeekend = oOverview.Weekend;
+							this.getEventBus().publish("Master", "WorkingWeekReceived", {
+								oWeekstart: this.oLastWeekstart,
+								oWeekend: this.oLastWeekend
+							});
+						}
+					}
+				}
+			}, this));
+		} else {
+			//This needs to publish the WorkingWeekReceived event with the start and end dates.  Currently it only gets sent
+			//if there is already time in that week
+			//   var lView = this.getView();
+			//   var lList = lView.byId("master1List");
+			//   var lWstart = lList.getProperty("Weekstart");
+			//   var lWend = lList.getProperty("Weekend");
+			//   var lWstart = this.getView().byId("master1List").getProperty("Weekstart");
+			//   var lWend = this.getView().byId("master1List").getProperty("Weekstart");
+		}
 		if (!oFilter && this.oLastListFilter) {
 			oFilter = this.oLastListFilter;
 		}
