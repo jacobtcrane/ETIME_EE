@@ -142,6 +142,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 					properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
 				});
 				this.getView().setBindingContext(this.oNewDetailContext);
+				// show initial time difference
+				this.displayTimeDif();
 			}, this)).catch(function(error) {
 				jQuery.sap.log.error("Error loading model metadata: " + error);
 			});
@@ -189,6 +191,12 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	prepareNewDetailEntity: function(oSelectedDate, isAllowance) {
+		// var oNow = new Date();
+		// oNow.setMinutes(0, 0, 0);
+		// var oNextHour = new Date(oNow);
+		// oNextHour.setHours(oNow.getHours() + 1);
+		// var sBeguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oNow, true);
+		// var sEnduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oNextHour, true);
 		return {
 			Acttyp: "",
 			Anzhl: "0.00",
@@ -196,10 +204,12 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			Awart: "",
 			Awarttxt: "",
 			Begda: oSelectedDate,
-			Beguz: "PT00H00M00S",
+			// 			Beguz: sBeguz, //"PT00H00M00S",
+			Beguz: "PT09H00M00S",
 			Costtxt: "",
 			Durationtxt: "",
-			Enduz: "PT00H00M00S",
+			// 			Enduz: sEnduz, //"PT00H00M00S",
+			Enduz: "PT17H00M00S",
 			Enote: "",
 			Hda: false,
 			Iaufnr: "",
@@ -305,41 +315,39 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-	displayTimeDif: function(begda, endda) {
+	displayTimeDif: function() {
 		var Durationtxt = "";
 		var Timetxt = "";
+		// the DateTime control will (in Time mode) internally set the date part to now in the local timezone
+		// when changing the time whilst the date part set from raw format (PT00H00M00S) is 1970 in AEST
+		// this results in expected differences when subtracting one date from the other due to daylight savings
+		// and other timezone issues
+		// as a result we construct new dates from just the time portion before comparing,
+		// instead of using the DateTime control's getDateValue() method
+		var sBeguz = this.byId("beguz").getValue();
+		var sEnduz = this.byId("enduz").getValue();
+		var begda = com.broadspectrum.etime.ee.utils.Conversions.timeFormatter.parse(sBeguz);
+		var endda = com.broadspectrum.etime.ee.utils.Conversions.timeFormatter.parse(sEnduz);
 		if (endda instanceof Date || begda instanceof Date) {
-			if (endda instanceof Date) {
-				begda.setFullYear(1970);
-				begda.setMonth(0);
-				begda.setDate(1);
+			if (begda instanceof Date) {
+				begda.setDate(3);
 			}
 			if (endda instanceof Date) {
-				endda.setFullYear(1970);
-				endda.setMonth(0);
-				endda.setDate(1);
+				endda.setDate(3);
 			}
 			var oTimeFormatter = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: "HH':'mm"
 			});
-			var oTimeFormatterUTC = sap.ui.core.format.DateFormat.getDateInstance({
-				pattern: "H':'mm",
-				UTC: true
-			});
-			Timetxt = (begda instanceof Date ? oTimeFormatter.format(begda) : "?") + "-" + (endda instanceof Date ? oTimeFormatter.format(endda) :
-				"?");
+			Timetxt = (begda instanceof Date ? oTimeFormatter.format(begda) : "?") +
+				"-" + (endda instanceof Date ? oTimeFormatter.format(endda) : "?");
 			if (endda instanceof Date &&
 				begda instanceof Date) {
-				if (endda.getTime() > begda.getTime()) {
-					var diffTime = endda.getTime() - begda.getTime();
-					var diffDate = new Date();
-					diffDate.setFullYear(1970);
-					diffDate.setMonth(0);
-					diffDate.setDate(1);
-					diffDate.setTime(diffTime);
-					Durationtxt = oTimeFormatterUTC.format(diffDate) + " Hours";
+				if (endda > begda) {
+					Durationtxt = Number((endda - begda) / 1000 / 60 / 60).toFixed(2);
 				} else {
-					Timetxt = "";
+					// if start later than end time, interpret it as being the day before
+					begda.setDate(2);
+					Durationtxt = Number((endda - begda) / 1000 / 60 / 60).toFixed(2);
 				}
 			}
 		}
@@ -349,11 +357,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	onBeguzEntered: function(oEvent) {
-		// 		var oBeguz = oEvent.getParameters().value;
-		// 		var oEnduz = this.getView().byId("enduz").getValue();
-		var oBeguz = oEvent.getParameters().dateValue;
-		var oEnduz = this.getView().byId("enduz").getDateValue();
-		this.displayTimeDif(oBeguz, oEnduz);
+		this.displayTimeDif();
 		if (oEvent.getParameters().dateValue) {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
 		} else {
@@ -362,13 +366,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	onEnduzEntered: function(oEvent) {
-		var oEnduz = oEvent.getParameters().dateValue;
-		var oBeguz = this.getView().byId("beguz").getDateValue();
-		this.displayTimeDif(oBeguz, oEnduz);
+		this.displayTimeDif();
 		if (oEvent.getParameters().dateValue) {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
-			//Remove check to accomodate time extending after midnight
-			// 			this.checkEndTimeAfterStart();
+			// Remove check to accomodate time extending after midnight
+			// this.checkEndTimeAfterStart();
 		} else {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Warning);
 		}
@@ -376,8 +378,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	checkEndTimeAfterStart: function() {
 		"use strict";
-		if (this.byId("beguz").getDateValue() && this.byId("enduz").getDateValue() &&
-			this.byId("beguz").getDateValue() > this.byId("enduz").getDateValue()
+		var sBeguz = this.byId("beguz").getValue();
+		var sEnduz = this.byId("enduz").getValue();
+		var begda = com.broadspectrum.etime.ee.utils.Conversions.timeFormatter.parse(sBeguz);
+		var endda = com.broadspectrum.etime.ee.utils.Conversions.timeFormatter.parse(sEnduz);
+
+		if (begda && endda &&
+			begda > endda
 		) {
 			this.byId("enduz").setValueState(sap.ui.core.ValueState.Error);
 			this.byId("enduz").setValueStateText("End time must be later than start time!");
@@ -1223,11 +1230,12 @@ Search Helps - END
 			isValidated = false;
 		}, this);
 		// check end time is after start time
-		if (oDetailEntity.isAttendance) {
-			if (!this.checkEndTimeAfterStart()) {
-				isValidated = false;
-			}
-		}
+		// Remove check to accomodate time extending after midnight
+		// 		if (oDetailEntity.isAttendance) {
+		// 			if (!this.checkEndTimeAfterStart()) {
+		// 				isValidated = false;
+		// 			}
+		// 		}
 		// check a cost assignment has been provided
 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
 		var hasNetwork = this.byId("netInput").getValue() ? true : false;

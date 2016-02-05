@@ -29,7 +29,7 @@
 					<!--		<l:content>-->
 								<Label id="lblStartTime" text="Start Time" required="true" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
 								<DateTimeInput id="beguz" placeholder="Enter Time..." visible="{path:'isAllowance',formatter:'.isAttendance'}" 
-									type="Time" value="{Beguz}" valueFormat="PTHH'H'mm'M'ss'S'" 
+									type="Time" value="{Beguz}" valueFormat="PTHH'H'mm'M'ss'S'" displayFormat="HH:mm"
 									change="onBeguzEntered" class="sapUiSmallMarginBottom" width="8em"/>
 						<!--	</l:content>-->
 						<!--</l:VerticalLayout>-->
@@ -37,7 +37,7 @@
 						<!--	<l:content>-->
 								<Label id="lblEndTime" text="End Time" required="true" visible="{path:'isAllowance',formatter:'.isAttendance'}" />
 								<DateTimeInput id="enduz" placeholder="Enter Time..." visible="{path:'isAllowance',formatter:'.isAttendance'}" 
-									type="Time" value="{Enduz}" valueFormat="PTHH'H'mm'M'ss'S'" 
+									type="Time" value="{Enduz}" valueFormat="PTHH'H'mm'M'ss'S'" displayFormat="HH:mm"
 									change="onEnduzEntered" class="sapUiSmallMarginBottom" width="8em"/>
 								<!--{path:'Enduz',formatter:'com.broadspectrum.etime.ee.utils.Conversions.time'}-->
 					<!--		</l:content>-->

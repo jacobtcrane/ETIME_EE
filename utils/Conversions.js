@@ -1,3 +1,6 @@
+// stop ESLint complaining about global namspaces "com", "window", etc.
+/*global com*/
+
 jQuery.sap.require("sap.ui.core.format.DateFormat");
 jQuery.sap.declare("com.broadspectrum.etime.ee.utils.Conversions");
 com.broadspectrum.etime.ee.utils.Conversions = {
