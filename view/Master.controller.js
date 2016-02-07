@@ -123,8 +123,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	// },
 
 	getFilterForDate: function(oDate) {
-		var startDate = new Date(oDate);
-		if (!startDate) {
+		var startDate = oDate instanceof Date ? oDate : new Date(oDate);
+		if (!startDate || !(startDate instanceof Date)) {
 			return null;
 		}
 		// var startDateStr = this.oFormatYyyymmdd.format(startDate)  + "T22:00:00";

@@ -16,8 +16,8 @@ sap.ui.define([
 			// 			oDivider.setHeight(sap.ui.commons.HorizontalDividerHeight.Large);
 			// 			oDivider.setType(sap.ui.commons.HorizontalDividerType.Area);
 
-			this.oEventBus = sap.ui.getCore().getEventBus();
-			this.oEventBus.subscribe("HeaderSelection", "headDateEvt", this.onDateSelected, this);
+			this.getEventBus().subscribe("HeaderSelection", "headDateEvt", this.onDateSelected, this);
+			this.getEventBus().subscribe("Detail", "Changed", this.onDetailChanged, this);
 
 			var rejectedHoursTV = this.byId("__input3");
 			rejectedHoursTV.setSemanticColor(sap.ui.commons.TextViewColor.Critical);
@@ -41,10 +41,22 @@ sap.ui.define([
 			});
 		},
 
-		onDateSelected: function(sChannel, sEvent, oData) {
-			var startDate = null;
+		onDetailChanged: function(sChannel, sEvent, oData) {
+			var oModel = sap.ui.getCore().getModel();
+			if (oData && oData.sEntityPath) {
+				var oDetailEntity = oModel.getProperty(oData.sEntityPath);
+				if (oDetailEntity && oDetailEntity.Begda) {
+					this.onDateSelected("HeaderSelection", "headDateEvt", oDetailEntity.Begda);
+				}
+			}
+		},
+
+		onDateSelected: function(sChannel, sEvent, oDate) {
+			var startDate = oDate instanceof Date ? oDate : new Date(oDate);
+			if (!startDate || !(startDate instanceof Date)) {
+				return null;
+			}
 			var sEntityPath = null;
-			startDate = new Date(oData);
 			var startDateStr = this.oFormatYyyymmdd.format(startDate);
 
 			sEntityPath = "/headerSet(Weekstart=datetime'" + startDateStr + "T22%3A00%3A00',Weekend=datetime'" + startDateStr +
@@ -69,11 +81,11 @@ sap.ui.define([
 					var oHeader;
 					var oData = oEvent.getParameter("data");
 					if (oData && oData.results && oData.results.length) {
-                        // oData contains an array of results
+						// oData contains an array of results
 						oHeader = oData.results[0];
 					}
 					if (oData && oData.Mindate || oData.Maxdate) {
-                        // oData contains a single result
+						// oData contains a single result
 						oHeader = oData;
 					}
 					if (oHeader && oHeader.Mindate && oHeader.Maxdate) {
