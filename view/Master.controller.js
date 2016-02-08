@@ -17,6 +17,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		oEventBus.subscribe("Any", "BusyDialogDone", this.onBusyDialogDone, this);
 		// oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
 		oEventBus.subscribe("Detail", "Changed", this.onDetailChanged, this);
+		oEventBus.subscribe("Detail", "EditingContextChanged", this.onEditingContextChanged, this);
+		oEventBus.subscribe("Detail", "EditingDone", this.onDetailEditingDone, this);
 	},
 
 	onRouteMatched: function(oEvent) {
@@ -51,7 +53,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		// 	this.bindView(sEntityPath);
 		// }
 		// we can't filter on dates if metadata is not loaded yet
-		var oModel = sap.ui.getCore().getModel();
+		var oModel = this.getModel();
 		if (!oModel.getServiceMetadata()) {
 			oModel.attachEventOnce("metadataLoaded", function() {
 				this.filterList(this.getFilterForDate(oData));
@@ -62,7 +64,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	onDetailChanged: function(sChannel, sEvent, oData) {
-		var oModel = sap.ui.getCore().getModel();
+		var oModel = this.getModel();
 		if (oData && oData.sEntityPath) {
 			var property = oModel.getProperty(oData.sEntityPath);
 			if (property && property.Begda) {
@@ -229,13 +231,66 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	},
 
 	showDetail: function(oItem) {
-		this.getRouter().navTo("timesheets", {
-			OverviewEntity: oItem.getBindingContext().getPath().substr(1) // no slash in router param
-		});
+		this.checkPendingChangesBeforeNav($.proxy(function() {
+			this.getRouter().navTo("timesheets", {
+				OverviewEntity: oItem.getBindingContext().getPath().substr(1) // no slash in router param
+			});
+		}, this));
+	},
+
+	hasPendingChanges: function() {
+		var oModel = this.getModel();
+		if (oModel.hasPendingChanges() || // this seems not to cover created entries, only changes to existing entries!?
+			(this.sEditingContextPath && oModel.mChangeHandles[this.sEditingContextPath.substr(1)])) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+
+	checkPendingChangesBeforeNav: function(fnNav) {
+		var oModel = this.getModel();
+		if (this.hasPendingChanges()) {
+			this.getEventBus().publish("Any", "BusyDialogDone", null);
+			sap.m.MessageBox.show("Exit without saving changes?", {
+				icon: sap.m.MessageBox.Icon.WARNING,
+				title: "Unsaved Changes",
+				actions: [sap.m.MessageBox.Action.CANCEL, sap.m.MessageBox.Action.OK],
+				onClose: $.proxy(function(oAction) {
+					if (oAction === sap.m.MessageBox.Action.OK && fnNav) {
+						oModel.resetChanges();
+						this.cleanupModelChangeHandles();
+						fnNav();
+					}
+				}, this)
+			});
+		} else if (fnNav) {
+			fnNav();
+		}
+	},
+
+	cleanupModelChangeHandles: function() {
+		var oModel = this.getModel();
+		if (this.sEditingContextPath && oModel.mChangeHandles[this.sEditingContextPath.substr(1)]) {
+			//ODataModel has a bug in resetChanges() which results in mChangeHandles not getting cleaned up for created entities
+			delete oModel.mChangeHandles[this.sEditingContextPath.substr(1)];
+		}
+	},
+
+	onEditingContextChanged: function(sChannel, sEvent, oData) {
+		this.sEditingContextPath = oData.editingContextPath || null;
+	},
+
+	onDetailEditingDone: function(sChannel, sEvent, oData) {
+		this.sEditingContextPath = null;
 	},
 
 	getEventBus: function() {
 		return sap.ui.getCore().getEventBus();
+	},
+
+	getModel: function() {
+		return sap.ui.getCore().getModel();
 	},
 
 	getRouter: function() {

@@ -69,10 +69,16 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		// jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
 
 		// When navigating in the Detail page, update the binding context
+		if (oParameters.name === "home") {
+            this.cleanup();
+        }
+
 		if (oParameters.name === "attendance" ||
 			oParameters.name === "allowance") {
 			isAllowance = oParameters.name === "allowance" ? true : false;
+
 			// extract routing parameters
+            this.oRoutingParams = {};
 			if (oParameters.arguments.OverviewEntity &&
 				oParameters.arguments.DetailEntity) {
 				this.oRoutingParams.OverviewEntity = oParameters.arguments.OverviewEntity;
@@ -118,6 +124,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.isNew = true;
 
 			// extract routing parameters
+            this.oRoutingParams = {};
 			if (oParameters.arguments.TimesheetDate) {
 				this.oRoutingParams.TimesheetDate = oParameters.arguments.TimesheetDate;
 			} else {
@@ -140,6 +147,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				this.oNewDetailContext = oModel.createEntry("detailSet", {
 					batchGroupId: "detailChanges",
 					properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
+				});
+				this.getEventBus().publish("Detail", "EditingContextChanged", {
+					editingContextPath: this.oNewDetailContext.getPath()
 				});
 				this.getView().setBindingContext(this.oNewDetailContext);
 				// show initial time difference
@@ -270,9 +280,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	formatDateForDisplay: function(oBegda) {
-        return oBegda ? com.broadspectrum.etime.ee.utils.Conversions.dateFormatterBasicDateOnly.format(new Date(oBegda)) : "";
+		return oBegda ? com.broadspectrum.etime.ee.utils.Conversions.dateFormatterBasicDateOnly.format(new Date(oBegda)) : "";
 	},
-	
+
 	formatEntityDates: function(oDetailEntity) {
 		var didChangeDates = false;
 		if (oDetailEntity.Beguz && oDetailEntity.Beguz.ms) {
@@ -456,7 +466,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	onNavBack: function() {
 		var oModel = this.getModel();
-		if (this.getModel().hasPendingChanges()) {
+		if (this.hasPendingChanges()) {
+			this.getEventBus().publish("Any", "BusyDialogDone", null);
 			sap.m.MessageBox.show("Exit without saving changes?", {
 				icon: sap.m.MessageBox.Icon.WARNING,
 				title: "Unsaved Changes",
@@ -469,6 +480,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 						}
 						this.cleanup();
 						oModel.resetChanges();
+						this.cleanupModelChangeHandles();
 						this.navHistoryBack();
 					}
 				}, this)
@@ -480,7 +492,26 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	navHistoryBack: function() {
+		this.getEventBus().publish("Detail", "EditingDone", {});
 		window.history.go(-1);
+	},
+
+	hasPendingChanges: function() {
+		var oModel = this.getModel();
+		if (oModel.hasPendingChanges() || // this seems not to cover created entries, only changes to existing entries!?
+			(this.getContextPath() && oModel.mChangeHandles[this.getContextPath().substr(1)])) {
+			return true;
+		} else {
+		    return false;
+		}
+	},
+
+	cleanupModelChangeHandles: function() {
+		var oModel = this.getModel();
+		if (this.getContextPath() && oModel.mChangeHandles[this.getContextPath().substr(1)]) {
+			//ODataModel has a bug in resetChanges() which results in mChangeHandles not getting cleaned up for created entities
+			delete oModel.mChangeHandles[this.getContextPath().substr(1)];
+		}
 	},
 
 	// 	onDetailSelect: function(oEvent) {
@@ -1325,6 +1356,7 @@ Search Helps - END
 					// 			var model = this.getModel();
 					// 			model.clearBatch();
 					oModel.resetChanges();
+					this.cleanupModelChangeHandles();
 					this.navHistoryBack();
 					sap.m.MessageToast.show(msg);
 				}
@@ -1363,6 +1395,7 @@ Search Helps - END
 					this.fireDetailChanged(this.getContextPath());
 					this.cleanup();
 					oModel.resetChanges();
+					this.cleanupModelChangeHandles();
 					this.navHistoryBack();
 					sap.m.MessageToast.show(msg);
 				}

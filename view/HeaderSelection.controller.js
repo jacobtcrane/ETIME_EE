@@ -21,6 +21,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				});
 				this.getEventBus().subscribe("Master", "WorkingWeekReceived", this.handleWorkingWeekReceived, this);
 				this.getEventBus().subscribe("HeaderSummary", "MinMaxDatesReceived", this.handleMinMaxDatesReceived, this);
+				this.getEventBus().subscribe("Detail", "EditingContextChanged", this.onEditingContextChanged, this);
+				this.getEventBus().subscribe("Detail", "EditingDone", this.onDetailEditingDone, this);
 
 				this.oCalendar = this.getView().byId("calendar");
 				// this.oCalendarOld = this.getView().byId("calendar_old");
@@ -57,7 +59,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 					oSelectedDate > this.oMinMaxDates.endDate
 				)) {
 					jQuery.sap.delayedCall(0, this, function() {
-    					sap.m.MessageToast.show("Selected date is outside the allowed timesheet min/max dates! Please select a different date.");
+						sap.m.MessageToast.show("Selected date is outside the allowed timesheet min/max dates! Please select a different date.");
 					});
 					return false;
 				}
@@ -187,6 +189,18 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				}
 			},
 
+			onEditingContextChanged: function(sChannel, sEvent, oData) {
+				this.sEditingContextPath = oData.editingContextPath || null;
+			},
+
+			onDetailEditingDone: function(sChannel, sEvent, oData) {
+				this.sEditingContextPath = null;
+			},
+
+			getModel: function() {
+				return sap.ui.getCore().getModel();
+			},
+
 			getEventBus: function() {
 				return sap.ui.getCore().getEventBus();
 			},
@@ -194,32 +208,76 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			getRouter: function() {
 				return sap.ui.core.UIComponent.getRouterFor(this);
 			},
+
+			hasPendingChanges: function() {
+				var oModel = this.getModel();
+				if (oModel.hasPendingChanges() || // this seems not to cover created entries, only changes to existing entries!?
+					(this.sEditingContextPath && oModel.mChangeHandles[this.sEditingContextPath.substr(1)])) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+
+			checkPendingChangesBeforeNav: function(fnNav) {
+				var oModel = this.getModel();
+				if (this.hasPendingChanges()) {
+					this.getEventBus().publish("Any", "BusyDialogDone", null);
+					sap.m.MessageBox.show("Exit without saving changes?", {
+						icon: sap.m.MessageBox.Icon.WARNING,
+						title: "Unsaved Changes",
+						actions: [sap.m.MessageBox.Action.CANCEL, sap.m.MessageBox.Action.OK],
+						onClose: $.proxy(function(oAction) {
+							if (oAction === sap.m.MessageBox.Action.OK && fnNav) {
+								oModel.resetChanges();
+								this.cleanupModelChangeHandles();
+								fnNav();
+							}
+						}, this)
+					});
+				} else if (fnNav) {
+					fnNav();
+				}
+			},
+
+			cleanupModelChangeHandles: function() {
+				var oModel = this.getModel();
+				if (this.sEditingContextPath && oModel.mChangeHandles[this.sEditingContextPath.substr(1)]) {
+					//ODataModel has a bug in resetChanges() which results in mChangeHandles not getting cleaned up for created entities
+					delete oModel.mChangeHandles[this.sEditingContextPath.substr(1)];
+				}
+			},
+
 			//Attendance
 			handleNewAttPress: function(oEvent) {
 				this._oPopover.close();
-				this.getEventBus().publish("Any", "BusyDialogNeeded", null);
-				// the busy dialog animation does not start until the routing (and associated page loading)
-				// completes, so we throw this onto the call stack for deferred execution
-				window.setTimeout($.proxy(function() {
-					this.getRouter().navTo("attendance-create", {
-						TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
-					});
-					this.getEventBus().publish("Any", "BusyDialogDone", null);
-				}, this), 0);
+				this.checkPendingChangesBeforeNav($.proxy(function() {
+					this.getEventBus().publish("Any", "BusyDialogNeeded", null);
+					// the busy dialog animation does not start until the routing (and associated page loading)
+					// completes, so we throw this onto the call stack for deferred execution
+					window.setTimeout($.proxy(function() {
+						this.getRouter().navTo("attendance-create", {
+							TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
+						});
+						this.getEventBus().publish("Any", "BusyDialogDone", null);
+					}, this), 0);
+				}, this));
 			},
 
 			//Allowance
 			handleNewAllPress: function(oEvent) {
 				this._oPopover.close();
-				this.getEventBus().publish("Any", "BusyDialogNeeded", null);
-				// the busy dialog animation does not start until the routing (and associated page loading)
-				// completes, so we throw this onto the call stack for deferred execution
-				window.setTimeout($.proxy(function() {
-					this.getRouter().navTo("allowance-create", {
-						TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
-					});
-					this.getEventBus().publish("Any", "BusyDialogDone", null);
-				}, this), 0);
+				this.checkPendingChangesBeforeNav($.proxy(function() {
+					this.getEventBus().publish("Any", "BusyDialogNeeded", null);
+					// the busy dialog animation does not start until the routing (and associated page loading)
+					// completes, so we throw this onto the call stack for deferred execution
+					window.setTimeout($.proxy(function() {
+						this.getRouter().navTo("allowance-create", {
+							TimesheetDate: this.oFormatYyyymmdd.format(this.oSelectedDate)
+						});
+						this.getEventBus().publish("Any", "BusyDialogDone", null);
+					}, this), 0);
+				}, this));
 
 			}
 		});
