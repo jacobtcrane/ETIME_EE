@@ -84,7 +84,8 @@ sap.ui.define([
 						// oData contains an array of results
 						oHeader = oData.results[0];
 					}
-					if (oData && oData.Mindate || oData.Maxdate) {
+					if (oData &&
+						(oData.Mindate || oData.Maxdate || oHeader.Weekstart || oHeader.Weekend)) {
 						// oData contains a single result
 						oHeader = oData;
 					}
@@ -100,6 +101,21 @@ sap.ui.define([
 							this.getEventBus().publish("HeaderSummary", "MinMaxDatesReceived", {
 								oMindate: this.oLastMindate,
 								oMaxdate: this.oLastMaxdate
+							});
+						}
+					}
+					if (oHeader && oHeader.Weekstart && oHeader.Weekend) {
+						if (!this.oLastWeekstart || !this.oLastWeekend) {
+							this.oLastWeekstart = new Date();
+							this.oLastWeekend = new Date();
+						}
+						if (this.oLastWeekstart.getTime() !== oHeader.Weekstart.getTime() ||
+							this.oLastWeekend.getTime() !== oHeader.Weekend.getTime()) {
+							this.oLastWeekstart = oHeader.Weekstart;
+							this.oLastWeekend = oHeader.Weekend;
+							this.getEventBus().publish("HeaderSummary", "WorkingWeekReceived", {
+								oWeekstart: this.oLastWeekstart,
+								oWeekend: this.oLastWeekend
 							});
 						}
 					}

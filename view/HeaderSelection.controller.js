@@ -19,7 +19,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 					pattern: "yyyy-MM-dd",
 					UTC: true
 				});
-				this.getEventBus().subscribe("Master", "WorkingWeekReceived", this.handleWorkingWeekReceived, this);
+				this.getEventBus().subscribe("HeaderSummary", "WorkingWeekReceived", this.handleWorkingWeekReceived, this);
 				this.getEventBus().subscribe("HeaderSummary", "MinMaxDatesReceived", this.handleMinMaxDatesReceived, this);
 				this.getEventBus().subscribe("Detail", "EditingContextChanged", this.onEditingContextChanged, this);
 				this.getEventBus().subscribe("Detail", "EditingDone", this.onDetailEditingDone, this);

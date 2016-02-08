@@ -1,3 +1,6 @@
+// stop ESLint complaining about global namspaces "com", "window", etc.
+/*global com*/
+
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
@@ -125,16 +128,18 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	// },
 
 	getFilterForDate: function(oDate) {
-		var startDate = oDate instanceof Date ? oDate : new Date(oDate);
-		if (!startDate || !(startDate instanceof Date)) {
+		var oStartDate = oDate instanceof Date ? oDate : new Date(oDate);
+		if (!oStartDate || !(oStartDate instanceof Date)) {
 			return null;
 		}
-		// var startDateStr = this.oFormatYyyymmdd.format(startDate)  + "T22:00:00";
+		// convert to non-UTC date-only string and then instantiate a UTC date,
+		// so the internal filter formatting does not convert our (locale-specific)
+		// date to UTC and potentiall change the date (e.g. 2016-02-01T00:00:00 UTC+11 may become 2016-01-31T13:00:00)
+		var sStartDate = com.broadspectrum.etime.ee.utils.Conversions.dateFormatter.format(oStartDate);
+		oStartDate = com.broadspectrum.etime.ee.utils.Conversions.dateFormatterUTC.parse(sStartDate);
 		var aFilters = [];
-		// aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, "datetime'" + startDateStr + "'"));
-		// aFilters.push(new sap.ui.model.Filter("Weekend",   sap.ui.model.FilterOperator.GE, "datetime'" + startDateStr + "'"));
-		aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, startDate));
-		aFilters.push(new sap.ui.model.Filter("Weekend", sap.ui.model.FilterOperator.GE, startDate));
+		aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, oStartDate));
+		aFilters.push(new sap.ui.model.Filter("Weekend", sap.ui.model.FilterOperator.GE, oStartDate));
 		return new sap.ui.model.Filter({
 			filters: aFilters,
 			and: true
@@ -143,64 +148,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
 	filterList: function(oFilter) {
 		var oBinding = this.getView().byId("master1List").getBinding("items");
-		// publish working week dates upon data received
-		// if (!this.didAttachToFilterListDataReceived) {
-		//     this.didAttachToFilterListDataReceived = true;
-		//     oBinding.attachDataReceived($.proxy(function(oEvent) {
-		//         var oData = oEvent.getParameter("data");
-		//         if (oData && oData.results && oData.results.length) {
-		//             var oOverview = oData.results[0];
-		//             if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
-		//                 if (!this.oLastWeekstart || !this.oLastWeekend) {
-		//                     this.oLastWeekstart = new Date();
-		//                     this.oLastWeekend = new Date();
-		//                 }
-		//                 if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
-		//                     this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
-		//                     this.oLastWeekstart = oOverview.Weekstart;
-		//                     this.oLastWeekend = oOverview.Weekend;
-		//     				this.getEventBus().publish('Master', 'WorkingWeekReceived', {
-		//     				    oWeekstart: this.oLastWeekstart,
-		//     				    oWeekend: this.oLastWeekend
-		//     				});
-		//                 }
-		//             }
-		//         }
-		//     }, this));
-		// }
-		if (!this.didAttachToFilterListDataReceived) {
-			this.didAttachToFilterListDataReceived = true;
-			oBinding.attachDataReceived($.proxy(function(oEvent) {
-				var oData = oEvent.getParameter("data");
-				if (oData && oData.results && oData.results.length) {
-					var oOverview = oData.results[0];
-					if (oOverview && oOverview.Weekstart && oOverview.Weekend) {
-						if (!this.oLastWeekstart || !this.oLastWeekend) {
-							this.oLastWeekstart = new Date();
-							this.oLastWeekend = new Date();
-						}
-						if (this.oLastWeekstart.getTime() !== oOverview.Weekstart.getTime() ||
-							this.oLastWeekend.getTime() !== oOverview.Weekend.getTime()) {
-							this.oLastWeekstart = oOverview.Weekstart;
-							this.oLastWeekend = oOverview.Weekend;
-							this.getEventBus().publish("Master", "WorkingWeekReceived", {
-								oWeekstart: this.oLastWeekstart,
-								oWeekend: this.oLastWeekend
-							});
-						}
-					}
-				}
-			}, this));
-		} else {
-			//This needs to publish the WorkingWeekReceived event with the start and end dates.  Currently it only gets sent
-			//if there is already time in that week
-			//   var lView = this.getView();
-			//   var lList = lView.byId("master1List");
-			//   var lWstart = lList.getProperty("Weekstart");
-			//   var lWend = lList.getProperty("Weekend");
-			//   var lWstart = this.getView().byId("master1List").getProperty("Weekstart");
-			//   var lWend = this.getView().byId("master1List").getProperty("Weekstart");
-		}
 		if (!oFilter && this.oLastListFilter) {
 			oFilter = this.oLastListFilter;
 		}
