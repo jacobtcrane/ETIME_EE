@@ -1,7 +1,3 @@
-// stop ESLint complaining about global namspaces "com", "window", etc.
-/*global com*/
-/*global window*/
-
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Dialogs");
 jQuery.sap.require("sap.ui.core.format.DateFormat");
@@ -10,17 +6,6 @@ jQuery.sap.require("sap.m.MessageBox");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	onInit: function() {
-		// 		this.oInitialLoadFinishedDeferred = jQuery.Deferred();
-
-		// 		if (sap.ui.Device.system.phone) {
-		// 			//Do not wait for the master2 when in mobile phone resolution
-		// 			this.oInitialLoadFinishedDeferred.resolve();
-		// 		} else {
-		// 			var oEventBus = this.getEventBus();
-		// 			oEventBus.subscribe("Master2", "LoadFinished", this.onMasterLoaded, this);
-		// 		}
-
-		// 		this.getEventBus().subscribe("Master2", "ItemSelected", this.onMasterItemSelected, this);
 
 		if (this.getRouter() != null) {
 			this.getRouter().attachRouteMatched(this.onRouteMatched, this);
@@ -28,45 +13,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		this.oRoutingParams = {};
 	},
 
-	// 	onMasterItemSelected: function(sChannel, sEvent, oData) {
-	// 		if (oData.oBindingContext) {
-	// 			var oModel = this.getModel();
-	// 			var oDetailEntity = oModel.getProperty(oData.oBindingContext.getPath());
-	// 			// update the view's binding context based on the master item selection
-	// 			if (oDetailEntity) {
-	// 				if (this.formatEntityDates(oDetailEntity)) {
-	// 					oModel.setProperty(oData.oBindingContext.getPath(), oDetailEntity);
-	// 				}
-	// 				this.getView().setBindingContext(oData.oBindingContext);
-	// 				this.addModelChangeListener();
-	// 			} else {
-	// 				this.showEmptyView();
-	// 				this.fireDetailNotFound();
-	// 			}
-	// 		} else {
-	// 			this.showEmptyView();
-	// 			this.fireDetailNotFound();
-	// 		}
-	// 	},
-
-	// 	onMasterLoaded: function(sChannel, sEvent, oData) {
-	// 		if (oData.oListItem) {
-	// 		    var oModel = this.getModel();
-	// 		    this.oBindingContext = oData.oListItem.getBindingContext();
-	// 			this.getContextPath() = this.oBindingContext.getPath();
-	// 			this.oDetailEntity = oModel.getProperty(this.getContextPath());
-	// 			this.bindView();
-	// 			this.oInitialLoadFinishedDeferred.resolve();
-	// 		}
-	// 	},
-
 	onRouteMatched: function(oEvent) {
 		var oModel = this.getModel();
 		var oParameters = oEvent.getParameters();
 		var isAllowance = false;
-
-		// 		var from = oParameters.name;
-		// jQuery.when(this.oInitialLoadFinishedDeferred).then(jQuery.proxy(function() {
 
 		// When navigating in the Detail page, update the binding context
 		if (oParameters.name === "home") {
@@ -89,23 +39,17 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			}
 			this.bindView("/" + this.oRoutingParams.DetailEntity);
 
-			// for existing detail records, setup and binding is done in onMasterItemSelected;
-			// when the routing match occurs we just clean up in preparation
-			// 			this.getView().unbindElement();
 			// remove any unsaved new detail entities from the model
 			if (this.oNewDetailContext) {
 				oModel.deleteCreatedEntry(this.oNewDetailContext);
 				this.oNewDetailContext = null;
 			}
-			// this.getContextPath() = "/" + oParameters.arguments.entity;
-			// this.oDetailEntity = oModel.getProperty(this.getContextPath());
 			// reset value state for all input controls
 			this.resetFormElementValueState();
 			// hide favourites panel and button
 			this.getView().byId("favPanel").setVisible(false);
 			this.getView().byId("favButton").setVisible(false);
-			// } else {	// With the commenting of the `jQuery.when` promise above, this return block exits the route matching, affecting the handling of other routes...
-			// 	return;
+
 			if (isAllowance) {
 				this.setupAllowanceDetail();
 			} else {
@@ -113,7 +57,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			}
 
 		}
-		// }, this));
 
 		if (oParameters.name === "attendance-create" ||
 			oParameters.name === "attendance-create-today" ||
@@ -131,16 +74,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				this.oRoutingParams.TimesheetDate = String(new Date());
 			}
 
-			//remove any existing view bindings
-			// 			this.getView().unbindElement();
 			// remove any unsaved new detail entities from the model
 			if (this.oNewDetailContext) {
 				oModel.deleteCreatedEntry(this.oNewDetailContext);
 			}
 			//create new record
 			var oSelectedDate = new Date(this.oRoutingParams.TimesheetDate);
-			// 			oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
-			// 			oModel.refreshMetadata();
+
 			// check model metadata has been loaded before attempting to create new entry
 			// (for in case the page was loaded from a bookmark)
 			oModel.oMetadata.loaded().then($.proxy(function() {
@@ -157,9 +97,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			}, this)).catch(function(error) {
 				jQuery.sap.log.error("Error loading model metadata: " + error);
 			});
-			// 			this.oDetailEntity = this.oNewDetailContext.getProperty();
-			// 			this.detailEntityPath = this.oNewDetailContext.getPath();
-			// 			this.bindView();
 
 			// reset value state for all input controls
 			this.resetFormElementValueState();
@@ -167,7 +104,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getView().byId("favPanel").setVisible(true);
 			this.getView().byId("favButton").setVisible(true);
 			// reset favourites switch
-			// 			this.getView().byId("favSwitch").setState(false);
 			this.getView().byId("loadFavButton").setPressed(false);
 			if (isAllowance) {
 				this.setupAllowanceDetail();
@@ -201,12 +137,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	},
 
 	prepareNewDetailEntity: function(oSelectedDate, isAllowance) {
-		// var oNow = new Date();
-		// oNow.setMinutes(0, 0, 0);
-		// var oNextHour = new Date(oNow);
-		// oNextHour.setHours(oNow.getHours() + 1);
-		// var sBeguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oNow, true);
-		// var sEnduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(oNextHour, true);
 		return {
 			Acttyp: "",
 			Anzhl: "0.00",
@@ -214,11 +144,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			Awart: "",
 			Awarttxt: "",
 			Begda: oSelectedDate,
-			// 			Beguz: sBeguz, //"PT00H00M00S",
 			Beguz: "PT07H00M00S",
 			Costtxt: "",
 			Durationtxt: "",
-			// 			Enduz: sEnduz, //"PT00H00M00S",
 			Enduz: "PT15H00M00S",
 			Enote: "",
 			Hda: false,
@@ -332,12 +260,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 	displayTimeDif: function() {
 		var Durationtxt = "";
 		var Timetxt = "";
-		// the DateTime control will (in Time mode) internally set the date part to now in the local timezone
-		// when changing the time whilst the date part set from raw format (PT00H00M00S) is 1970 in AEST
-		// this results in expected differences when subtracting one date from the other due to daylight savings
-		// and other timezone issues
-		// as a result we construct new dates from just the time portion before comparing,
-		// instead of using the DateTime control's getDateValue() method
 		var sBeguz = this.byId("beguz").getValue();
 		var sEnduz = this.byId("enduz").getValue();
 		var begda = com.broadspectrum.etime.ee.utils.Conversions.timeFormatter.parse(sBeguz);
@@ -383,8 +305,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		this.displayTimeDif();
 		if (oEvent.getParameters().dateValue) {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Success);
-			// Remove check to accomodate time extending after midnight
-			// this.checkEndTimeAfterStart();
 		} else {
 			oEvent.getSource().setValueState(sap.ui.core.ValueState.Warning);
 		}
@@ -417,26 +337,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			oEvent.getSource().setValueStateText("Only positive numbers are allowed");
 		}
 	},
-
-	// 	getTimeDiff: function(oEnduz, oBeguz) {
-	// 		var diffTime = oEnduz.getTime() - oBeguz.getTime();
-	// 		var minutes = ((diffTime / 1000) / 60) % 60;
-	// 		var hours = Math.floor(((diffTime / 1000) / 60) / 60);
-	// 		if (minutes < 10) {
-	// 			var strTime = hours + ':' + "0" + minutes + ' Hours';
-	// 		} else {
-	// 			var strTime = hours + ':' + minutes + ' Hours';
-	// 		}
-	// 		oTimeDiff.setNumber(strTime);
-	// 	},
-
-	// timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({
-	// 	pattern: "PTHH'H'mm'M'ss'S'"
-	// }),
-
-	// dateFormatter: sap.ui.core.format.DateFormat.getDateInstance({
-	// 	pattern: "yyyy-MM-ddTHH:mm:ss"
-	// }),
 
 	showEmptyView: function() {
 		this.getRouter().navTo("notfound", {}, true); // don't create a history entry
@@ -514,12 +414,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-	// 	onDetailSelect: function(oEvent) {
-	// 		sap.ui.core.UIComponent.getRouterFor(this).navTo("detail", {
-	// 			entity: oEvent.getSource().getBindingContext().getPath().slice(1)
-	// 		}, true);
-	// 	},
-
 	handleHDASelected: function(oEvent) {
 		"use strict";
 		if (oEvent.getParameter("selected") === true) {
@@ -529,49 +423,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-	// 	handleLiveSearch: function(oEvent) {
-	// 		var sInputValue = oEvent.getSource().getValue();
-	// 		if (sInputValue.length > 2) {
-	// 			this.handleValueHelp(oEvent);
-	// 		}
-	// 	},
-
 	handleLiveChange: function(oEvent) {
-		// 		// check mutually exclusive inputs are not being maintained
-		// 		// (only one of wbs/network/order or internal order can be entered)
-		// 		var hasConflicts = false;
-		// 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
-		// 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
-		// 		var hasOrder = this.byId("orderInput").getValue() ? true : false;
-		// 		var hasInternalOrder = this.byId("internalorderInput").getValue() ? true : false;
-
-		// 		if (oEvent.getSource().getId().search("wbsInput") > -1 && (
-		// 			hasNetwork || hasOrder || hasInternalOrder
-		// 		)) {
-		// 			hasConflicts = true;
-		// 		} else if (oEvent.getSource().getId().search("netInput") > -1 && (
-		// 			hasWbs || hasOrder || hasInternalOrder
-		// 		)) {
-		// 			hasConflicts = true;
-		// 		} else if (oEvent.getSource().getId().search("internalorderInput") > -1 && (
-		// 			hasWbs || hasNetwork || hasOrder
-		// 		)) {
-		// 			hasConflicts = true;
-		// 		} else if (oEvent.getSource().getId().search("orderInput") > -1 && (
-		// 			hasWbs || hasNetwork || hasInternalOrder
-		// 		)) {
-		// 			hasConflicts = true;
-		// 		}
-		// 		if (hasConflicts) {
-		// 			sap.m.MessageBox.show(
-		// 				"Only one cost assignment (WBS Element/Network/Order/Internal Order) is allowed\nRemove one before choosing another...",
-		// 				sap.m.MessageBox.Icon.ERROR,
-		// 				"Multiple cost assignments", [sap.m.MessageBox.Action.CANCEL]
-		// 			);
-		// 			oEvent.getSource().setValue(null);
-		// 			return false;
-		// 		}
-
 		// clear the existing description on input changes
 		oEvent.getSource().setDescription(null);
 		// clear operation if changing network/order
@@ -696,8 +548,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 Favourites - START
 *********************/
 	handleFavourites: function(oEvent) { //Creates the Popover for Managing Favourites
-		// var oView = this.getView();
-
 		// create popover
 		var oFavPopover = com.broadspectrum.etime.ee.util.Dialogs.getFavPopover(this);
 		// delay because addDependent will do a async rerendering and the popover will immediately close without it
@@ -737,7 +587,6 @@ Favourites - START
 		}
 		oFavPopover.close();
 		var oNewFavEntity = {
-			// "Guid": "0",
 			"Pernr": "00000000",
 			"Description": favouriteName,
 			"Awart": oDetailEntity.Awart,
@@ -759,25 +608,7 @@ Favourites - START
 			"IsPrepopulated": false, // this is only true for favs created by the backend
 			"Hda": oDetailEntity.Hda
 		};
-		// 		if (this.oNewDetailContext) {
-		// 			//remove the new detail entity from the model as we don't want to save that yet
-		// 			oModel.deleteCreatedEntry(this.oNewDetailContext);
-		// 		}
-		// //Reset the model to avoid calling detail updates here		
-		// // 		oModel.resetChanges();
-		// 		oModel.createEntry("favTableSet", oNewFavEntity);
-		// 		oModel.submitChanges(function() {
-		// 			var msg = 'Favourite Added';
-		// 			sap.m.MessageToast.show(msg);
-		// 		}, function() {
-		// 			var msg = 'An error occurred during the adding of the favourite';
-		// 			sap.m.MessageToast.show(msg);
-		// 		});
-		// 		if (this.oNewDetailContext) {
-		// 			// now recreate the new detail entity on the model
-		// 			this.oNewDetailContext = oModel.createEntry("detailSet", oDetailEntity);
-		// 			this.getView().setBindingContext(this.oNewDetailContext);
-		// 		}
+
 		// post new favourite to service
 		oModel.create("/favTableSet", oNewFavEntity, {
 			success: function(oData, response) {
@@ -791,7 +622,6 @@ Favourites - START
 	},
 
 	handleFavSelect: function(oEvent) { //Generates Popover Search Help for selecting a favourite to populate from
-		// 		var switchVal = oEvent.getSource().getState();
 		var switchVal = oEvent.getSource().getPressed();
 		var oFavSelectDialog = com.broadspectrum.etime.ee.util.Dialogs.getFavSelectDialog(this);
 		var oDetailEntity = this.getContextObject();
@@ -834,25 +664,13 @@ Favourites - START
 		this.formatEntityDates(oDetailEntity);
 		oModel.setProperty(this.getContextPath(), oDetailEntity);
 
-		// perform lookups for descritions of received values
-		// if (oFavEntity.Beguz && oFavEntity.Beguz.ms) {
-		// 	this.getView().byId("beguz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oFavEntity.Beguz.ms), true));
-		// }
-		// if (oFavEntity.Enduz && oFavEntity.Enduz.ms) {
-		// 	this.getView().byId("enduz").setValue(com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oFavEntity.Enduz.ms), true));
-		// }
-		// if (oFavEntity.Vtken) {
-		// 	this.getView().byId("vtken").setSelected(oFavEntity.Vtken ? true : false);
-		// }
+		// perform lookups for descriptions of received values
 		if (oFavEntity.Awart) {
 			this.filterSuggestionItems(this.getView().byId("attendanceInput"), oFavEntity.Awart, true, "Awart", "Atext");
 		}
 		if (oFavEntity.Lgart) {
 			this.filterSuggestionItems(this.getView().byId("allowanceInput"), oFavEntity.Lgart, true, "Lgart", "Lgtxt");
 		}
-		// 		if (oFavEntity.Anzhl) {
-		// 			this.getView().byId("quantity").setValue(oFavEntity.Anzhl);
-		// 		}
 		if (oFavEntity.Wbs) {
 			this.filterSuggestionItems(this.getView().byId("wbsInput"), oFavEntity.Wbs, true, "Posid", "Post1");
 		}
@@ -871,13 +689,6 @@ Favourites - START
 		if (oFavEntity.Iaufnr) {
 			this.filterSuggestionItems(this.getView().byId("internalorderInput"), oFavEntity.Iaufnr, true, "Aufnr", "Ktext");
 		}
-		// if (oFavEntity.Hda) {
-		// 	this.getView().byId("hda").setSelected(oFavEntity.Hda ? true : false);
-		// }
-		// if (oFavEntity.Enote) {
-		// 	this.getView().byId("Enote").setValue(oFavEntity.Enote);
-		// }
-
 	},
 	/********************
 Favourites - END
@@ -956,64 +767,21 @@ Search Helps - START
 				oSource.bindAggregation("suggestionItems", "/VH_operationSet", new sap.ui.core.ListItem({
 					key: "{Vornr}",
 					text: "{Aufnr}",
-					// text : "{Ltxa1}",	// current search help behind service cannot filter by description - must use order number instead
 					additionalText: "{Ltxa1}"
-					// additionalText : "{Vornr}"
 				}));
 			}
 		}
 	},
 
 	handleSuggest: function(evt) {
-		// 		var oSource = evt.getSource();
-		// 		// start by clearing the existing description
-		// 		oSource.setDescription(null);
-		// 		// ensure the suggestionItems aggregation is bound
-		// 		this.bindSuggestionItems(evt.getSource());
-		// 		var sValue = evt.getParameter("suggestValue");
-		// 		var oFilter;
-		// 		if (oSource.getId().search("attendanceInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Atext", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("allowanceInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Lgtxt", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("wbsInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Post1", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("netInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("internalorderInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Iaufnr", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("orderInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Ktext", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("causeInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Grund", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		} else if (oSource.getId().search("operationInput") > -1) {
-		// 			oFilter = new sap.ui.model.Filter("Vornr", sap.ui.model.FilterOperator.Contains, sValue);
-		// 		}
-		// 		var suggestionItemsBinding = oSource.getBinding("suggestionItems");
-		// 		if (suggestionItemsBinding) {
-		// 			// set the control as busy until we've received data for the filter
-		// 			oSource.setBusy(true);
-		// 			var onFilterDataReceived = function() {
-		// 				suggestionItemsBinding.detachDataReceived(onFilterDataReceived, this);
-		// 				oSource.setBusy(false);
-		// 			};
-		// 			suggestionItemsBinding.attachDataReceived(onFilterDataReceived, this);
-		// 			// apply the filter
-		// 			suggestionItemsBinding.filter([oFilter]);
-		// 		}
+//Do nothing since this is disabled now
 	},
 
 	handleSuggestionSel: function(oEvent) {
-		// 		// this.handleValueHelp(oEvent);
-		// 		var selectedItem = oEvent.getParameter("selectedItem");
-		// 		if (selectedItem) {
-		// 			oEvent.getSource().setDescription(selectedItem.getKey());
-		// 			this.checkInputIsValid(oEvent.getSource());
-		// 		}
+//Do nothing since this is disabled now
 	},
 
 	handleValueHelp: function(oEvent) {
-		// 		var oModel = this.getModel();
 		var oDetailEntity = this.getContextObject();
 		var sInputValue = oEvent.getSource().getValue();
 		var source = oEvent.getSource().getId();
@@ -1073,13 +841,6 @@ Search Helps - START
 			var oValueHelpCauseDialog = com.broadspectrum.etime.ee.util.Dialogs.getValueHelpCauseDialog(this);
 			// include order number in filter
 			sAufnr = this.byId("orderInput").getValue() || "00000000";
-			// 			oFilter = new sap.ui.model.Filter({
-			// 				filters: [
-			//                     new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr),
-			//                     new sap.ui.model.Filter("Grdtx", sap.ui.model.FilterOperator.Contains, sInputValue)
-			//                 ],
-			// 				and: true
-			// 			});
 			oFilter = new sap.ui.model.Filter("Aufnr", sap.ui.model.FilterOperator.EQ, sAufnr);
 			oValueHelpCauseDialog.getBinding("items").filter([oFilter]);
 			oValueHelpCauseDialog.open(sInputValue);
@@ -1167,27 +928,10 @@ Search Helps - START
 			}
 
 		}
-		// if (evt.getSource().getBinding("items")) {
-		// 	evt.getSource().getBinding("items").filter([]);
-		// }
 	},
 	/********************
 Search Helps - END
 *********************/
-
-	// makeSAPDateTime: function(field, isTime) {
-	//	oModel = this.getModel();
-	// 	var path = this.getContextPath() + field;
-	// 	var property = oModel.getProperty(path);
-	// 	var datetime = new Date(property);
-	// 	var sapDateTime;
-	// 	if (isTime) {
-	// 		sapDateTime = this.timeFormatter.format(datetime);
-	// 	} else {
-	// 		sapDateTime = this.dateFormatter.format(datetime);
-	// 	}
-	// 	oModel.setProperty(path, sapDateTime);
-	// },
 
 	handleSaveRequest: function() {
 		if (this.isNew) {
@@ -1220,12 +964,6 @@ Search Helps - END
 					msg: "Allowance type is required"
 				});
 			}
-			// 			if (!this.byId("quantity").getValue()) {
-			// 				aRequiredFields.push({
-			// 					source: this.byId("quantity"),
-			// 					msg: "Allowance quantity is required"
-			// 				});
-			// 			}
 			var quant = this.byId("quantity").getValue();
 			if (quant === null || Number(quant) <= 0) {
 				aRequiredFields.push({
@@ -1264,13 +1002,6 @@ Search Helps - END
 			oRequiredField.source.setValueState(sap.ui.core.ValueState.Error);
 			isValidated = false;
 		}, this);
-		// check end time is after start time
-		// Remove check to accomodate time extending after midnight
-		// 		if (oDetailEntity.isAttendance) {
-		// 			if (!this.checkEndTimeAfterStart()) {
-		// 				isValidated = false;
-		// 			}
-		// 		}
 		// check a cost assignment has been provided
 		var hasWbs = this.byId("wbsInput").getValue() ? true : false;
 		var hasNetwork = this.byId("netInput").getValue() ? true : false;
@@ -1309,10 +1040,6 @@ Search Helps - END
 			!this.validateRequiredFields()) {
 			return false;
 		}
-		//Housekeeping
-		// this.makeSAPDateTime('/Weekstart', false);
-		// this.makeSAPDateTime('/Weekend', false);
-		// this.makeSAPDateTime('/Begda', false);
 		var path = this.getContextPath() + "/Weekstart";
 		var property = oModel.getProperty(path);
 		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
@@ -1322,11 +1049,6 @@ Search Helps - END
 		path = this.getContextPath() + "/Begda";
 		property = oModel.getProperty(path);
 		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
-
-		// property = oModel.getProperty(this.getContextPath() + "/Vtken");
-		// if (property) {
-		// 	oModel.setProperty(this.getContextPath() + "/Vtken", "X");
-		// }
 
 		property = oModel.getProperty(this.getContextPath() + "/Status");
 		if (property && statusToSend) {
@@ -1341,20 +1063,18 @@ Search Helps - END
 		oModel.submitChanges({
 			batchGroupId: "detailChanges",
 			success: $.proxy(function() {
-				// TODO: until we can figure out why batching doesn't work, check for messages
+				// check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
 					oModel.setProperty(this.getContextPath() + "/Status", "NEW");
 					// show odata errors in message popover
 					this.showMessagePopover(this.byId("toolbar"));
-					// some errors screw up the model data, whilst our context object is still intact
+					// some errors affect the model data, whilst our context object is still intact
 					this.setContextObjectToModel();
 				} else {
 					// raise a toast to the user!
 					var msg = statusToSend === "SAV" ? "Record saved" : "Request sent";
 					this.fireDetailChanged(this.getContextPath());
 					this.cleanup();
-					// 			var model = this.getModel();
-					// 			model.clearBatch();
 					oModel.resetChanges();
 					this.cleanupModelChangeHandles();
 					this.navHistoryBack();
@@ -1365,13 +1085,9 @@ Search Helps - END
 				oModel.setProperty(this.getContextPath() + "/Status", "NEW");
 				// show odata errors in message popover
 				this.showMessagePopover(this.byId("toolbar"));
-				// some errors screw up the model data, whilst our context object is still intact
+				// some errors affect the model data, whilst our context object is still intact
 				this.setContextObjectToModel();
-				// var msg = 'An error occurred during the sending of the request';
-				// sap.m.MessageToast.show(msg);
 			}, this)
-			//  success: $.proxy(this.handleSubmitSuccess, this),
-			//  error: $.proxy(this.handleSubmitError, this)
 		});
 	},
 
@@ -1383,11 +1099,10 @@ Search Helps - END
 		oModel.submitChanges({
 			batchGroupId: "detailChanges",
 			success: $.proxy(function() {
-				// TODO: until we can figure out why batching doesn't work, check for messages
+				// check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
 					// show odata errors in message popover
 					this.showMessagePopover(this.byId("toolbar"));
-					// some errors screw up the model data, whilst our context object is still intact
 					this.setContextObjectToModel();
 				} else {
 					// raise a toast to the user!
@@ -1403,26 +1118,10 @@ Search Helps - END
 			error: $.proxy(function() {
 				// show odata errors in message popover
 				this.showMessagePopover(this.byId("toolbar"));
-				// some errors screw up the model data, whilst our context object is still intact
 				this.setContextObjectToModel();
-				// var msg = 'An error occurred during the sending of the request';
-				// sap.m.MessageToast.show(msg);
 			}, this)
-			//  success: $.proxy(this.handleSubmitSuccess, this),
-			//  error: $.proxy(this.handleSubmitError, this)
 		});
 	},
-
-	// 	handleSubmitError: function() {
-	// 		var msg = 'An error occurred during the sending of the request';
-	// 		sap.m.MessageToast.show(msg);
-	// 	},
-
-	// 	handleSubmitSuccess: function() {
-	// 		var msg = 'Request sent';
-	// 		sap.m.MessageToast.show(msg);
-	// 		this.showEmptyView();
-	// 	},
 
 	setContextObjectToModel: function() {
 		if (this.getContextObject() && this.getContextPath()) {

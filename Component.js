@@ -1,16 +1,7 @@
 jQuery.sap.declare("com.broadspectrum.etime.ee.Component");
 
 sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
-//     		createContent : function(){
-// 		    this.view = sap.ui.view({
-// 		        id:'ZHTR_ETIME_EE',
-// 		        viewName: 'com.broadspectrum.etime.ee.view.App',
-// 		        type : sap.ui.core.mvc.ViewType.XML, 
-// 		        viewData : { component : this }  
-// 		    });
-// 		    return this.view;  
-// 		},
-    
+
 	metadata : {
 		name : "My Timesheets App",
 		version : "1.0",
@@ -162,7 +153,6 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 		}
 
 		// Create and set domain model to the component
-// 		var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, {json: true,loadMetadataAsync: true});
 		var oModel = new sap.ui.model.odata.v2.ODataModel(sServiceUrl);
 		oModel.setDefaultBindingMode(sap.ui.model.BindingMode.TwoWay);
 		oModel.setDefaultCountMode(sap.ui.model.odata.CountMode.None);

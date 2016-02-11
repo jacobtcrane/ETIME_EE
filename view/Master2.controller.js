@@ -1,5 +1,3 @@
-/*global window*/
-
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 
 	onInit: function() {
@@ -27,12 +25,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 			}
 			this.bindView("/" + this.oRoutingParams.OverviewEntity);
 
-			// 			var oEventBus = this.getEventBus();
 			this.byId("master2List").attachEventOnce("updateFinished", function() {
 				this.selectFirstItem();
-				// oEventBus.publish("Master2", "LoadFinished", {
-				// 	oListItem: this.getView().byId("master2List").getItems()[0]
-				// });
 			}, this);
 		}
 	},
@@ -83,7 +77,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 
 	hasPendingChanges: function() {
 		var oModel = this.getModel();
-		if (oModel.hasPendingChanges() || // this seems not to cover created entries, only changes to existing entries!?
+		if (oModel.hasPendingChanges() ||
 			(this.sEditingContextPath && oModel.mChangeHandles[this.sEditingContextPath.substr(1)])) {
 			return true;
 		} else {
@@ -134,9 +128,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	navHistoryBack: function() {
 		this.sEditingContextPath = null;
 		window.history.go(-1);
-        // this.getRouter().navTo("home", {
-        //     transition: "show"
-        // });
 	},
 
 	onSearch: function(oEvent) {
@@ -148,9 +139,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 	},
 
 	onSelect: function(oEvent) {
-		// Get the list item either from the listItem parameter or from the event's
-		// source itself (will depend on the device-dependent mode)
-		// 		var oList = this.getView().byId("master2List");
 		this.showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
 	},
 

@@ -7,12 +7,6 @@
 				<items>
 					<StandardListItem title="{Description}" description="{Awart}" 
 					    iconDensityAware="false" iconInset="false" />
-					<!--<StandardListItem id="favListItem" press="onSelect" title="{Description}" type="{device]/listItemType}">-->
-					<!--	<attributes>-->
-					<!--		<ObjectAttribute text="{Awart}"/>-->
-					<!--		<ObjectAttribute text="{Wbs}"/>-->
-					<!--	</attributes>-->
-					<!--</StandardListItem>-->
 				</items>
 			</List>
 		</content>

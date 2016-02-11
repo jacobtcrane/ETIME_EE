@@ -5,7 +5,6 @@ jQuery.sap.require("sap.ui.core.format.DateFormat");
 jQuery.sap.declare("com.broadspectrum.etime.ee.utils.Conversions");
 com.broadspectrum.etime.ee.utils.Conversions = {
 	time: function(value) {
-		// value = 'PT08H00M00S';
 		if (value) {
 			var date = new Date(value.ms);
 			var timeinmiliseconds = date.getTime(); //date.getTime(); //date.getSeconds(); //date.getTime();  
@@ -42,8 +41,6 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 		}
 	},
 	makeSAPDateTime: function(property, isTime, toUTC) {
-		// var path = this.oNewDetailContext.getPath() + field;
-		// var property = this.oModel.getProperty(field);
 		var datetime = new Date(property);
 		var sapDateTime;
 		if (isTime) {
@@ -60,7 +57,6 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 		    }
 		}
 		return sapDateTime;
-		// this.oModel.setProperty(path, sapDateTime);
 	},
 	
 	timeFormatter: sap.ui.core.format.DateFormat.getDateInstance({

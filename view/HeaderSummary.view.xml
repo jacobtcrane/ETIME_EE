@@ -6,23 +6,15 @@
 	xmlns="sap.m" 
 	xmlns:l="sap.ui.layout" 
 	controllerName="com.broadspectrum.etime.ee.view.HeaderSummary">
-	<!--<l:VerticalLayout>-->
-		<!--<l:content>-->
 	<Panel id="panel" xmlns:sap.m.Panel="sap.m.Panel" width="auto" class="sapUiResponsiveMargin">
 	<headerToolbar xmlns:sap.m.Toolbar="sap.m.Toolbar"/>
 		<content>
 		    <sap.ui.layout.form:SimpleForm xmlns:sap.ui.layout.form="sap.ui.layout.form" editable="false" layout="ResponsiveLayout" id="__form0">
-				<!--<content>-->
-		            <!--<core:Title text="Title" id="__title0"/>-->
 		            <c:TextView width="100%" id="__input0" value="{Weektxt}" text="{Weektxt}"/>
 		            <c:TextView width="100%" id="__input1" value="{Totalhourstxt}" text="{Totalhourstxt}"/>
 		            <c:TextView width="100%" id="__input2" value="{Approvedhourstxt}" text="{Approvedhourstxt}"/>
 		            <c:TextView width="100%" id="__input3" value="{Rejectedhourstxt}" text="{Rejectedhourstxt}"/>
-		        <!--</content>-->
 		    </sap.ui.layout.form:SimpleForm>
 	    </content>
 	 </Panel>
-		    <!--<c:HorizontalDivider id="devider" width="100%"></c:HorizontalDivider>-->
-		<!--</l:content>-->
-	<!--</l:VerticalLayout>-->
 </core:View>

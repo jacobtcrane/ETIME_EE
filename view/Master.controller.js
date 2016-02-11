@@ -1,6 +1,3 @@
-// stop ESLint complaining about global namspaces "com", "window", etc.
-/*global com*/
-
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
@@ -18,7 +15,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		oEventBus.subscribe("HeaderSelection", "headDateEvt", this.onDateSelected, this);
 		oEventBus.subscribe("Any", "BusyDialogNeeded", this.onBusyDialogNeeded, this);
 		oEventBus.subscribe("Any", "BusyDialogDone", this.onBusyDialogDone, this);
-		// oEventBus.subscribe("Detail", "Changed", this.bindView(this.keyForView), this);
 		oEventBus.subscribe("Detail", "Changed", this.onDetailChanged, this);
 		oEventBus.subscribe("Detail", "EditingContextChanged", this.onEditingContextChanged, this);
 		oEventBus.subscribe("Detail", "EditingDone", this.onDetailEditingDone, this);
@@ -35,27 +31,12 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		var oParameters = oEvent.getParameters();
 		if (oParameters.name === "home") {
 			if (!sap.ui.Device.system.phone) {
-				// load the welcome page on non-phone devices (splitapp behaves like a
-				// single nav controller on phones, so the master list has to be shown first)
-				// note that this has to happen on the RoutePatternMatched event as this
-				// only traps a route actually being matched.
-				// intermediate RouteMatched events (such as "home" being loaded as a parent
-				// route of "detail", are not trapped by this event)
 				this.getRouter().navTo("welcome");
 			}
 		}
 	},
 
 	onDateSelected: function(sChannel, sEvent, oData) {
-		// var startDate = new Date(oData);
-		// var startDateStr = this.oFormatYyyymmdd.format(startDate);
-		// var sEntityPath = '/overviewSet?$filter=Weekstart le datetime\'' + startDateStr + 'T22:00:00\' and Weekend ge datetime\'' + startDateStr +
-		// 	'T22:00:00\'';
-		// // 			var sEntityPath = '/headerSet(Weekstart=datetime\'' + startDateStr + 'T22:00:00\',Weekend=datetime\'' + startDateStr + 'T22:00:00\')?$expand=overviewSet';
-		// if (sEntityPath != null) {
-		// 	this.bindView(sEntityPath);
-		// }
-		// we can't filter on dates if metadata is not loaded yet
 		var oModel = this.getModel();
 		if (!oModel.getServiceMetadata()) {
 			oModel.attachEventOnce("metadataLoaded", function() {
@@ -101,31 +82,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 	fireDetailNotFound: function() {
 		this.getEventBus().publish("Master", "NotFound", {});
 	},
-
-	// bindView: function(sEntityPath) {
-	// 	if (sEntityPath != null) {
-	// 		var oView = this.getView();
-	// 		var list = this.getView().byId("master1List");
-
-	// 		var template = new sap.m.ObjectListItem({
-	// 			// id : "master1ListItem",
-	// 			type: "{device>/listItemType}",
-	// 			press: "onSelect",
-	// 			title: "{Datetxt}",
-	// 			attributes: [new sap.m.ObjectAttribute({
-	// 					text: "{Hourstxt}"
-	// 				}),
-	// 				new sap.m.ObjectAttribute({
-	// 					text: "{Statustxt}"
-	// 				})
-	// 			]
-
-	// 		});
-
-	// 		list.bindItems(sEntityPath, template, null, null);
-	// 		this.keyForView = sEntityPath;
-	// 	}
-	// },
 
 	getFilterForDate: function(oDate) {
 		var oStartDate = oDate instanceof Date ? oDate : new Date(oDate);
@@ -187,7 +143,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 
 	hasPendingChanges: function() {
 		var oModel = this.getModel();
-		if (oModel.hasPendingChanges() || // this seems not to cover created entries, only changes to existing entries!?
+		if (oModel.hasPendingChanges() ||
 			(this.sEditingContextPath && oModel.mChangeHandles[this.sEditingContextPath.substr(1)])) {
 			return true;
 		} else {
@@ -248,7 +204,5 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		this.getEventBus().unsubscribe("Master2", "NotFound", this.onNotFound, this);
 	},
 
-	onAfterRendering: function() {
-		// this.bindView('');
-	}
+	onAfterRendering: function() {}
 });

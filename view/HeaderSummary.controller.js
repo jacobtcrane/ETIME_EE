@@ -5,17 +5,7 @@ sap.ui.define([
 
 	return sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.HeaderSummary", {
 
-		/**
-		 * Called when a controller is instantiated and its View controls (if available) are already created.
-		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-		 * @memberOf com.broadspectrum.etime.ee.view.HeaderSummary
-		 */
 		onInit: function() {
-			// 			var oDivider = this.byId("devider");
-			// 			// oDivider.setWidth("1%");
-			// 			oDivider.setHeight(sap.ui.commons.HorizontalDividerHeight.Large);
-			// 			oDivider.setType(sap.ui.commons.HorizontalDividerType.Area);
-
 			this.getEventBus().subscribe("HeaderSelection", "headDateEvt", this.onDateSelected, this);
 			this.getEventBus().subscribe("Detail", "Changed", this.onDetailChanged, this);
 
@@ -26,9 +16,6 @@ sap.ui.define([
 			var approvedHoursTV = this.byId("__input2");
 			approvedHoursTV.setSemanticColor(sap.ui.commons.TextViewColor.Positive);
 			approvedHoursTV.setDesign(sap.ui.commons.TextViewDesign.H5);
-
-			// var panel = this.byId("panel");
-			// panel.setBackgroundDesign(sap.m.BackgroundDesign.Solid);
 
 			var totalhoursTV = this.byId("__input1");
 			totalhoursTV.setDesign(sap.ui.commons.TextViewDesign.Standard);
@@ -142,19 +129,7 @@ sap.ui.define([
 		fireDetailNotFound: function() {
 			this.getEventBus().publish("HeaderSummary", "NotFound");
 		},
-		/**
-		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf com.broadspectrum.etime.ee.view.HeaderSummary
-		 */
-		// onAfterRendering: function() {
 
-		// },
-
-		/**
-		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf com.broadspectrum.etime.ee.view.HeaderSummary
-		 */
 		onExit: function() {
 
 		}

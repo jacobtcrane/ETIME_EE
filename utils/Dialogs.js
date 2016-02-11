@@ -1,6 +1,3 @@
-// stop ESLint complaining about global namspace "com"
-/*global com*/
-
 jQuery.sap.declare("com.broadspectrum.etime.ee.util.Dialogs");
 
 com.broadspectrum.etime.ee.util.Dialogs = {
@@ -120,12 +117,6 @@ com.broadspectrum.etime.ee.util.Dialogs = {
 			oController.getOwnerComponent()._dialogMessagePopover = sap.ui.xmlfragment("com.broadspectrum.etime.ee.dialogs.MessagePopover", oController);
 			oController.getOwnerComponent()._dialogMessagePopover.setModel(sap.ui.getCore().getMessageManager().getMessageModel());
 		}
-		// filter out messages without an actual message
-		// 	var oFilter = new sap.ui.model.Filter("message", sap.ui.model.FilterOperator.NE, "");
-		// 	if (oController.getOwnerComponent()._dialogMessagePopover.getBinding("items")) {
-		// 		oController.getOwnerComponent()._dialogMessagePopover.getBinding("items").filter([oFilter]);
-		// 	}
-		// filter method only works in higher UI5 runtime, so take matters into our own hands...
 		var aFilteredMessages = $.map(sap.ui.getCore().getMessageManager().getMessageModel().oData, function(oMessage) {
 			if (oMessage.message) {
 				return oMessage;

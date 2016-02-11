@@ -1,20 +1,12 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns="sap.m" controllerName="com.broadspectrum.etime.ee.view.Master2">
-	<Page id="master2Page" showNavButton="true" navButtonPress="onNavBack" title="{Datetxt}">
-		<!--<subHeader>-->
-		<!--	<Bar id="master2SearchBar">-->
-		<!--		<contentMiddle>-->
-		<!--			<SearchField id="master2SearchField" showRefreshButton="{device&gt;/isNoTouch}" placeholder="{i18n&gt;master2SearchPlaceholder}" search="onSearch" tooltip="{i18n&gt;master2SearchTooltip}" width="100%">-->
-		<!--			</SearchField>-->
-		<!--		</contentMiddle>-->
-		<!--	</Bar>-->
-		<!--</subHeader>-->
+<mvc:View controllerName="com.broadspectrum.etime.ee.view.Master2" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+	<Page id="master2Page" navButtonPress="onNavBack" showNavButton="true" title="{Datetxt}">
 		<content>
-			<List id="master2List" items="{detailSet}" mode="{device&gt;/listMode}" noDataText="{i18n&gt;masterListNoDataText}" select="onSelect" growing="true" growingScrollToLoad="true">
+			<List growing="true" growingScrollToLoad="true" id="master2List" items="{detailSet}" mode="{device&gt;/listMode}"
+				noDataText="{i18n&gt;masterListNoDataText}" select="onSelect">
 				<items>
-					<ObjectListItem id="master2ListItem" type="{device&gt;/listItemType}" press="onSelect" 
-					    title="{parts:[{path:'Timetxt'},{path:'Lgart'},{path:'isAllowance'}], formatter:'.formatMaster2ListItem'}" 
-					    number="{parts:[{path:'Durationtxt'},{path:'Anzhl'},{path:'isAllowance'}], formatter:'.formatMaster2ListItem'}"
-					    numberUnit="">
+					<ObjectListItem id="master2ListItem"
+						number="{parts:[{path:'Durationtxt'},{path:'Anzhl'},{path:'isAllowance'}], formatter:'.formatMaster2ListItem'}" numberUnit="" press="onSelect"
+						title="{parts:[{path:'Timetxt'},{path:'Lgart'},{path:'isAllowance'}], formatter:'.formatMaster2ListItem'}" type="{device&gt;/listItemType}">
 						<attributes>
 							<ObjectAttribute text="{Atttxt}"/>
 						</attributes>
@@ -26,7 +18,7 @@
 			</List>
 		</content>
 		<footer>
-			<Toolbar>
-			</Toolbar>
+			<Toolbar></Toolbar>
 		</footer>
-	</Page></mvc:View>
+	</Page>
+</mvc:View>

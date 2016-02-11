@@ -1,6 +1,3 @@
-// stop ESLint complaining about global namspaces "com", "window", etc.
-/*global window*/
-
 sap.ui.define(["sap/ui/core/mvc/Controller",
                 "sap/ui/unified/DateRange",
                 "sap/ui/core/Fragment",
@@ -25,20 +22,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				this.getEventBus().subscribe("Detail", "EditingDone", this.onDetailEditingDone, this);
 
 				this.oCalendar = this.getView().byId("calendar");
-				// this.oCalendarOld = this.getView().byId("calendar_old");
-				// 			// set calendar to full width on phone, else 320px
-				//     		if (sap.ui.Device.system.phone) {
-				//         	    this.oCalendar.setWidth("380px");
-				//     		} else {
-				//         	    this.oCalendar.setWidth("320px");
-				//     		}
-				// 	this.oCalendar.setSingleRow(true);
 				this.oCalendarLegend = this.getView().byId("calendar_legend");
-
-				// var oView = this.getView();
-
-				// oView.bindElement("/headerSet");
-
 			},
 
 			handleDaySelect: function(oEvent) {
@@ -66,12 +50,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				if (!this.oSelectedDate || (this.oSelectedDate && this.oSelectedDate.getTime() !== oSelectedDate.getTime())) {
 					// publish selected date if different from last
 					this.oSelectedDate = oSelectedDate;
-					// if (this.oCalendarOld.getSelectedDates().length) {
-					//     this.oSelectedDate = new Date(this.oCalendarOld.getSelectedDates()[0];
-					// } else {
-					//     return;
-					// }
-					// 			var selDateStr = this.oFormatYyyymmdd.format(this.oSelectedDate);
 					this.getEventBus().publish("HeaderSelection", "headDateEvt", this.oSelectedDate);
 					// if the new request popover is open, close it upon selection of a different date
 					if (this._oPopover.isOpen()) {
@@ -89,11 +67,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 						});
 					}
 				}
-
-				// var oView = this.getView();
-				// var sEntityPath = '/headerSet(Weekstart=datetime\'' + selDateStr + 'T22:00:00\',Weekend=datetime\'' + selDateStr + 'T22:00:00\')';
-				// var oData = oView.getModel().getData(sEntityPath);
-
 			},
 
 			handleWorkingWeekReceived: function(sChannel, sEvent, oData) {
@@ -157,15 +130,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				}
 			},
 
-			// 		handleCalendarSelect: function(oEvent) {
-			// 			// var oCalendar = this.byId("calendar_old");
-			// 			 var oNewDate = this.oCalendar.getCurrentDate();
-			// 			 this.getEventBus().publish('HeaderSelection','headDateEvt',oNewDate);
-			// 		},
-
-			// onBeforeRendering: function() {
-			// 	// var enddate = this.getView().byId('calendar').getEndDate;
-			// },
 			onAfterRendering: function() {
 				if (!this.didRenderFirstTime) {
 					// var oNewDate = this.oCalendar.getCurrentDate();
