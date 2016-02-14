@@ -200,7 +200,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		var aFormElements = this.byId("detailForm").getContent();
 		aFormElements.forEach(function(oFormElement) {
 			if (oFormElement instanceof sap.m.DateTimeInput ||
-				oFormElement instanceof sap.m.Input) {
+				oFormElement instanceof sap.m.Input ||
+				oFormElement instanceof sap.m.TextArea) {
 				oFormElement.setValueState(sap.ui.core.ValueState.None);
 				oFormElement.setValueStateText(null);
 			}
@@ -420,6 +421,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.byId("labelenote").setRequired(true);
 		} else {
 			this.byId("labelenote").setRequired(false);
+			this.byId("Enote").setValueState(sap.ui.core.ValueState.None);
 		}
 	},
 
