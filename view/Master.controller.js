@@ -1,3 +1,5 @@
+/*global com*/
+
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 

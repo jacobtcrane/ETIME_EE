@@ -1,3 +1,6 @@
+/*global com*/
+/*global _*/
+
 jQuery.sap.declare("com.broadspectrum.etime.ee.util.Dialogs");
 
 com.broadspectrum.etime.ee.util.Dialogs = {
@@ -122,9 +125,12 @@ com.broadspectrum.etime.ee.util.Dialogs = {
 				return oMessage;
 			}
 		});
+        aFilteredMessages = _.uniq(aFilteredMessages, function(oMessage) {
+            return oMessage.message;
+        });
 		sap.ui.getCore().getMessageManager().removeMessages(sap.ui.getCore().getMessageManager().getMessageModel().oData);
 		sap.ui.getCore().getMessageManager().addMessages(aFilteredMessages);
-		
+
 		return oController.getOwnerComponent()._dialogMessagePopover;
 	}
 };

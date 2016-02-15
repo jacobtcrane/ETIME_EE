@@ -1,3 +1,5 @@
+/*global window*/
+
 sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 
 	onInit: function() {
@@ -26,7 +28,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 			this.bindView("/" + this.oRoutingParams.OverviewEntity);
 
 			this.byId("master2List").attachEventOnce("updateFinished", function() {
-				this.selectFirstItem();
+				if (!this.sEditingContextPath) {
+					// if not already editing, select first item (if also the only item)
+					this.selectFirstItem();
+				}
 			}, this);
 		}
 	},

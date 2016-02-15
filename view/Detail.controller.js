@@ -1,3 +1,6 @@
+/*global com*/
+/*global window*/
+
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Dialogs");
 jQuery.sap.require("sap.ui.core.format.DateFormat");
@@ -20,15 +23,15 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 		// When navigating in the Detail page, update the binding context
 		if (oParameters.name === "home") {
-            this.cleanup();
-        }
+			this.cleanup();
+		}
 
 		if (oParameters.name === "attendance" ||
 			oParameters.name === "allowance") {
 			isAllowance = oParameters.name === "allowance" ? true : false;
 
 			// extract routing parameters
-            this.oRoutingParams = {};
+			this.oRoutingParams = {};
 			if (oParameters.arguments.OverviewEntity &&
 				oParameters.arguments.DetailEntity) {
 				this.oRoutingParams.OverviewEntity = oParameters.arguments.OverviewEntity;
@@ -67,7 +70,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.isNew = true;
 
 			// extract routing parameters
-            this.oRoutingParams = {};
+			this.oRoutingParams = {};
 			if (oParameters.arguments.TimesheetDate) {
 				this.oRoutingParams.TimesheetDate = oParameters.arguments.TimesheetDate;
 			} else {
@@ -394,7 +397,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	navHistoryBack: function() {
 		this.getEventBus().publish("Detail", "EditingDone", {});
-		window.history.go(-1);
+		if (this.isNew) {
+			this.getRouter().navTo("home", {
+				transition: "show"
+			});
+		} else {
+			window.history.go(-1);
+		}
 	},
 
 	hasPendingChanges: function() {
@@ -403,7 +412,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			(this.getContextPath() && oModel.mChangeHandles[this.getContextPath().substr(1)])) {
 			return true;
 		} else {
-		    return false;
+			return false;
 		}
 	},
 
@@ -440,13 +449,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.byId("causeInput").setDescription(null);
 		}
 	},
-	
-	handleEnoteChange: function(oEvent)  {
+
+	handleEnoteChange: function(oEvent) {
 		// clear HDA error on note
-		if ((oEvent.getSource().getId().search("Enote") > -1 )) {
+		if ((oEvent.getSource().getId().search("Enote") > -1)) {
 			this.byId("labelenote").setRequired(false);
 			this.byId("Enote").setValueState(sap.ui.core.ValueState.None);
-		}			    
+		}
 	},
 
 	handleInputChange: function(oEvent) {
@@ -784,11 +793,11 @@ Search Helps - START
 	},
 
 	handleSuggest: function(evt) {
-//Do nothing since this is disabled now
+		//Do nothing since this is disabled now
 	},
 
 	handleSuggestionSel: function(oEvent) {
-//Do nothing since this is disabled now
+		//Do nothing since this is disabled now
 	},
 
 	handleValueHelp: function(oEvent) {

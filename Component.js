@@ -1,3 +1,6 @@
+// load underscore.js library for app-wide usage
+jQuery.sap.require("com.broadspectrum.etime.ee.lib.underscore-min");
+
 jQuery.sap.declare("com.broadspectrum.etime.ee.Component");
 
 sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
