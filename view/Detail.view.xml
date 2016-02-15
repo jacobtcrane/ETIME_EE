@@ -56,7 +56,7 @@
 						</layoutData>
 					</CheckBox>
 					<Label id="labelenote" text="Notes"/>
-					<TextArea editable="true" id="Enote" rows="4" value="{Enote}"/>
+					<TextArea editable="true" id="Enote" rows="4" value="{Enote}" liveChange="handleEnoteChange"/>
 					<Label id="labelmnote" text="Approver Notes"
 						visible="{parts : [{path : 'Mnote'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
 					<TextArea editable="true" id="Mnote" rows="4" value="{Mnote}"

@@ -440,6 +440,14 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.byId("causeInput").setDescription(null);
 		}
 	},
+	
+	handleEnoteChange: function(oEvent)  {
+		// clear HDA error on note
+		if ((oEvent.getSource().getId().search("Enote") > -1 )) {
+			this.byId("labelenote").setRequired(false);
+			this.byId("Enote").setValueState(sap.ui.core.ValueState.None);
+		}			    
+	},
 
 	handleInputChange: function(oEvent) {
 		"use strict";
