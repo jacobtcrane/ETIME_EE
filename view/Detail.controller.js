@@ -1054,6 +1054,7 @@ Search Helps - END
 	},
 
 	sendRequest: function(statusToSend) {
+        this.getEventBus().publish("Any", "BusyDialogNeeded", {});
 		var oModel = this.getModel();
 		if ((statusToSend === "SUB" || statusToSend === "SBN") && // validate upon submit (not save)
 			!this.validateRequiredFields()) {
@@ -1082,6 +1083,7 @@ Search Helps - END
 		oModel.submitChanges({
 			batchGroupId: "detailChanges",
 			success: $.proxy(function() {
+                this.getEventBus().publish("Any", "BusyDialogDone", {});
 				// check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
 					oModel.setProperty(this.getContextPath() + "/Status", "NEW");
@@ -1101,6 +1103,7 @@ Search Helps - END
 				}
 			}, this),
 			error: $.proxy(function() {
+                this.getEventBus().publish("Any", "BusyDialogDone", {});
 				oModel.setProperty(this.getContextPath() + "/Status", "NEW");
 				// show odata errors in message popover
 				this.showMessagePopover(this.byId("toolbar"));
@@ -1111,6 +1114,7 @@ Search Helps - END
 	},
 
 	handleDeleteRequest: function() {
+        this.getEventBus().publish("Any", "BusyDialogNeeded", {});
 		var oModel = this.getModel();
 		oModel.setProperty(this.getContextPath() + "/Status", "DEL");
 		// remove all current messages from message manager
@@ -1118,6 +1122,7 @@ Search Helps - END
 		oModel.submitChanges({
 			batchGroupId: "detailChanges",
 			success: $.proxy(function() {
+                this.getEventBus().publish("Any", "BusyDialogDone", {});
 				// check for messages
 				if (sap.ui.getCore().getMessageManager().getMessageModel().oData.length > 0) {
 					// show odata errors in message popover
@@ -1135,6 +1140,7 @@ Search Helps - END
 				}
 			}, this),
 			error: $.proxy(function() {
+                this.getEventBus().publish("Any", "BusyDialogDone", {});
 				// show odata errors in message popover
 				this.showMessagePopover(this.byId("toolbar"));
 				this.setContextObjectToModel();
