@@ -1,3 +1,5 @@
+/*global window*/
+
 sap.ui.define(["sap/ui/core/mvc/Controller",
                 "sap/ui/unified/DateRange",
                 "sap/ui/core/Fragment",

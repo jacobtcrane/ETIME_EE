@@ -1,3 +1,5 @@
+/*global window*/
+
 sap.ui.controller("com.broadspectrum.etime.ee.view.Favourites", {
 
 	getRouter: function() {

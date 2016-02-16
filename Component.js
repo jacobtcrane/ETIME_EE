@@ -99,31 +99,37 @@ sap.ui.core.UIComponent.extend("com.broadspectrum.etime.ee.Component", {
 			targets: {
 				home: {
 					viewName: "Master",
+					viewLevel: 1,
 					controlId: "idAppControl",
 					controlAggregation: "masterPages"
 				},
 				timesheets: {
 					viewName: "Master2",
+					viewLevel: 2,
 					controlId: "idAppControl",
 					controlAggregation: "masterPages"
 				},
 				welcome: {
 					viewName: "Welcome",
+					viewLevel: 1,
 					controlId: "idAppControl",
 					controlAggregation: "detailPages"
 				},
 				detail: {
 					viewName: "Detail",
+					viewLevel: 3,
 					controlId: "idAppControl",
 					controlAggregation: "detailPages"
 				},
 				favourites: {
 					viewName: "Favourites",
+					viewLevel: 3,
 					controlId: "idAppControl",
 					controlAggregation: "detailPages"
 				},
 				notfound: {
 					viewName: "NotFound",
+					viewLevel: 1,
 					controlId: "idAppControl",
 					controlAggregation: "detailPages"
 				}

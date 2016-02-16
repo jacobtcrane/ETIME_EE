@@ -132,7 +132,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 
 	navHistoryBack: function() {
 		this.sEditingContextPath = null;
-		window.history.go(-1);
+// 		window.history.go(-1);
+		this.getRouter().navTo("home");
 	},
 
 	onSearch: function(oEvent) {
