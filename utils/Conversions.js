@@ -90,6 +90,21 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 		} else {
 			return false;
 		}
-	}	
+	},
+
+	sendButtonVisibilityTrigger: function(v) {
+		if ( v == 'APP' || v == 'TRF' || v == 'TRE' || v == 'REM' ) {
+			return false;
+		} else {
+			return true;
+		}
+	},	
+	editableByStatusTrigger: function(v) {
+		if ( v == 'APP' || v == 'TRF' || v == 'TRE' || v == 'REM' ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 };

@@ -19,47 +19,61 @@
 				<f:content>
 					<Label id="lblStartTime" required="true" text="Start Time" visible="{path:'isAllowance',formatter:'.isAttendance'}"/>
 					<DateTimeInput change="onBeguzEntered" class="sapUiSmallMarginBottom" displayFormat="HH:mm" id="beguz" placeholder="Enter Time..." type="Time"
-						value="{Beguz}" valueFormat="PTHH'H'mm'M'ss'S'" visible="{path:'isAllowance',formatter:'.isAttendance'}" width="8em"/>
+						value="{Beguz}" valueFormat="PTHH'H'mm'M'ss'S'" visible="{path:'isAllowance',formatter:'.isAttendance'}" width="8em"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="lblEndTime" required="true" text="End Time" visible="{path:'isAllowance',formatter:'.isAttendance'}"/>
 					<DateTimeInput change="onEnduzEntered" class="sapUiSmallMarginBottom" displayFormat="HH:mm" id="enduz" placeholder="Enter Time..." type="Time"
-						value="{Enduz}" valueFormat="PTHH'H'mm'M'ss'S'" visible="{path:'isAllowance',formatter:'.isAttendance'}" width="8em"/>
-					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left" visible="{path:'isAllowance',formatter:'.isAttendance'}"/>
+						value="{Enduz}" valueFormat="PTHH'H'mm'M'ss'S'" visible="{path:'isAllowance',formatter:'.isAttendance'}" width="8em"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
+					<CheckBox id="vtken" selected="{Vtken}" text="Previous Day Indicator" textAlign="Left" visible="{path:'isAllowance',formatter:'.isAttendance'}"
+					editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelatt" required="true" text="Attendance Type" visible="{path:'isAllowance',formatter:'.isAttendance'}"/>
 					<Input description="{Awarttxt}" id="attendanceInput" change="handleInputChange" liveChange="handleLiveChange"
 						placeholder="Enter Attendance Type ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Awart}" valueHelpRequest="handleValueHelp"
-						visible="{path:'isAllowance',formatter:'.isAttendance'}"/>
+						visible="{path:'isAllowance',formatter:'.isAttendance'}"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelall" required="true" text="Allowance Type / Quantity" visible="{isAllowance}"/>
 					<Input description="{Lgarttxt}" id="allowanceInput" change="handleInputChange" liveChange="handleLiveChange"
-						placeholder="Enter Allowance Type ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Lgart}" valueHelpRequest="handleValueHelp" visible="{isAllowance}"/>
-					<Input change="onQuantityEntered" id="quantity" placeholder="Enter Quantity ..." type="Number" value="{Anzhl}" visible="{isAllowance}"/>
+						placeholder="Enter Allowance Type ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Lgart}" valueHelpRequest="handleValueHelp" visible="{isAllowance}"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
+					<Input change="onQuantityEntered" id="quantity" placeholder="Enter Quantity ..." type="Number" value="{Anzhl}" visible="{isAllowance}"
+					editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelwbs" text="WBS Element"/>
 					<Input change="handleInputChange" description="{Wbstxt}" id="wbsInput" liveChange="handleLiveChange" placeholder="Enter WBS Element ..."
-						showSuggestion="false" showValueHelp="true" type="Text" value="{Wbs}" valueHelpRequest="handleValueHelp"/>
+						showSuggestion="false" showValueHelp="true" type="Text" value="{Wbs}" valueHelpRequest="handleValueHelp"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelnet" text="Network"/>
 					<Input change="handleInputChange" description="{Networktxt}" id="netInput" liveChange="handleLiveChange" placeholder="Enter Network ..."
-						showSuggestion="false" showValueHelp="true" type="Text" value="{Nwh}" valueHelpRequest="handleValueHelp"/>
+						showSuggestion="false" showValueHelp="true" type="Text" value="{Nwh}" valueHelpRequest="handleValueHelp"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelorder" text="Order"/>
 					<Input change="handleInputChange" description="{Ordertxt}" id="orderInput" liveChange="handleLiveChange" placeholder="Enter Order ..."
-						showSuggestion="false" showValueHelp="true" type="Text" value="{Srvord}" valueHelpRequest="handleValueHelp"/>
+						showSuggestion="false" showValueHelp="true" type="Text" value="{Srvord}" valueHelpRequest="handleValueHelp"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelcause" text="Cause"/>
 					<Input change="handleInputChange" description="{Rsnvartxt}" id="causeInput" liveChange="handleLiveChange" placeholder="Enter Cause ..."
-						showSuggestion="false" showValueHelp="true" type="Text" value="{Rsnvar}" valueHelpRequest="handleValueHelp"/>
+						showSuggestion="false" showValueHelp="true" type="Text" value="{Rsnvar}" valueHelpRequest="handleValueHelp"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labeloperation" text="Operation"/>
 					<Input change="handleInputChange" description="{Operationtxt}" id="operationInput" liveChange="handleLiveChange"
-						placeholder="Enter Operation ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Operation}" valueHelpRequest="handleValueHelp"/>
+						placeholder="Enter Operation ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Operation}" valueHelpRequest="handleValueHelp"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelinternalorder" text="Internal Order"/>
 					<Input change="handleInputChange" description="{Iaufnrtxt}" id="internalorderInput" liveChange="handleLiveChange"
-						placeholder="Enter Internal Order ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Iaufnr}" valueHelpRequest="handleValueHelp"/>
-					<CheckBox id="hda" select="handleHDASelected" selected="{Hda}" text="Higher Duties">
+						placeholder="Enter Internal Order ..." showSuggestion="false" showValueHelp="true" type="Text" value="{Iaufnr}" valueHelpRequest="handleValueHelp"
+						editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
+					<CheckBox id="hda" select="handleHDASelected" selected="{Hda}" text="Higher Duties"
+					editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}">
 						<layoutData>
 							<l:GridData indent="L4 M4" linebreak="true"/>
 						</layoutData>
 					</CheckBox>
 					<Label id="labelenote" text="Notes"/>
-					<TextArea editable="true" id="Enote" rows="4" value="{Enote}" liveChange="handleEnoteChange"/>
+					<TextArea id="Enote" rows="4" value="{Enote}" liveChange="handleEnoteChange"
+					editable="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.editableByStatusTrigger'}"/>
 					<Label id="labelmnote" text="Approver Notes"
 						visible="{parts : [{path : 'Mnote'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
-					<TextArea editable="true" id="Mnote" rows="4" value="{Mnote}"
+					<TextArea editable="false" id="Mnote" rows="4" value="{Mnote}"
 						visible="{parts : [{path : 'Mnote'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.commonFieldVisibilityTrigger'}"/>
 				</f:content>
 			</f:SimpleForm>
@@ -68,10 +82,12 @@
 			<OverflowToolbar id="toolbar">
 				<OverflowToolbarButton icon="sap-icon://favorite" id="favButton" press="handleFavourites" text="Favorite"/>
 				<ToolbarSpacer/>
-				<Button id="sendButton" press="handleSendRequest" text="Send" type="Accept">
+				<Button id="sendButton" press="handleSendRequest" text="Send" type="Accept"
+				    visible="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.sendButtonVisibilityTrigger'}">
 					<layoutData><OverflowToolbarLayoutData moveToOverflow="false"/></layoutData>
 				</Button>
-				<Button id="saveButton" press="handleSaveRequest" text="Save" type="Emphasized">
+				<Button id="saveButton" press="handleSaveRequest" text="Save" type="Emphasized"
+				    visible="{parts : [{path : 'Status'}], formatter : 'com.broadspectrum.etime.ee.utils.Conversions.sendButtonVisibilityTrigger'}">
 					<layoutData><OverflowToolbarLayoutData moveToOverflow="true"/></layoutData>
 				</Button>
 				<Button id="deleteButton" press="handleDeleteRequest" text="Delete" type="Reject"
