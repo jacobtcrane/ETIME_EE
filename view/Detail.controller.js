@@ -1058,6 +1058,7 @@ Search Helps - END
 		var oModel = this.getModel();
 		if ((statusToSend === "SUB" || statusToSend === "SBN") && // validate upon submit (not save)
 			!this.validateRequiredFields()) {
+            this.getEventBus().publish("Any", "BusyDialogDone", {});
 			return false;
 		}
 		var path = this.getContextPath() + "/Weekstart";
