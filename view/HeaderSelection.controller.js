@@ -156,7 +156,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			},
 
 			onEditingContextChanged: function(sChannel, sEvent, oData) {
-				this.sEditingContextPath = oData.editingContextPath || null;
+				this.sEditingContextPath = oData.sEditingContextPath || null;
 			},
 
 			onDetailEditingDone: function(sChannel, sEvent, oData) {

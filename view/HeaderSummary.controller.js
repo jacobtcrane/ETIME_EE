@@ -1,6 +1,7 @@
 sap.ui.define([
-	"sap/ui/commons/TextView"
-], function(TextView) {
+	"sap/ui/commons/TextView",
+	"com/broadspectrum/etime/ee/utils/Conversions"
+], function(TextView, Conversions) {
 	"use strict";
 
 	return sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.HeaderSummary", {
@@ -39,15 +40,18 @@ sap.ui.define([
 		},
 
 		onDateSelected: function(sChannel, sEvent, oDate) {
-			var startDate = oDate instanceof Date ? oDate : new Date(oDate);
-			if (!startDate || !(startDate instanceof Date)) {
+			var oStartDate = oDate instanceof Date ? oDate : new Date(oDate);
+			if (!oStartDate || !(oStartDate instanceof Date)) {
 				return null;
 			}
+			// convert to non-UTC date-only string and then instantiate a UTC date
+			// as the server expects UTC for Edm.Datetime (the provided oDate will be in local timezone)
+			var sStartDate = Conversions.dateFormatterBasicDateOnly.format(oStartDate);
+			oStartDate = Conversions.dateFormatterUTC.parse(sStartDate);
+			sStartDate = Conversions.dateFormatterUTC.format(oStartDate);
+			sStartDate = encodeURIComponent(sStartDate);
 			var sEntityPath = null;
-			var startDateStr = this.oFormatYyyymmdd.format(startDate);
-
-			sEntityPath = "/headerSet(Weekstart=datetime'" + startDateStr + "T22%3A00%3A00',Weekend=datetime'" + startDateStr +
-				"T22%3A00%3A00')";
+			sEntityPath = "/headerSet(Weekstart=datetime'" + sStartDate + "',Weekend=datetime'" + sStartDate + "')";
 
 			if (sEntityPath != null) {
 				this.bindView(sEntityPath);

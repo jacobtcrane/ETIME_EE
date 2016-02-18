@@ -1,5 +1,4 @@
 /*global com*/
-/*global window*/
 
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Conversions");
 jQuery.sap.require("com.broadspectrum.etime.ee.utils.Dialogs");
@@ -41,6 +40,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 				return;
 			}
 			this.bindView("/" + this.oRoutingParams.DetailEntity);
+			this.getEventBus().publish("Detail", "EditingContextChanged", {
+				sEditingContextPath: "/" + this.oRoutingParams.DetailEntity
+			});
 
 			// remove any unsaved new detail entities from the model
 			if (this.oNewDetailContext) {
@@ -92,7 +94,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 					properties: this.prepareNewDetailEntity(oSelectedDate, isAllowance)
 				});
 				this.getEventBus().publish("Detail", "EditingContextChanged", {
-					editingContextPath: this.oNewDetailContext.getPath()
+					sEditingContextPath: this.oNewDetailContext.getPath()
 				});
 				this.getView().setBindingContext(this.oNewDetailContext);
 				// show initial time difference
@@ -1061,15 +1063,16 @@ Search Helps - END
 			this.getEventBus().publish("Any", "BusyDialogDone", {});
 			return false;
 		}
-		var path = this.getContextPath() + "/Weekstart";
-		var property = oModel.getProperty(path);
-		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
-		path = this.getContextPath() + "/Weekend";
-		property = oModel.getProperty(path);
-		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
-		path = this.getContextPath() + "/Begda";
-		property = oModel.getProperty(path);
-		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
+		var property;
+// 		var path = this.getContextPath() + "/Weekstart";
+// 		property = oModel.getProperty(path);
+// 		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
+// 		path = this.getContextPath() + "/Weekend";
+// 		property = oModel.getProperty(path);
+// 		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
+// 		path = this.getContextPath() + "/Begda";
+// 		property = oModel.getProperty(path);
+// 		oModel.setProperty(path, com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(property, false));
 
 		property = oModel.getProperty(this.getContextPath() + "/Status");
 		if (property && statusToSend) {

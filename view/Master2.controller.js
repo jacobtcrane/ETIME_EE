@@ -7,6 +7,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		this.oRoutingParams = {};
 
 		var oEventBus = this.getEventBus();
+		oEventBus.subscribe("Detail", "EditingContextChanged", this.onEditingContextChanged, this);
 		oEventBus.subscribe("Detail", "EditingDone", this.onDetailEditingDone, this);
 	},
 
@@ -119,6 +120,10 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 		}
 	},
 
+	onEditingContextChanged: function(sChannel, sEvent, oData) {
+		this.sEditingContextPath = oData.sEditingContextPath || null;
+	},
+
 	onDetailEditingDone: function(sChannel, sEvent, oData) {
 		this.byId("master2List").removeSelections();
 		this.sEditingContextPath = null;
@@ -156,7 +161,6 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master2", {
 			// the busy dialog animation does not start until the routing (and associated page loading)
 			// completes, so we throw this onto the call stack for deferred execution
 			window.setTimeout($.proxy(function() {
-				this.sEditingContextPath = oItem.getBindingContext().getPath();
 				this.getRouter().navTo(a.isAllowance ? "allowance" : "attendance", {
 					OverviewEntity: this.oRoutingParams.OverviewEntity,
 					DetailEntity: oItem.getBindingContext().getPath().substr(1) // no slash in route parameter
