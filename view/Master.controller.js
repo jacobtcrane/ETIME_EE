@@ -93,7 +93,7 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Master", {
 		// convert to non-UTC date-only string and then instantiate a UTC date,
 		// so the internal filter formatting does not convert our (locale-specific)
 		// date to UTC and potentially change the date (e.g. 2016-02-01T00:00:00 UTC+11 may become 2016-01-31T13:00:00)
-		var sStartDate = com.broadspectrum.etime.ee.utils.Conversions.dateFormatterBasicDateOnly.format(oStartDate);
+		var sStartDate = com.broadspectrum.etime.ee.utils.Conversions.dateFormatterISODateOnly.format(oStartDate);
 		oStartDate = com.broadspectrum.etime.ee.utils.Conversions.dateFormatterUTC.parse(sStartDate);
 		var aFilters = [];
 		aFilters.push(new sap.ui.model.Filter("Weekstart", sap.ui.model.FilterOperator.LE, oStartDate));

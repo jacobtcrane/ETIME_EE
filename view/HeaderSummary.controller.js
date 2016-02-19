@@ -46,7 +46,7 @@ sap.ui.define([
 			}
 			// convert to non-UTC date-only string and then instantiate a UTC date
 			// as the server expects UTC for Edm.Datetime (the provided oDate will be in local timezone)
-			var sStartDate = Conversions.dateFormatterBasicDateOnly.format(oStartDate);
+			var sStartDate = Conversions.dateFormatterISODateOnly.format(oStartDate);
 			oStartDate = Conversions.dateFormatterUTC.parse(sStartDate);
 			sStartDate = Conversions.dateFormatterUTC.format(oStartDate);
 			sStartDate = encodeURIComponent(sStartDate);

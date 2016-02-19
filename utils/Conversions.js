@@ -84,6 +84,11 @@ com.broadspectrum.etime.ee.utils.Conversions = {
 		UTC: false
 	}),
 	
+	dateFormatterISODateOnly: sap.ui.core.format.DateFormat.getDateInstance({
+		pattern: "yyyy-MM-dd",
+		UTC: false
+	}),
+	
 	deleteButtonVisibilityTrigger: function(v) {
 		if (v == 'SUB' || v == 'SAV') {
 			return true;
