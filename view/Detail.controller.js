@@ -219,11 +219,11 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 
 	formatEntityDates: function(oDetailEntity) {
 		var didChangeDates = false;
-		if (oDetailEntity.Beguz && oDetailEntity.Beguz.ms) {
+		if (oDetailEntity.Beguz && oDetailEntity.Beguz.ms >= 0) {
 			oDetailEntity.Beguz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oDetailEntity.Beguz.ms), true, true);
 			didChangeDates = true;
 		}
-		if (oDetailEntity.Enduz && oDetailEntity.Enduz.ms) {
+		if (oDetailEntity.Enduz && oDetailEntity.Enduz.ms >= 0) {
 			oDetailEntity.Enduz = com.broadspectrum.etime.ee.utils.Conversions.makeSAPDateTime(new Date(oDetailEntity.Enduz.ms), true, true);
 			didChangeDates = true;
 		}
