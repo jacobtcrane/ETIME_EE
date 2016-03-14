@@ -13,6 +13,8 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			this.getRouter().attachRouteMatched(this.onRouteMatched, this);
 		}
 		this.oRoutingParams = {};
+		var oEventBus = this.getEventBus();
+		oEventBus.subscribe("HeaderSelection", "headDateEvt", this.onNewDateSelected, this);
 	},
 
 	onRouteMatched: function(oEvent) {
@@ -397,9 +399,9 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 		}
 	},
 
-	navHistoryBack: function() {
+	navHistoryBack: function( status ) {
 		this.getEventBus().publish("Detail", "EditingDone", {});
-		if (this.isNew) {
+		if (this.isNew || status === "SUB" || status === "SBN") {
 			this.getRouter().navTo("home");
 		} else {
 			this.getRouter().navTo("timesheets", {
@@ -424,6 +426,13 @@ sap.ui.core.mvc.Controller.extend("com.broadspectrum.etime.ee.view.Detail", {
 			//ODataModel has a bug in resetChanges() which results in mChangeHandles not getting cleaned up for created entities
 			delete oModel.mChangeHandles[this.getContextPath().substr(1)];
 		}
+	},
+	
+	onNewDateSelected: function() {
+	  var oModel = this.getModel();  
+	  this.cleanup();
+	  oModel.resetChanges();
+	  this.cleanupModelChangeHandles();	  
 	},
 
 	handleHDASelected: function(oEvent) {
@@ -1102,7 +1111,7 @@ Search Helps - END
 					this.cleanup();
 					oModel.resetChanges();
 					this.cleanupModelChangeHandles();
-					this.navHistoryBack();
+					this.navHistoryBack(statusToSend);
 					sap.m.MessageToast.show(msg);
 				}
 			}, this),
